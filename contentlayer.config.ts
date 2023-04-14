@@ -54,13 +54,38 @@ const _fieldsWithInfra = {
     required: true,
   },
 }
+const _fieldsWithFrontend = {
+  title: {
+    type: 'string',
+    required: true,
+  },
+  publishedAt: {
+    type: 'string',
+    required: true,
+  },
+  summary: {
+    type: 'string',
+    required: true,
+  },
+  lng: {
+    type: 'string',
+    required: true,
+  },
+  deployment: {
+    type: 'boolean',
+    required: true,
+  },
+  pageKey: {
+    type: 'string',
+    required: true,
+  },
+}
 
 export const Frontend = defineDocumentType(() => ({
   name: 'Frontend',
-  filePathPattern: `frontend/*.mdx`,
-  // filePathPattern: `**/*.mdx`,
+  filePathPattern: `frontend/**/*.mdx`,
   contentType: 'mdx',
-  fields: _fields as {},
+  fields: _fieldsWithFrontend as {},
   // 도메인 위치 변경 필요 시 사용
   // computedFields: {
   //   url: {
