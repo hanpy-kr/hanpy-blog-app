@@ -1,4 +1,4 @@
-import "./Profile.css";
+import './Profile.css'
 
 function Profile() {
   return (
@@ -10,7 +10,7 @@ function Profile() {
             <h2>🔓 TEST OPEN</h2>
           </div>
           <div className="profile__title">
-            Hi 👋, I'm Hanpy from South Korea 🇰🇷
+            Hi 👋, I&apos;m Hanpy from South Korea 🇰🇷
           </div>
           <div className="profile__description">
             Welcome to my personal blog(v0.1) 📖, where I write about all things
@@ -19,7 +19,7 @@ function Profile() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Profile;
+export default Profile
