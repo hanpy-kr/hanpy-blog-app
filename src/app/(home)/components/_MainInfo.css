@@ -22,6 +22,15 @@
   font-weight: 600;
 }
 
+.main-info__button {
+  width: 170px;
+  height: 40px;
+  margin: 40px;
+  border: 1px solid gray;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
 @media screen and (max-width: 1048px) {
   .main-info__title {
     font-size: 6rem;

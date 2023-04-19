@@ -1,11 +1,12 @@
 import { useMDXComponent } from 'next-contentlayer/hooks'
 
-import { allInfras } from 'contentlayer/generated'
+import { allInfraForKORs } from 'contentlayer/generated'
 
 import { Roboto_Flex } from 'next/font/google'
 
 import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
+import useI18N from '@/hooks/useI18N'
 
 const PREFIX_PATH = 'infra/ko/kubernetes'
 
@@ -14,14 +15,12 @@ const robotoFlex = Roboto_Flex({
 })
 
 export default function Page({ params }: { params: { slug: string } }) {
-  const post = allInfras.find((p) => {
+  const post = allInfraForKORs.find((p) => {
     console.log(p)
     return p._raw.flattenedPath === `${PREFIX_PATH}/${params.slug}`
   })
 
-  console.log(params.slug)
-  console.log(post)
-  if (!post) return <>안들어옴</>
+  if (!post) throw new Error(`Post not found for slug: ${params.slug}`)
 
   const MDXComponent = useMDXComponent(post.body.code)
   return (

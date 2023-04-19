@@ -9,6 +9,8 @@ export default function Page({ params }: { params: { slug: string } }) {
     (p) => p._raw.flattenedPath === `${PREFIX_PATH}/${params.slug}`,
   )
 
+  if (!post) throw new Error(`Post not found for slug: ${params.slug}`)
+
   const MDXComponent = useMDXComponent(post.body.code)
   return (
     <div>
