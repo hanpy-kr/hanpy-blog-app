@@ -1,0 +1,40 @@
+---
+deployment: false
+category: Frontend
+title: '[Web] new Date'
+summary: 'new Date() 함수에 대해 알아봅니다'
+pageKey: web_date
+lng: KOR
+publishedAt: 2022-03-01
+---
+
+# new Date
+
+```
+updatedAt: new Date()?.toLocaleDateString('ko', {
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+}),
+
+return [...allFrontendForENGs].sort((a, b) => {
+  if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+  return 1
+})
+```
+
+---
+
+## Reference
+
+아래는 Mozilla
+
+- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
+
+아래는 한국어
+
+- https://kimyang-sun.tistory.com/entry/new-Date-toLocaleDateString-%ED%98%84%EC%9E%AC-%EB%82%A0%EC%A7%9C%EC%8B%9C%EA%B0%84-%ED%91%9C%EC%8B%9C%ED%95%98%EA%B8%B0-JavaScript
+
+  아래가 Date 관련 전체 method 정리 잘 되어있다.
+
+- https://www.geeksforgeeks.org/javascript-date-tolocaledatestring-method/
