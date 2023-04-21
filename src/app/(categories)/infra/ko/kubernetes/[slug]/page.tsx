@@ -9,6 +9,7 @@ import BlogLayout from '@/app/(categories)/_components/BlogLayout'
 import useI18N from '@/hooks/useI18N'
 
 const PREFIX_PATH = 'infra/ko/kubernetes'
+const SUB_TITLE = 'kubernetes'
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
@@ -25,7 +26,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const MDXComponent = useMDXComponent(post.body.code)
   return (
     <div className={robotoFlex.className}>
-      <BlogLayout type="infra" subType="docker">
+      <BlogLayout type="infra" subType={SUB_TITLE}>
         <div className="infra__content">
           <p className="infra__header">Kubernetes</p>
           {/* My Post: {params.slug} */}

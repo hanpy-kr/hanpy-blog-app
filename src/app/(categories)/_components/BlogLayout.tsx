@@ -5,11 +5,11 @@ import BlogLNBTitle from './BlogLNBTitle'
 const BlogLayout = ({
   children,
   type,
-  subType,
+  subType, // kubernetes / docker
 }: {
   children: React.ReactNode
   type: 'frontend' | 'backend' | 'infra'
-  subType: string
+  subType: 'kubernetes' | 'docker'
 }) => {
   return (
     <>
