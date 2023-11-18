@@ -1,0 +1,37 @@
+/* login form */
+
+.form {
+  margin: 0 auto;
+  max-width: 680px;
+  padding: 20px;
+}
+
+.form .form__block {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.form--lg {
+  min-height: 70vh;
+  margin-top: 10vh;
+}
+
+.form__title {
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.form__link {
+  margin-left: 10px;
+  text-decoration: none;
+  color: gray;
+}
+
+.form__link:hover,
+.form__link:focus {
+  color: black;
+}
+
+.form__error {
+  color: red;
+}
