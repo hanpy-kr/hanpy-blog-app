@@ -4,8 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-// import { app } from "firebaseApp";
-// import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app } from "@/utils/firebaseApp.lib";
 
 import "./LoginForm.css";
 
@@ -19,9 +19,8 @@ export default function LoginForm() {
     e.preventDefault();
 
     try {
-      // const auth = getAuth(app);
-      // await signInWithEmailAndPassword(auth, email, password);
-
+      const auth = getAuth(app);
+      await signInWithEmailAndPassword(auth, email, password);
       toast.success("로그인에 성공했습니다.");
       router.replace("/");
     } catch (error: any) {
