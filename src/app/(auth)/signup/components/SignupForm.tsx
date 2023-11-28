@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { app } from "@/utils/firebaseApp.lib";
+import "./SignupForm.css";
 
 export default function SignupForm() {
   const [error, setError] = useState<string>("");
