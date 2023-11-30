@@ -11,6 +11,10 @@ const AuthContext = createContext({
   user: null as User | null,
 });
 
+/**
+ * context에 변화를 알려주는 Provider
+ * 구독하는 부분이 children
+ */
 export const AuthContextProvider = ({ children }: AuthProps) => {
   const auth = getAuth(app);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
