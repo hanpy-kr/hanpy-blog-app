@@ -20,3 +20,9 @@ footer a:focus,
 footer a:hover {
   color: black;
 }
+
+.footer__theme-btn {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
