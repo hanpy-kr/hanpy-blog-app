@@ -1,0 +1,25 @@
+깃 최초등록 ------------------------------------------------------------------------------
+git config -- 계정정보 설정
+$ git config --global user.name "계정" 
+$ git config --global user.email 이메일
+
+git init -- 깃 초기화
+$ git init  git add -- 로컬 저장소커밋
+$ git add .  git commit -- 커밋
+$ git commit -m "First commit git remote -- 레파지토리 등록 
+$ git remote add origin #URL# git push -- 푸쉬
+$ git push -u origin master 깃 Clone ------------------------------------------------------------------------------ git clone  
+$ git cloen #URL#
+원격 저장소 연결해제 ------------------------------------------------------------------------------ 
+$ git remote remove origin  <- 깃연결 해제 
+$ git remote -v  <- 연결해제 확인
+
+비밀번호 변경시 인증오류
+------------------------------------------------------------------------------ 
+git 허브에서 비밀번호를 변경해서 인증오류 fatal: Authentication failed for 발생시
+인증 삭제
+$ git config --unset credential.helper
+
+기타------------------------------------------------------------------------------ 
+$ git config --list  : 설정정보조회
+$ git status : 현재상태조회 ( 커밋상태, unstaging 정보 등 )
