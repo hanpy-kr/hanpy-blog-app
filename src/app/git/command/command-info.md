@@ -23,3 +23,10 @@ $ git config --unset credential.helper
 기타------------------------------------------------------------------------------ 
 $ git config --list  : 설정정보조회
 $ git status : 현재상태조회 ( 커밋상태, unstaging 정보 등 )
+
+## 방금 커밋한 깃 git 시간 변경
+
+```
+$ git commit --amend --no-edit --date="Sat Dec 27 11:58:10 2023 +0900"
+$ git push origin -f main
+```

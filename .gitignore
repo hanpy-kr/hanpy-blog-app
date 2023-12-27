@@ -1,4 +1,13 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# 추후 정리 파일
+/src/app/architecture
+/src/app/css
+/src/app/git
+/src/app/infra
+/src/app/network
+/src/app/nodejs
+/src/app/reactjs
+
 
 # dependencies
 /node_modules
@@ -33,3 +42,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# yarn
+.pnp.*
+.yarn/
+
+

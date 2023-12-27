@@ -2,6 +2,8 @@
 
 > commit test
 
+https://github.com/jen-frontend/fastcampus-react-blog/tree/feature/2-4
+
 ##### 2023.10.23
 
 > 프로젝트 셋업 후 아래와 같이 path를 제작한다. 고민하기보다는 코드부터 치자.
