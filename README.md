@@ -4,6 +4,12 @@
 
 https://github.com/jen-frontend/fastcampus-react-blog/tree/feature/2-4
 
+## code block
+
+- carbon 이미지처럼 드레그 할 수 있는 css 적용
+- https://blog.robbie.digital/posts/highlight-js highlignt 라이브러리 적용
+- https://github.com/highlightjs/highlight.js/#custom-usage
+
 ##### 2023.10.23
 
 > 프로젝트 셋업 후 아래와 같이 path를 제작한다. 고민하기보다는 코드부터 치자.
