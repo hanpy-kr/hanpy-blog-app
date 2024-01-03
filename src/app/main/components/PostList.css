@@ -7,19 +7,6 @@
   grid-template-columns: repeat(4, 1fr);
 }
 
-.post__card {
-  /* float: left; */
-  border: 1px solid blue;
-  width: 200px;
-  height: 300px;
-  padding: 0 10px;
-  margin-bottom: 20px;
-}
-
-.post__card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-}
-
 @media screen and (max-width: 1048px) {
   .post__list {
     grid-template-columns: repeat(3, 1fr);

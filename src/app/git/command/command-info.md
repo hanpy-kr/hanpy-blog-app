@@ -28,5 +28,8 @@ $ git status : 현재상태조회 ( 커밋상태, unstaging 정보 등 )
 
 ```
 $ git commit --amend --no-edit --date="Sat Dec 27 11:58:10 2023 +0900"
+$ git commit --amend --no-edit --date="Tue Jan 1 15:31:38 2024 +0900"
+
+
 $ git push origin -f main
 ```

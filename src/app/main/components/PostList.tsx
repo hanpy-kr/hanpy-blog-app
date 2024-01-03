@@ -1,5 +1,6 @@
 import Link from "next/link";
 import "./PostList.css";
+import PostListItem from "./PostListItem";
 
 const posts = [
   {
@@ -51,22 +52,7 @@ function PostList({ title }: { title?: React.ReactNode }) {
       {title !== null ? <div className="post__title">{title}</div> : null}
       <div className="post__list">
         {posts?.length > 0 ? (
-          posts?.map((post) => (
-            <>
-              <div className="post__card">
-                {/* <Link href={`/${post?.category}/${post?.id}`}> */}
-                <Link href={`#`}>
-                  <div className="post__image">
-                    {/* <img src={post.metaImage} alt={post.title} /> */}
-                  </div>
-                  <div className="post__title">{post.title}</div>
-                  <div className="post__description">
-                    {post.metaDescription}
-                  </div>
-                </Link>
-              </div>
-            </>
-          ))
+          posts?.map((post) => <PostListItem post={post} />)
         ) : (
           <div className="post__no-post">There are no posts.</div>
         )}
