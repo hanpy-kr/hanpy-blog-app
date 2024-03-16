@@ -4,18 +4,19 @@ import PostListItem from "./PostListItem";
 
 const posts = [
   {
-    id: "react-test", // 유니크한 값 + 상세 페이지 주소
-    title: "1번 타이틀",
+    id: "react-setup", // 유니크한 값 + 상세 페이지 주소
+    title: "react optimization 1. font",
     category: "react",
-    metaImage: "test",
-    metaDescription: "1번 타이틀 내용",
+    subCategory: "optimization",
+    metaImage: "",
+    metaDescription: "How to Use Font Asset",
     createAt: "",
   },
   {
     id: "react-test2", // 유니크한 값 + 상세 페이지 주소
     title: "2번 타이틀",
     category: "react",
-    metaImage: "",
+    metaImage: "aef",
     metaDescription: "2번 타이틀 내용",
     createAt: "",
   },
@@ -62,3 +63,15 @@ function PostList({ title }: { title?: React.ReactNode }) {
 }
 
 export default PostList;
+
+// ```
+// For example, a blog could include the following route app/blog/[slug]/page.js where [slug] is the Dynamic Segment for blog posts.
+
+// app/blog/[slug]/page.tsx
+
+// TypeScript
+
+// export default function Page({ params }: { params: { slug: string } }) {
+//   return <div>My Post: {params.slug}</div>
+// }
+// ```;
