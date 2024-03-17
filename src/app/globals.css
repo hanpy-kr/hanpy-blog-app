@@ -1,21 +1,20 @@
-/* reset css */
-html,
+reset css html,
 body,
 div,
 span,
 applet,
 object,
 iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
+/* h1, */
+/* h2, */
+/* h3, */
+/* h4, */
+/* h5, */
+/* h6, */
+/* p, */
+/* blockquote, */
+/* pre, */
+/* a, */
 abbr,
 acronym,
 address,
@@ -116,7 +115,7 @@ blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-  content: "";
+  content: '';
   content: none;
 }
 table {
@@ -129,15 +128,15 @@ table {
 html,
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
@@ -185,3 +184,115 @@ code {
 .dark header {
   background-color: #111827;
 }
+
+/* mdx contentlayer css setup */
+/* contentlayer - layout */
+[data-rehype-pretty-code-figure] pre {
+  overflow-x: auto;
+  padding: 1rem 0;
+  border: 1px solid #8b8b8b;
+  margin-top: 0;
+}
+
+[data-rehype-pretty-code-title] {
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.4rem 1rem;
+  border: 1px solid #8b8b8b;
+  border-top-left-radius: 0.4rem;
+  border-top-right-radius: 0.4rem;
+  border-bottom-style: none;
+}
+
+[data-rehype-pretty-code-title] + pre {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.dark [data-rehype-pretty-code-title] {
+  /* 다크모드 설정 관련 */
+}
+
+/* contentlayer - codeline number setup 
+
+ex. showLineNumbers
+ex. showLineNumbers{n}
+
+*/
+[data-rehype-pretty-code-figure] code {
+  counter-reset: line;
+}
+
+[data-rehype-pretty-code-figure] [data-line]::before {
+  counter-increment: line;
+}
+
+[data-line-numbers] > [data-line]::before {
+  content: counter(line);
+
+  display: inline-block;
+  width: 1rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: gray;
+}
+
+[data-line-numbers-max-digits='2'] > [data-line]::before {
+  width: 1rem;
+}
+
+[data-line-numbers-max-digits='3'] > [data-line]::before {
+  width: 2rem;
+}
+
+/* contentlayer - codeline highlight setup 
+
+ex. {6}
+ex. {1-2}
+ex. {2, 9}
+
+*/
+[data-highlighted-line] {
+  background-color: #b3c0de40;
+}
+
+/* contentlayer - github commit : plus / mines 
+
+ex. {2}#minus {3}#plus
+
+*/
+[data-highlighted-line-id='minus'] {
+  position: relative;
+  background-color: #fcdcdc;
+}
+
+[data-highlighted-line-id='minus']::before {
+  content: '-';
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-weight: 500;
+  padding-left: 0.3rem;
+  color: #834444;
+}
+
+[data-highlighted-line-id='plus'] {
+  position: relative;
+  background-color: #3c6c49;
+}
+
+[data-highlighted-line-id='plus']::before {
+  content: '+';
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-weight: 500;
+  padding-left: 0.3rem;
+  color: #43ac5c;
+}
+
+/* contentlayer - word accent
+ex. /Link/ /MDXComponent/ /className/3 /className/3-5
+- 관련 단어 모두 강조
+- 한개만 강조하려면, 뒤에 순서 적어준다.
+*/

@@ -4,7 +4,7 @@ import { useMDXComponent } from "next-contentlayer/hooks";
 
 function PostPage() {
   console.log("allPosts");
-  console.log(allPosts);
+  console.log(allPosts.length);
   // console.log(Post);
   return (
     <section>
