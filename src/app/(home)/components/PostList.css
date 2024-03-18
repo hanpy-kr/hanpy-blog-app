@@ -30,7 +30,8 @@
 .post__box {
   padding-top: 24px;
   padding-bottom: 24px;
-  border-top: 1px solid #f2f2f2;
+  border-bottom: 1.5px solid #afafaf;
+  opacity: 0.7;
 }
 
 .post__profile-box {
@@ -38,6 +39,9 @@
   gap: 8px;
   font-size: 14px;
   align-items: center;
+  justify-content: end;
+
+  opacity: 0.7;
 }
 
 .post__profile {
@@ -49,7 +53,14 @@
 
 .post__date,
 .post__author-name {
+  /* width: 100px; */
+  margin-right: 20px;
   color: gray;
+}
+
+.post__title-container {
+  display: flex;
+  justify-content: space-between;
 }
 
 .post__title {

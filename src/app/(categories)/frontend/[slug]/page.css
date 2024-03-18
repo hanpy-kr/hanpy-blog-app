@@ -1,0 +1,12 @@
+.frontend__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.frontend__content {
+  max-width: 42rem;
+  min-height: 1700px;
+
+  padding: 1rem;
+}
