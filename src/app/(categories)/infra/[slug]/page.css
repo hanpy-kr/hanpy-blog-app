@@ -4,8 +4,15 @@
   align-items: center;
 } */
 
-.frontend__content {
+.infra__content {
   max-width: 90vw;
+
   min-height: 1700px;
   width: 100%;
+}
+
+.infra__header {
+  color: #028dde;
+
+  margin: 1rem 0;
 }

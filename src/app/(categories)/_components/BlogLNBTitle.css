@@ -1,0 +1,22 @@
+.LBN__title {
+  font-size: 1rem;
+  font-weight: 600;
+  /* line-height: 3rem; */
+
+  margin-top: 2rem;
+}
+
+.LBN__subTitle__container {
+  color: gray;
+  border-left: 1.5px solid black;
+  /* padding: 0.2rem 0; */
+
+  font-size: 0.9rem;
+}
+
+.LBN__subTitle {
+  /* padding: 0.2rem; */
+  padding-left: 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+}

@@ -190,7 +190,7 @@ codeline {
 /* contentlayer - layout */
 [data-rehype-pretty-code-figure] pre {
   overflow-x: auto;
-  padding: 1rem 0;
+  padding: 0.1rem 0;
   border: 1px solid #8b8b8b;
   margin-top: 0;
 }
@@ -308,6 +308,6 @@ ex. /Link/ /MDXComponent/ /className/3 /className/3-5
 contentlayer - custome
 */
 li::marker {
-  color: gray;
+  color: #cbd5e1;
   position: absolute;
 }
