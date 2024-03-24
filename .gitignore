@@ -49,3 +49,9 @@ next-env.d.ts
 
 #contentlayer
 .contentlayer
+
+
+# test
+_test.md
+_content/backend
+_content/frontend
