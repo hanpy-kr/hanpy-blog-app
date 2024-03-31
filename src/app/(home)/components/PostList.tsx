@@ -63,7 +63,7 @@ export default function PostList({
       // )
     }
     postsQuery = {
-      category: 'all',
+      category: activeTab,
       type: 'meta',
       orderBy: 'publishedAt',
     }
