@@ -50,7 +50,7 @@ export const Backend = defineDocumentType(() => ({
 
 export const Infra = defineDocumentType(() => ({
   name: 'Infra',
-  filePathPattern: `infra/*.mdx`,
+  filePathPattern: `infra/**/*.mdx`,
   contentType: 'mdx',
   fields: _fields as {},
 }))
@@ -63,6 +63,8 @@ const rehypeOptions = {
 export default makeSource({
   contentDirPath: '_content',
   documentTypes: [Frontend, Backend, Infra],
+  disableImportAliasWarning: true,
+
   mdx: {
     remarkPlugins: [remarkGfm], // mdx table Plugin
     rehypePlugins: [[rehypePrettyCode as any, rehypeOptions]],
