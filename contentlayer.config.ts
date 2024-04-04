@@ -30,6 +30,29 @@ const _fields = {
     type: 'string',
     required: true,
   },
+  lng: {
+    type: 'string',
+    required: true,
+  },
+  pageKey: {
+    type: 'string',
+    required: true,
+  },
+}
+
+const _fieldsWithInfra = {
+  title: {
+    type: 'string',
+    required: true,
+  },
+  publishedAt: {
+    type: 'string',
+    required: true,
+  },
+  summary: {
+    type: 'string',
+    required: true,
+  },
 }
 
 export const Frontend = defineDocumentType(() => ({
@@ -38,6 +61,13 @@ export const Frontend = defineDocumentType(() => ({
   // filePathPattern: `**/*.mdx`,
   contentType: 'mdx',
   fields: _fields as {},
+  // 도메인 위치 변경 필요 시 사용
+  // computedFields: {
+  //   url: {
+  //     type: "string",
+  //     resolve: (doc) => `/posts/${doc._raw.flattenedPath}`,
+  //   },
+  // },
 }))
 
 export const Backend = defineDocumentType(() => ({
@@ -52,7 +82,7 @@ export const Infra = defineDocumentType(() => ({
   name: 'Infra',
   filePathPattern: `infra/**/*.mdx`,
   contentType: 'mdx',
-  fields: _fields as {},
+  fields: _fieldsWithInfra as {},
 }))
 
 const rehypeOptions = {
