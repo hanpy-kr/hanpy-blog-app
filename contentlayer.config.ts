@@ -30,14 +30,6 @@ const _fields = {
     type: 'string',
     required: true,
   },
-  lng: {
-    type: 'string',
-    required: true,
-  },
-  pageKey: {
-    type: 'string',
-    required: true,
-  },
 }
 
 const _fieldsWithInfra = {
@@ -50,6 +42,14 @@ const _fieldsWithInfra = {
     required: true,
   },
   summary: {
+    type: 'string',
+    required: true,
+  },
+  lng: {
+    type: 'string',
+    required: true,
+  },
+  pageKey: {
     type: 'string',
     required: true,
   },
