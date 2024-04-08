@@ -1,0 +1,79 @@
+---
+title: '[Kubernetes] 1. Introduction'
+publishedAt: 2022-03-01
+summary: 'In this beginner’s guide, you’ll learn what Kubernetes can do and how to get started running your own application solutions.'
+lng: KOR
+pageKey: kubernetes-1
+---
+
+# Kubernetes Introduction
+
+Let's get familiar with the basics of Kubernetes.
+The reason for learning Kubernetes is simple: it greatly assists in developing/deploying applications.
+
+<br />
+
+Initially, applications had no networking.
+Therefore, deploying applications wasn't as straightforward as it is now.
+To deploy applications, they were distributed to physical disks and installed locally for data management.
+For instance, it's like installing software such as "Word/Excel" on a computer for usage.
+
+<br />
+
+With the popularization of networking, the era of physical servers arrived.
+In a corporate context, it involves installing company applications on servers located in server rooms and integrating them into the network.
+While this seems like a common approach, there are drawbacks.
+Primarily, to install servers, you need to buy them.
+Moreover, it takes several months for expensive servers to be delivered. Additionally,
+if you want to expand the servers you've bought, you'll need to purchase and wait for the delivery of more servers.
+Nevertheless, during that time, this method was the best available.
+
+<br />
+
+The emergence of AWS, which most people are familiar with, allows for large-scale public clouds.
+This concept involves virtualizing hardware,
+meaning resources (CPU/RAM) can be dynamically allocated, allowing for server usage.
+This drastically reduces the time it takes to increase server capacity,
+from a process that took months in the era of physical servers to simply clicking a mouse button to buy cloud servers or expand existing ones.
+
+<br />
+
+With these changes in the infrastructure environment,
+virtualization processing at the operating system level also becomes possible.
+And Kubernetes is what makes this possible.
+
+<br />
+<hr />
+<br />
+
+## Word
+
+<br />
+
+#### Application
+
+A computer program created by developers for a specific purpose.
+
+<br />
+
+#### Steps to create an application
+
+1. Development: Developers write source code to make the application function.
+2. Build: Optimizes the written source code to transform it into an executable form.
+3. Deployment: Moves the application to an executable environment (AWS).
+4. Execution: Initiates the deployed application.
+
+<br />
+
+#### Application environments
+
+- Development environment: Environment where source code is written and executable files are created after building.
+- Execution environment: Environment where the executable files are run from development. This includes virtual machines, cloud environments, including the operating system.
+
+<br />
+<hr />
+<br />
+
+## reference
+
+- https://kubernetes.io/docs/concepts/overview/
