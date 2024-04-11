@@ -9,3 +9,7 @@
 ## reference
 
 - svg icon : https://www.svgrepo.com/svg/
+
+## Tech Reference
+
+- https://yozm.wishket.com/magazine/detail/2493/

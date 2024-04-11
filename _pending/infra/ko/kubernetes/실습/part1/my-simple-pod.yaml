@@ -1,0 +1,15 @@
+# 객체 스펙 지정
+# 파드는 apiVersion이 v1으로 적해져 있다. 레프런스 찾아보자.
+# metadata name : 객체 식별 id
+# spec : 실제 객체 스펙을 적어준다.
+# spec containers image : 별다른 주소를 안적었다. 따라서 도커 허브에서 가져와서 쓸것이다.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-simple-pod
+spec:
+  restartPolicy: Never
+  containers:
+    - name: my-container
+      image: busybox
+      command: ['sh', '-c', 'exit 1']
