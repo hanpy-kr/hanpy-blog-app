@@ -4,12 +4,12 @@ import './globals.css'
 import ToastProvider from '@/components/provider/ToastProvider'
 import { AuthContextProvider } from '@/context/AuthContext'
 import { ThemeContextProvider } from '@/context/ThemeContext'
-import { RecoilRoot } from 'recoil'
 import {
   Roboto,
   //  Noto_Sans_KR
 } from 'next/font/google' // Roboto와 한글 NotoSans를 사용합니다.
 import { ChakraProviders } from '@/context/ChakraContext'
+import RecoilRootWrapper from '@/recoil/wrapper/RecoilRootWrapper'
 
 // const notoSansKr = Noto_Sans_KR({
 //   // preload: true, 기본값
@@ -38,9 +38,9 @@ export default function RootLayout({
         <ToastProvider />
         <ThemeContextProvider>
           <AuthContextProvider>
-            <RecoilRoot>
+            <RecoilRootWrapper>
               <ChakraProviders>{children}</ChakraProviders>
-            </RecoilRoot>
+            </RecoilRootWrapper>
           </AuthContextProvider>
         </ThemeContextProvider>
       </body>
