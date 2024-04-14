@@ -1,0 +1,89 @@
+---
+title: The Query Options API
+publishedAt: 2022-03-13
+summary: React Query version 5 was released about three months ago, and with it, we got one of the biggest "breaking" changes in the library's history. All of our functions now only get one object passed, instead of multiple arguments. We call this object the Query Options, because it contains all the options you need to create a query
+---
+
+# H1 test
+
+## H2 test
+
+### H3 test
+
+#### H4 test
+
+##### H5 test
+
+The table container component renders a div<code id='awef'>eh2</code> that wraps the table component to
+not allow the table to overflow the parent container, not allow data content to
+break lines without exception, and enable horizontal scrolling.
+
+> code test
+
+<codeline>code</codeline> test
+
+- 1
+- 1
+- 1
+- 1
+
+<div style={{ backgroundColor: 'red' }}>awefawef</div>
+
+```jsx title="제목 테스트" showLineNumbers {2}#minus {3}#plus
+<article key={'post.slug'} className="mb-6">
+  <Link href={`/post/${'post.slug'}`}>
+    <h2 className="text-xl font-semibold">{post.title}</h2>
+    <h6 className="font-light text-gray-500">{post.summary}</h6>
+    <p>
+      <small className="mr-2">{post.publishedAt}</small>
+    </p>
+  </Link>
+  {/* {post.body.raw} */}
+  {/* {post.body.code} */}
+  <MDXComponent />
+</article>
+```
+
+```jsx title="제목 테스트" {3-6} showLineNumbers /Link/ /MDXComponent/ /className/3
+<article key={'post.slug'} className="mb-6">
+  <Link href={`/post/${'post.slug'}`}>
+    <h2 className="text-xl font-semibold">{post.title}</h2>
+    <h6 className="font-light text-gray-500">{post.summary}</h6>
+    <p>
+      <small className="mr-2">{post.publishedAt}</small>
+    </p>
+  </Link>
+  {/* {post.body.raw} */}
+  {/* {post.body.code} */}
+  <MDXComponent />
+</article>
+```
+
+## Table Container
+
+The table container component renders a div<code id='awef'>eh2</code> that wraps the table component to
+not allow the table to overflow the parent container, not allow data content to
+break lines without exception, and enable horizontal scrolling.
+
+It renders the following props:
+
+# GFM
+
+## Autolink literals
+
+www.example.com, https://example.com, and contact@example.com.
+
+## Footnote
+
+A note[^1]
+
+[^1]: Big note.
+
+## Strikethrough
+
+~one~ or ~~two~~ tildes.
+
+## Tasklist
+
+- [ ] to do
+- [x] done
