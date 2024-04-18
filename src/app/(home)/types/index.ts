@@ -1,6 +1,6 @@
 export interface PostListProps {
   hasNavigation?: boolean
-  defaultTab?: TabType | CategoryType
+  defaultTab?: CategoryType
 }
 
 export interface PostProps {
@@ -14,6 +14,8 @@ export interface PostProps {
   // uid: string
   // category?: CategoryType
   body: {}
+  deployment?: boolean
+  category?: string
   publishedAt: string
   summary: string
   title: string
@@ -24,6 +26,10 @@ export interface PostProps {
   }
 }
 
-export type CategoryType = 'Frontend' | 'Backend' | 'Web' | 'Infra'
-
-export type TabType = 'all' | 'my'
+export type CategoryType =
+  | 'Frontend'
+  | 'Backend'
+  | 'Web'
+  | 'Infra'
+  | 'All'
+  | 'my'

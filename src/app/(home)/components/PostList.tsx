@@ -13,18 +13,26 @@ import {
   // where,
 } from 'firebase/firestore'
 import { db } from '@/utils/firebaseApp.lib'
-import { CategoryType, PostListProps, PostProps, TabType } from '../types'
-import { toast } from 'react-toastify'
+import { CategoryType, PostListProps, PostProps } from '../types'
+// import { toast } from 'react-toastify'
 import { CATEGORIES } from '../constants'
 import contentlayer from '@/services-client/contentlayer'
+import { useRecoilValue } from 'recoil'
+import { withChanged } from '@/recoil/i18n'
+import useI18N from '@/hooks/useI18N'
 
 export default function PostList({
   hasNavigation = true,
-  defaultTab = 'all',
+  defaultTab = 'All',
 }: PostListProps) {
-  const [activeTab, setActiveTab] = useState<TabType | CategoryType>(defaultTab)
+  const [activeTab, setActiveTab] = useState<CategoryType>(defaultTab)
+  const [activeLng, setActiveLng] = useState('ko')
   const [posts, setPosts] = useState<PostProps[]>([])
   const { user } = useContext(AuthContext)
+  const currentLng = useRecoilValue(withChanged)
+
+  const { changeI18N } = useI18N()
+  // if (!post) throw new Error(`Post not found for slug: ${params.slug}`);
 
   const getPosts = async () => {
     // const datas = await getDocs(collection(db, "posts"));
@@ -33,7 +41,12 @@ export default function PostList({
     setPosts([])
 
     // let postsRef = collection(db, 'posts')
-    let postsQuery
+    let postsQuery: {
+      category: CategoryType
+      type: 'meta' | 'content'
+      currentLng: string
+      orderBy: 'publishedAt'
+    }
 
     if (activeTab === 'my' && user) {
       // 나의 글만 필터링
@@ -46,12 +59,13 @@ export default function PostList({
       //   where('uid', '==', user.uid),
       //   orderBy('createdAt', 'asc'),
       // )
-    } else if (activeTab === 'all') {
+    } else if (activeTab === 'All') {
       // 모든 글 보여주기
       // postsQuery = query(postsRef, orderBy('createdAt', 'asc'))
       postsQuery = {
-        category: 'all',
+        category: 'All',
         type: 'meta',
+        currentLng: currentLng.lng,
         orderBy: 'publishedAt',
       }
     } else {
@@ -65,17 +79,11 @@ export default function PostList({
     postsQuery = {
       category: activeTab,
       type: 'meta',
+      currentLng: currentLng.lng,
       orderBy: 'publishedAt',
     }
-    const datas = contentlayer.query(
-      postsQuery as {
-        category: 'all'
-        type: 'meta' | 'content'
-        orderBy: 'publishedAt'
-      },
-    )
-    console.log('datas')
-    console.log(datas)
+    const datas = contentlayer.query(postsQuery)
+
     setPosts(datas)
 
     // datas?.forEach((doc) => {
@@ -98,58 +106,62 @@ export default function PostList({
    */
   useEffect(() => {
     getPosts()
-  }, [activeTab])
+    setActiveLng(currentLng.lng)
+  }, [activeTab, currentLng.lng])
 
   return (
     <>
       {hasNavigation && (
-        <div className="post__navigation">
-          <div
-            role="presentation"
-            onClick={() => setActiveTab('all')}
-            className={activeTab === 'all' ? 'post__navigation--active' : ''}
-          >
-            All
+        <section className="post__Navigation__container">
+          <div className="post__navigation">
+            {CATEGORIES?.map((category) => (
+              <div
+                key={category}
+                role="presentation"
+                onClick={() => setActiveTab(category)}
+                className={
+                  activeTab === category ? 'post__navigation--active' : ''
+                }
+              >
+                {category}
+              </div>
+            ))}
           </div>
-          {/* <div
-            role="presentation"
-            onClick={() => setActiveTab('my')}
-            className={activeTab === 'my' ? 'post__navigation--active' : ''}
-          >
-            나의 글
-          </div> */}
-
-          {CATEGORIES?.map((category) => (
+          <div className="post__lng">
             <div
-              key={category}
-              role="presentation"
-              onClick={() => setActiveTab(category)}
-              className={
-                activeTab === category ? 'post__navigation--active' : ''
-              }
+              className={activeLng === 'en' ? 'post__lng--active' : ''}
+              onClick={() => changeI18N('en')}
             >
-              {category}
+              en
             </div>
-          ))}
-        </div>
+            <div
+              className={activeLng === 'ko' ? 'post__lng--active' : ''}
+              onClick={() => changeI18N('ko')}
+            >
+              ko
+            </div>
+          </div>
+        </section>
       )}
       <div className="post__list">
         {posts?.length > 0 ? (
-          posts?.map((post) => (
-            <div key={post?._id} className="post__box">
-              <Link href={`/${post._raw.flattenedPath}`}>
-                <div className="post__title-container">
-                  <div className="post__title">{post?.title}</div>
+          posts?.map((post) => {
+            if (!post.deployment) return
+            return (
+              <div key={post?._id} className="post__box">
+                <Link href={`/${post._raw.flattenedPath}`}>
+                  <div className="post__title-container">
+                    <div className="post__title">{post?.title}</div>
 
-                  <div className="post__profile-box">
-                    {/* <div className="post__profile" /> */}
-                    <div className="post__author-name">{post?.type}</div>
-                    <div className="post__date">{post?.publishedAt}</div>
+                    <div className="post__profile-box">
+                      {/* <div className="post__profile" /> */}
+                      <div className="post__author-name">{post?.category}</div>
+                      <div className="post__date">{post?.publishedAt}</div>
+                    </div>
                   </div>
-                </div>
-                <div className="post__text">{post?.summary}</div>
-              </Link>
-              {/* {post?.email === user?.email && (
+                  <div className="post__text">{post?.summary}</div>
+                </Link>
+                {/* {post?.email === user?.email && (
                 <div className="post__utils-box">
                   <div
                     className="post__delete"
@@ -163,8 +175,9 @@ export default function PostList({
                   </Link>
                 </div>
               )} */}
-            </div>
-          ))
+              </div>
+            )
+          })
         ) : (
           <div className="post__no-post">게시글이 없습니다.</div>
         )}

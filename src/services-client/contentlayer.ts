@@ -1,7 +1,7 @@
 import { CategoryType } from '@/app/(home)/types'
-import { allFrontends } from 'contentlayer/generated'
+import { allFrontendForKORs, allFrontendForENGs } from 'contentlayer/generated'
 import { allBackends } from 'contentlayer/generated'
-import { allInfras } from 'contentlayer/generated'
+import { allInfraForKORs, allInfraForENGs } from 'contentlayer/generated'
 
 /**
  * blog
@@ -10,36 +10,109 @@ class ContentlayerService {
   query({
     category,
     type,
+    currentLng,
     orderBy,
   }: {
-    category: 'all' | CategoryType // 'Frontend' | 'Backend' | 'Web' | 'Infra'
+    category: CategoryType
     type: 'meta' | 'content'
+    currentLng: string
     orderBy: 'publishedAt'
   }) {
-    switch (category) {
-      case 'Frontend':
-        return [...allFrontends].sort((a, b) => {
-          if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-          return 1
-        })
-      case 'Backend':
-        return [...allBackends].sort((a, b) => {
-          if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-          return 1
-        })
-      case 'Infra':
-        return [...allInfras].sort((a, b) => {
-          if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-          return 1
-        })
-      case 'all':
-      default:
-        return [...allFrontends, ...allBackends, ...allInfras].sort((a, b) => {
-          if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-          return 1
-        })
+    // en-US
+    if (currentLng?.includes('en')) {
+      switch (category) {
+        case 'Frontend':
+          return [...allFrontendForENGs].sort((a, b) => {
+            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+            return 1
+          })
+        case 'Backend':
+          return [...allBackends].sort((a, b) => {
+            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+            return 1
+          })
+        case 'Infra':
+          return [...allInfraForENGs].sort((a, b) => {
+            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+            return 1
+          })
+        case 'All':
+        default:
+          return [
+            ...allFrontendForENGs,
+            ...allBackends,
+            ...allInfraForENGs,
+          ].sort((a, b) => {
+            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+            return 1
+          })
+      }
+    } else {
+      // (currentLng.includes('ko'))
+      switch (category) {
+        case 'Frontend':
+          return [...allFrontendForKORs].sort((a, b) => {
+            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+            return 1
+          })
+        case 'Backend':
+          return [...allBackends].sort((a, b) => {
+            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+            return 1
+          })
+        case 'Infra':
+          return [...allInfraForKORs].sort((a, b) => {
+            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+            return 1
+          })
+        case 'All':
+        default:
+          return [
+            ...allFrontendForKORs,
+            ...allBackends,
+            ...allInfraForKORs,
+          ].sort((a, b) => {
+            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+            return 1
+          })
+      }
     }
   }
 }
 
 export default new ContentlayerService()
+
+// reference
+// // app/page.tsx
+// import Link from 'next/link'
+// import { compareDesc, format, parseISO } from 'date-fns'
+// import { allDocuments, Post } from 'contentlayer/generated'
+
+// function PostCard(post: Post) {
+//   return (
+//     <div>
+//       <h2>
+//         <Link href={post.url}>{post.title}</Link>
+//       </h2>
+//       <time dateTime={post.date}>
+//         {format(parseISO(post.date), 'LLLL d, yyyy')}
+//       </time>
+//       <div dangerouslySetInnerHTML={{ __html: post.body.html }} />
+//     </div>
+//   )
+// }
+
+// export default function Home() {
+//   const posts = allDocuments.sort((a, b) =>
+//     compareDesc(new Date(a.date), new Date(b.date)),
+//   )
+
+//   return (
+//     <div>
+//       <h1>Next.js + Contentlayer Example</h1>
+//       {posts.map((post, idx) => (
+//         <PostCard key={idx} {...post} />
+//       ))}
+//     </div>
+//   )
+// }

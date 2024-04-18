@@ -10,6 +10,7 @@ import {
 } from 'next/font/google' // Roboto와 한글 NotoSans를 사용합니다.
 import { ChakraProviders } from '@/context/ChakraContext'
 import RecoilRootWrapper from '@/recoil/wrapper/RecoilRootWrapper'
+import ClientInitSetup from '@/components/provider/ClientInitSetup'
 
 // const notoSansKr = Noto_Sans_KR({
 //   // preload: true, 기본값
@@ -33,12 +34,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html>
+      {/* <body> */}
       <body className={roboto.className}>
         <ToastProvider />
         <ThemeContextProvider>
           <AuthContextProvider>
             <RecoilRootWrapper>
+              <ClientInitSetup />
               <ChakraProviders>{children}</ChakraProviders>
             </RecoilRootWrapper>
           </AuthContextProvider>

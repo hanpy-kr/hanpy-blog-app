@@ -33,6 +33,14 @@ const _fields = {
 }
 
 const _fieldsWithInfra = {
+  deployment: {
+    type: 'boolean',
+    required: true,
+  },
+  category: {
+    type: 'string',
+    required: true,
+  },
   title: {
     type: 'string',
     required: true,
@@ -55,6 +63,14 @@ const _fieldsWithInfra = {
   },
 }
 const _fieldsWithFrontend = {
+  deployment: {
+    type: 'boolean',
+    required: true,
+  },
+  category: {
+    type: 'string',
+    required: true,
+  },
   title: {
     type: 'string',
     required: true,
@@ -71,19 +87,16 @@ const _fieldsWithFrontend = {
     type: 'string',
     required: true,
   },
-  deployment: {
-    type: 'boolean',
-    required: true,
-  },
   pageKey: {
     type: 'string',
     required: true,
   },
 }
 
-export const Frontend = defineDocumentType(() => ({
-  name: 'Frontend',
-  filePathPattern: `frontend/**/*.mdx`,
+// 한국어 - 프론트 엔드
+export const FrontendForKOR = defineDocumentType(() => ({
+  name: 'FrontendForKOR',
+  filePathPattern: `frontend/ko/**/*.mdx`,
   contentType: 'mdx',
   fields: _fieldsWithFrontend as {},
   // 도메인 위치 변경 필요 시 사용
@@ -95,19 +108,43 @@ export const Frontend = defineDocumentType(() => ({
   // },
 }))
 
+// 영어 - 프론트 엔드
+export const FrontendForENG = defineDocumentType(() => ({
+  name: 'FrontendForENG',
+  filePathPattern: `frontend/en/**/*.mdx`,
+  contentType: 'mdx',
+  fields: _fieldsWithFrontend as {},
+  // 도메인 위치 변경 필요 시 사용
+  // computedFields: {
+  //   url: {
+  //     type: "string",
+  //     resolve: (doc) => `/posts/${doc._raw.flattenedPath}`,
+  //   },
+  // },
+}))
+
+// 한국어 - 프론트 엔드
+export const InfraForKOR = defineDocumentType(() => ({
+  name: 'InfraForKOR',
+  filePathPattern: `infra/ko/**/*.mdx`,
+  contentType: 'mdx',
+  fields: _fieldsWithInfra as {},
+}))
+
+// 영어 - 프론트 엔드
+export const InfraForENG = defineDocumentType(() => ({
+  name: 'InfraForENG',
+  filePathPattern: `infra/en/**/*.mdx`,
+  contentType: 'mdx',
+  fields: _fieldsWithInfra as {},
+}))
+
 export const Backend = defineDocumentType(() => ({
   name: 'Backend',
   filePathPattern: `backend/*.mdx`,
   // filePathPattern: `**/*.mdx`,
   contentType: 'mdx',
   fields: _fields as {},
-}))
-
-export const Infra = defineDocumentType(() => ({
-  name: 'Infra',
-  filePathPattern: `infra/**/*.mdx`,
-  contentType: 'mdx',
-  fields: _fieldsWithInfra as {},
 }))
 
 const rehypeOptions = {
@@ -117,7 +154,13 @@ const rehypeOptions = {
 
 export default makeSource({
   contentDirPath: '_content',
-  documentTypes: [Frontend, Backend, Infra],
+  documentTypes: [
+    FrontendForKOR,
+    FrontendForENG,
+    Backend,
+    InfraForKOR,
+    InfraForENG,
+  ],
   disableImportAliasWarning: true,
 
   mdx: {
