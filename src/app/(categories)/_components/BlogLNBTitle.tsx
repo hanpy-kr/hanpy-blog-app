@@ -104,7 +104,10 @@ const BlogLNBTitle = ({
             <>
               <li>
                 <h2 className="LBN__title">{value}</h2>
-                <ul className="LBN__subTitle__container" key={index}>
+                <ul
+                  className="LBN__subTitle__container"
+                  key={`${value}_${index}`}
+                >
                   {CONTENT_CATEGORY[type].subCategoryDetail.subTitle[index].map(
                     (subValue, subIndex) => {
                       return (

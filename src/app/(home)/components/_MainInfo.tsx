@@ -2,15 +2,15 @@ import './_MainInfo.css'
 const MainInfo = () => {
   return (
     <section className="main-info__container">
-      <h1 className="main-info__title">Improve how you coding skiils</h1>
+      <h1 className="main-info__title">Improve how you coding skills</h1>
 
       <button
-        style={{
-          width: '170px',
-          height: '40px',
-          margin: '40px',
-          borderRadius: '10px',
-          fontWeight: 600,
+        className="main-info__button"
+        onClick={() => {
+          window.scrollTo({
+            top: 360,
+            behavior: 'smooth',
+          })
         }}
       >
         Get Start
