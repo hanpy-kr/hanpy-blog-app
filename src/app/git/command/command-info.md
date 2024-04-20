@@ -41,3 +41,24 @@ $ git push origin -f main
 ```
 git commit --date "1 day ago" -m "커밋 메시지
 ```
+
+## 까먹고 여러개 올렸을 시!!!
+
+> rebase로 해야한다.
+
+```bash
+11239  git log
+11240  git rebase -i 4488c9249f67cde57cd0bb82e9880bc2657e58aa  // 변경하고 싶은 바로 전 commit으로 돌아간다.
++ 변경하려는 커밋에 pick 글자를 edit로 변경하고 :wq!를 눌러서 빠져나간다. 그리고 아래의 명령어를 친다.
+11241  git commit --amend --no-edit --date "2023-04-15"
+11242  git rebase --continue // 반영된다.  만약 작업을 취소하려면 git rebase --abort 를 눌러준다.
+11243  git rebase -i 4488c9249f67cde57cd0bb82e9880bc2657e58aa
+11244  git commit --amend --no-edit --date "2023-04-16"
+11245  git rebase --continue
+11246  git rebase -i 4488c9249f67cde57cd0bb82e9880bc2657e58aa
+11247  git commit --amend --no-edit --date "2023-04-17"
+11248  git rebase --continue
+11249  git rebase -i 4488c9249f67cde57cd0bb82e9880bc2657e58aa
+11250  git commit --amend --no-edit --date "2023-04-18"
+11251  git rebase --continue
+```
