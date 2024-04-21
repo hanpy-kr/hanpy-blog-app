@@ -14,22 +14,8 @@ import { ChevronDownIcon } from '@chakra-ui/icons'
 import './BlogLNBTitle.css'
 import { useState } from 'react'
 import { CONTENT_CATEGORY } from '@/data/content'
-
-const HEADER_CATEGORY_DATA = {
-  mainTitle: 'Infra',
-  subCategory: [
-    { name: 'docker', href: '/docker', icon: '/docker.svg' },
-    { name: 'kubernetes', href: '/kubernetes', icon: '/kubernetes.svg' },
-  ],
-}
-
-const HEADER_SUB_DATA = {
-  title: ['TEST1', 'TEST2'],
-  subTitle: [
-    ['TEST1-1', 'TEST1-2', 'TEST1-3', 'TEST1-4'],
-    ['TEST2-1', 'TEST2-2', 'TEST2-3', 'TEST2-4'],
-  ],
-}
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 type CurrentCategoryInfoType = {
   name: string
@@ -42,17 +28,26 @@ const BlogLNBTitle = ({
   subType,
 }: {
   type: 'frontend' | 'backend' | 'infra'
-  subType: string
+  subType: 'docker' | 'kubernetes'
 }) => {
+  const router = useRouter()
   const [currentCategoryInfo, setCurrentCategoryInfo] =
-    useState<CurrentCategoryInfoType>(CONTENT_CATEGORY[type].subCategory[0])
+    useState<CurrentCategoryInfoType>(
+      CONTENT_CATEGORY[type].subCategory[subType],
+    )
 
   const handleDropdown = (value: string) => {
-    const clickData = CONTENT_CATEGORY[type].subCategory.find(
-      (v) => v.name === value,
+    const clickData = Object.keys(CONTENT_CATEGORY[type].subCategory).find(
+      (v) => v === value,
     )
     if (!clickData) return
-    setCurrentCategoryInfo(clickData)
+    setCurrentCategoryInfo(
+      CONTENT_CATEGORY[type].subCategory[clickData as 'docker' | 'kubernetes'],
+    )
+    router.push(
+      CONTENT_CATEGORY[type].subCategory[clickData as 'docker' | 'kubernetes']
+        .href,
+    )
   }
   return (
     <>
@@ -77,7 +72,7 @@ const BlogLNBTitle = ({
           </Flex>
         </MenuButton>
         <MenuList>
-          {CONTENT_CATEGORY[type].subCategory.map((data) => (
+          {Object.values(CONTENT_CATEGORY[type].subCategory).map((data) => (
             <MenuItem
               minH="20px"
               key={data.name}
@@ -106,14 +101,17 @@ const BlogLNBTitle = ({
                 <h2 className="LBN__title">{value}</h2>
                 <ul
                   className="LBN__subTitle__container"
-                  key={`${value}_${index}`}
+                  key={`${JSON.stringify(value)}_${index}`}
                 >
                   {CONTENT_CATEGORY[type].subCategoryDetail.subTitle[index].map(
                     (subValue, subIndex) => {
                       return (
-                        <>
-                          <li className="LBN__subTitle">{subValue}</li>
-                        </>
+                        <Link
+                          href={subValue.href}
+                          key={`${subValue.title}_${subIndex}`}
+                        >
+                          <li className="LBN__subTitle">{subValue.title}</li>
+                        </Link>
                       )
                     },
                   )}
@@ -122,39 +120,7 @@ const BlogLNBTitle = ({
             </>
           )
         })}
-        <li>
-          <h2 className="LBN__title">Design Patterns</h2>
-          <ul className="LBN__subTitle__container">
-            <li className="LBN__subTitle">subTitle1</li>
-            <li className="LBN__subTitle">subTitle2</li>
-            <li className="LBN__subTitle">subTitle3</li>
-          </ul>
-        </li>
-        <li>
-          <h2 className="LBN__title">Design Patterns</h2>
-          <ul className="LBN__subTitle__container">
-            <li className="LBN__subTitle">subTitle1</li>
-            <li className="LBN__subTitle">subTitle2</li>
-            <li className="LBN__subTitle">subTitle3</li>
-          </ul>
-        </li>
-        <li>
-          <div>Title1</div>
-          <ul>
-            <li>subTitle1</li>
-            <li>subTitle2</li>
-            <li>subTitle3</li>
-          </ul>
-        </li>
       </ul>
-      {/* <Image
-        // boxSize="2rem"
-        // borderRadius="full"
-        fill
-        src={`/icons/docker.svg`}
-        alt="Fluffybuns the destroyer"
-        // mr="12px"
-      /> */}
     </>
   )
 }

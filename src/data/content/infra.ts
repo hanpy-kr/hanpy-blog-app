@@ -1,14 +1,55 @@
+// Nav 목차
 export const CONTENT_INFRA = {
   mainCategory: 'Infra',
-  subCategory: [
-    { name: 'docker', href: '/docker', icon: '/docker.svg' },
-    { name: 'kubernetes', href: '/kubernetes', icon: '/kubernetes.svg' },
-  ],
+  subCategory: {
+    docker: { name: 'docker', href: '/', icon: '/docker.svg' },
+    kubernetes: {
+      name: 'kubernetes',
+      href: '/infra/ko/kubernetes/01.Introduction',
+      icon: '/kubernetes.svg',
+    },
+  },
   subCategoryDetail: {
-    title: ['TEST1', 'TEST2'],
+    title: ['Beginner', 'Middle', 'Trouble-Shooting'],
     subTitle: [
-      ['TEST1-1', 'TEST1-2', 'TEST1-3', 'TEST1-4'],
-      ['TEST2-1', 'TEST2-2', 'TEST2-3', 'TEST2-4'],
+      [
+        {
+          href: '/infra/ko/kubernetes/01.Introduction',
+          title: 'Introduction',
+        },
+        {
+          href: '/infra/ko/kubernetes/02.container',
+          title: 'container',
+        },
+        {
+          href: '/infra/ko/kubernetes/01.Introduction',
+          title: 'Introduction',
+        },
+        {
+          href: '/infra/ko/kubernetes/01.Introduction',
+          title: 'Introduction',
+        },
+      ],
+      [
+        {
+          href: '/infra/ko/kubernetes/01.Introduction',
+          title: 'Introduction',
+        },
+        {
+          href: '/infra/ko/kubernetes/01.Introduction',
+          title: 'Introduction',
+        },
+      ],
+      [
+        {
+          href: '/infra/ko/kubernetes/01.Introduction',
+          title: 'Introduction',
+        },
+        {
+          href: '/infra/ko/kubernetes/01.Introduction',
+          title: 'Introduction',
+        },
+      ],
     ],
   },
 }
