@@ -1,0 +1,98 @@
+---
+deployment: true
+category: Infra
+title: '[Kubernetes] 3. Container Orchestration'
+summary: '컨테이너 오케스트레이션은 <codeline>컨테이너의 포로비저닝/배포/네트워킹/확장/가용성/자원에 대한 통합 관리</codeline> 합니다.'
+lng: KOR
+pageKey: kubernetes_3_ko
+publishedAt: 2022-03-20
+---
+
+# Container Orchestration
+
+Kubernetes가 구글에서 시작되었다는 이야기도 어느 정도는 맞습니다. 구글이 성장함에 따라 내부 환경이 복잡해 지게 됩니다.
+이에 따른 효율적인 관리를 위해 보그(Brog)라는 오케스트레이션(Orchestration) 도구를 만들어 내부적으로 사용하게 됩니다.
+이때 구글에서 사용한 보그(Brog)가 쿠버네티스의 시초가 되었고, Kubernetes의 기본 컨셉도 정해지게 됩니다.
+
+<br />
+
+보그의 성장과 함께 Container 기술이 성숙해지면서, 구글은 보그를 리눅스 재단에 기부하게 됩니다.
+리눅스 재단에서는 클라우드 네이티브 컴퓨팅 재단(CNCF, Cloud Native Computing Foundation)을 만들었고,
+시드 기술로 기부받은 보그(Brog)를 바탕으로, 오픈소스 Kubernetes 1.0을 발표합니다.
+2015년 등장과 동시에 개발환경/운영환경의 큰 변화를 가져왔고, 현 시점에서 가장 표준화된 컨테이너 오케스트레이션(Container Orchestration)이라고 할 수 있습니다.
+
+<br />
+
+컨테이너 오케스트레이션은 <codeline>컨테이너의 포로비저닝/배포/네트워킹/확장/가용성/자원에 대한 통합 관리</codeline> 합니다.
+Amazon Web Services(AWS), Google Cloud Platform, IBM Cloud 및 Microsoft Azure를 비롯한 대부분의 주요 퍼블릭 클라우드 제공업체에서도 Kubernetes 서비스를 제공하기 때문에 쉽게 사용가능합니다. 컨테이너 오케스트레이션을 이해하기 위해서는 초기 컨테이너와 도커의 이해가 우선적으로 필요합니다.
+
+## 초기 컨테이너와 도커
+
+초기에는 쿠버네티스가 아닌, LXC(Linux Containers)를 활용하여 컨테이너를 사용하였습니다. LXC는 리눅스 환경 내에서 Namespace와 파일시스템/네트워크(하드웨어 자원) 분리를 지원합니다. 여기서 조금 더 발전한 형태가 바로 Docker입니다. Docker는 아래의 명령어만으로 간단히 nginx를 실행시킬 수 있습니다. 간단한 예
+
+```
+$ sudo docker pull nginx:latest
+$ docker container run --name my-webserver -d -p 8080:80 nginx
+```
+
+- --name : 컨테이너의 이름을 my-webserver로 설정
+- -d : 백그라운드로 실행하겠다는 설정
+- -p : 포트설정으로 컨테이너 내부에는 80 포트가 떴고, 외부는 8080 포트로 연결
+- 로컬에서 연결 시 8080 포트를 통해 컨테이너와 통신
+
+위의 방식으로 포트만 변경하면, 여러개의 nginx를 띄우기도 가능합니다.
+
+## Dockerizing
+
+Docker를 사용하면 만들어진 애플리케이션을 간단한 명령어 다운받아 실행시키는 것이 가능합니다. 또한, 내가 만든 애플리케이션도 컨테이너로 만든다면, 어디서든 실행하는 것이 가능합니다. 이를 도커라이징(Dockerizing)이라 합니다. <codeline>도커라이징(Dockerizing)은 Docker 컨테이너를 사용하여 응용프로그램(application)을 패킹(packing), 배포(deploying), 실행(running) 하는 전 과정</codeline>을 포합합니다.
+
+만약, 내가 만든 애플리케이션을 도커 이미지로 만들려면, Dockerfile을 먼저 만들어야 합니다. Dockerfile의 내부 샘플 코드는 아래와 같습니다.
+
+```Dockerfile
+COPY package.json /app/package.json
+```
+
+위의 의미는 로컬의 package.json 컨테이너에서 /app 위치에 package.json을 복사한다는 의미입니다. Dockerfile은 명령어를 순차적으로 진행하면서, 컨테이너 안에 애플리케이션을 설치/빌드 하면서 실행 환경으로 만들어 줍니다. 그러나 Dockerfile 만으로는 이미지를 만들 수 없습니다. Dockerfile을 실행시켜야 하는 명령어가 필요합니다. 이것이 바로 <codeline>doker build</codeline> 명령어입니다.
+
+```bash
+$ sudo docker build -f ./cicd/dev/Dockerfile -t hanpy/my-app:dev_1 ./
+```
+
+docker build가 완료 되었다면, <codeline>docker run</codeline> 명령어를 통해 컨테이너를 실행할 수 있습니다.
+(docker 파트가 아니기 때문에 자세한 설명은 생략합니다.)
+
+```bash
+$ docker run -p 3000:3000 hanpy/my-app:dev_1
+```
+
+이러한 환경은 내 로컬 PC/ 개발 서버 / 운영 서버가 동일하게 돌아가는 것을 보장합니다. 이러한 도커/컨테이너는 하나의 애플리케이션을 구성하고 실행하는 것에는 최적화 되어있다고 할 수 있습니다. 그러나 각각의 컨테이너의 목적은 격리에 중점되어 있기 때문에 통신이나 그룹핑은 불가능하다는 단점도 존재합니다. 물론 docker에서는 docker compose를 통해 멀티 컨테이너 구동 환경을 지원하였지만, 하나의 머신에서만 사용되어야만 했기 때문에, 여러 서버를 동시에 띄우는 운영환경(MSA)에서는 docker compose도 제약이 많았습니다. 이러한 제약은 Kubenetes의 등장으로 해결됩니다.
+
+## Container Orchestration 등장
+
+컨테이너와 관련된 모든 자원에 대한 관리를 하는것을 컨테이너 오케스트레이션이라 합니다. 컨테이너 오케스트레이션에서 가장 많이 사용하는 것이 쿠버네티스이고, 컨테이너 런타임을 도커가 담당합니다. 또한 개발/운영 시 필요한 대부분의 요구사항도 지원합니다. 간단한 특징을 요약해 보면 아래와 같습니다.
+
+- 컨테이너 상태 조회/관리
+- 컨테이너 실행/종료
+- 컨테이너 실행/종료 호스트가 여러개 구성 가능
+- 호스터 추가/삭제
+- 컨테이너 네트워크 관리
+- 컨테이너 연관된 자원 관리
+
+사실상 컨테이너와 호스트를 쿠버네티스에서 관리해 줍니다. 이 부분의 의의는 하드웨어 자원을 추상적인 영역으로 올렸고, 물리 서버에 집중하기보다 비즈니스 개발에 집중할수 있다고 할 수 있습니다.
+
+---
+
+## word
+
+- 도커 : 컨테이너 런타임
+- Dockerfile : 도커파일은 docker 에서 이미지를 생성하기 위한 용도로 작성하는 파일
+- 가상머신 : 하드웨어 레벨의 가상화 기술로 cpu/memory 등을 할당하고 생성한다.
+- 컨테이너 : 운영체제 레벨의 가상화 기술
+- 가상머신과 컨테이너
+  (그림으로 생성 필요)
+  [애플리케이션] 프로세스
+  [컨테이너] 운영체제 Layer
+  [가상머신] 하드웨어 Layer
+
+- LXC (LinuX Containers) : 단일 리눅스 시스템에 동작하고 있는 프로세스를 격리시켜 각 프로세스마다 독자적인 리눅스 시스템 환경을 구축하는 것을 리눅스 컨테이너라 한다.
+<!-- ![Alt text](/logo.png 'title') -->
