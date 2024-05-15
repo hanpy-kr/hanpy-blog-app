@@ -30,10 +30,14 @@ Amazon Web Services(AWS), Google Cloud Platform, IBM Cloud 및 Microsoft Azure�
 
 초기에는 쿠버네티스가 아닌, LXC(Linux Containers)를 활용하여 컨테이너를 사용하였습니다. LXC는 리눅스 환경 내에서 Namespace와 파일시스템/네트워크(하드웨어 자원) 분리를 지원합니다. 여기서 조금 더 발전한 형태가 바로 Docker입니다. Docker는 아래의 명령어만으로 간단히 nginx를 실행시킬 수 있습니다. 간단한 예
 
+<br />
+
 ```
 $ sudo docker pull nginx:latest
 $ docker container run --name my-webserver -d -p 8080:80 nginx
 ```
+
+<br />
 
 - --name : 컨테이너의 이름을 my-webserver로 설정
 - -d : 백그라운드로 실행하겠다는 설정
@@ -80,6 +84,8 @@ $ docker run -p 3000:3000 hanpy/my-app:dev_1
 
 사실상 컨테이너와 호스트를 쿠버네티스에서 관리해 줍니다. 이 부분의 의의는 하드웨어 자원을 추상적인 영역으로 올렸고, 물리 서버에 집중하기보다 비즈니스 개발에 집중할수 있다고 할 수 있습니다.
 
+<br />
+
 ---
 
 ## word
@@ -95,4 +101,3 @@ $ docker run -p 3000:3000 hanpy/my-app:dev_1
   [가상머신] 하드웨어 Layer
 
 - LXC (LinuX Containers) : 단일 리눅스 시스템에 동작하고 있는 프로세스를 격리시켜 각 프로세스마다 독자적인 리눅스 시스템 환경을 구축하는 것을 리눅스 컨테이너라 한다.
-<!-- ![Alt text](/logo.png 'title') -->
