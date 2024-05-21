@@ -7,7 +7,7 @@ const nextConfig = {
   i18n: {
     locales: ['ko', 'en-US'],
     defaultLocale: 'en-US', // prefix 안붙음
-    // localeDetection: false, // accept-language 무시
+    localeDetection: false, // accept-language 무시
   },
 }
 
