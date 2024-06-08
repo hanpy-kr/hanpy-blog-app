@@ -1,0 +1,258 @@
+---
+deployment: true
+category: Infra
+title: '[Kubernetes] 2-1. Kubernetes Pod'
+summary: 'Kubernetes 객체 중 POD에 대해 알아보자.'
+lng: KOR
+pageKey: kubernetes_2_1_ko
+publishedAt: 2024-05-03
+---
+
+# POD
+
+쿠버네티스에서 POD는 배포가능한 가장 작은 단위입니다.
+보통 컨테이너를 배포한다는 이야기를 하지만,
+사실은 컨테이너가 아니라 POD를 배포한다는 용어가 맞습니다.
+그리고 배포한 POD위에 여러개의 컨테이너를 포함시키는 것이 가능합니다.
+
+<br />
+
+쿠버네티스에서 POD 내부에 실행되는 컨테이너들은 같은 환경을 가집니다.
+따라서 최소 배포단위인 POD간의 격리는 맞는 말이지만, 컨테이너 간의 격리는 맞지 않는 말입니다.
+따라서 컨테이너가 파드에서 여러개 실행 될때는 각각의 다른 포트를 가져야 실행이 됩니다.
+
+<br />
+
+POD안에서 여러개의 컨테이너를 실행 시키는 것이 가능합니다.
+하지만 일반적으로 하나의 POD에는 하나의 컨테이너를 가지도록 구성을 합니다.
+왜냐하면 하나의 어플리케이션인 컨테이너마다 POD에 넣어서 배포하는 것이
+쿠버네티스가 효율적으로 관리를 하는 것이 가능하기 때문입니다.
+하나의 파드에 하나의 컨테이너를 가지게 설계를 주로하기 때문에,
+파드와 컨테이너를 동일하게 부르기도 합니다.
+하지만 파드 없이 컨테이너를 배치하는 것은 불가능 하다는 것은 알아두셔야 합니다.
+
+## 파드 생성 방법
+
+yaml 파일을 통해 간단히 생성이 가능하다.
+ex-pod.yaml 파일을 아래와 같이 만들어보자.
+
+```yaml title="yaml" showLineNumbers
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ex-pod
+spec:
+  containers:
+    - name: ex-container
+      image: nginx:1.29
+```
+
+- kind : 정의하는 객체의 종류를 의미합니다. 우리는 Pod를 생성하므로 Pod라 적힌 것을 확인 할 수 있습니다.
+- metadata: 객체 식별이름으로, 이 부분을 통해 객체 식별 및 정보 조회를 하기 때문에 중복되지 않는 이름을 가져야 합니다.
+- spec은 어떤 객체를 만들지 정의하는 부분입니다. 이부분은 kind의 정의된 객체 종류에 따라 다른 값들이 포함될 수 있습니다.
+  - spec:name : 단순히 이름을 적어주는 곳입니다.
+  - spec:image : 생성할 이미지를 적여주는 부분입니다.
+
+<br />
+
+물론 yaml파일만 적고 저장한다고 바로 실행되는 것은 아니다.
+
+```bash title="bash" showLineNumbers
+$ kubectl apply -f ex-pod.yaml
+```
+
+명령어를 통해 yaml파일을 쿠버네티스 spec 적용이 가능하다.
+
+<br />
+
+## Pod Phase
+
+기본적으로 Pod도 life cycle을 가집니다.
+각각의 라이플 사이클을 Phase(페이즈)라고 부릅니다.
+보통 Pending과 Running을 자주 사용하게 됩니다.
+전체 Phase의 종류는 아래와 같습니다.
+
+<br />
+
+- Pending
+  - 파드 생성 후부터 실행되지 전까지의 상태 (파드가 노드에 배치되는 단계)
+- Running
+  - 컨테이너가 실행되고 종료되기 전 단계
+  - Running은 스프링 로그 뜨면 Running 상태이다. 이때, 만약 DB 연결 안되면 Application다시 종료된다. 그후에도 다시 시작될텐데, 이때도 Running이다. 따라서 Running이라고 정상 실행이라고 확정지으면 안되고 로그 및 작동 확인이 필요하다.
+- Failed
+  - 컨테이너가 비정상 종료된 경우
+  - 생각보다 Failed상태는 만나기 힘들다. 아래의 재시작 정책 참고(Restart Policy)
+- Succeeded
+  - 컨테이너 정상 종료 > exit 0인상태
+- Unknown
+  - 파드의 상태를 알 수 없는 상태
+  - 보통 하나의 파드만 장애가 나지는 않는다. 이런 이슈는 대부분 하드웨어 이슈가 많기 때문에 발생하면 Node에 속한 전체 파드가 이러한 이슈가 발생한다. (인프라 레벨 해결필요)
+
+<br />
+
+## Restart Policy (재시작 정책)
+
+> 기본적으로 다른 설정이 없으면 Always 상태입니다.
+
+- Always : 종료된 컨테이너를 항상 재시작 합니다. 따라서 Always의 경우에는 Phase가 Failed나 Succeeded로 잘 가지 안게 됩니다.
+- OnFailure : 실패한 컨테이너만 재시작 합니다.
+- Never : 어떠한 경우에도 컨테이너를 재시작 하지 않습니다.
+
+<br />
+
+## Container Status
+
+- Waiting : 컨테이너가 실행을 준비하고 있는 상태입니다.
+- Running : 컨테이너가 실행중인 상태입니다.
+- Terminated : 컨테이너가 정삭 혹은 비정상 종료된 상태입니다.
+
+<br />
+
+## Container Restart with backoff
+
+쿠버네티스에서는 컨테이너 종료 시 상태에 따라 재시작합니다.
+그렇다면 어떤 주기로 재시작할까요?
+기본적으로 컨테이너의 재시작 주기는 10s입니다.
+재시작을 실패했을 경우에는 2배 후인 20s에 재시작하게 됩니다.
+이러한 방식으로 재시작 주기가 2배로 증가하고 최대 5분까지 재시간 주기가 늘어납니다.
+그리고 5분 마다 정상 실행 될때까지 반복합니다.
+
+<br />
+
+## Probe
+
+프로드 라는 개념을 통해 파드 내부의 상태를 모니터링 할 수 있습니다.
+
+프로브는 명령어를 계속 실행하여 확인하거나 API호출을 통해 정상적으로 오는지를 확인하는 역할을 한다. 종류는 3개다.
+
+- readiness
+  - 파드를 네트워크에 연결할 지 결정합니다.(네트워크)
+  - http 호출을 하여 200이 온다면 프로브는 성공이고 정상 호출로 판별합니다.
+- liveness
+  - 파드를 재시작을 판별합니다.
+  - 파드 정상 체크를 하여, 실패 시 프로세스만 살아있고 정상동작 못한다 판단하여 재시작합니다.
+  - ffmpeg 같이 무거운 작업 도중에 cpu 터지는 경우 재시작을 진행합니다.
+- startup
+  - Readiness Probe와 Liveness Probe를 보내도 될지 사전 체크하는 부분입니다.
+  - 즉 startup을 성공해야 readiness와 liveness를 호출합니다.
+  - 사실 상 startup이 있는 이유는 바로 위 2개를 바로 쓰면 장애날 수도 있다. 약간의 서비스를 안정화한 이후에 위 2개를 쓰기 위해 startup 단계가 있다고 보면 된다.
+
+<br />
+
+## Gracefull Shutdown
+
+Gracefull Shutdown이란 파드가 종료 될때, 작업 중인 데이터 유실을 막기 위해 종료 유예 기간을 주는 개념입니다.
+전체 작동 순서는 우선은 추가적인 작업이 들어오지 못하게 막는 작업을 하고, 남을 작업들을 처리하게 됩니다.
+kubelet에서 pod로 SIGTERM을 줍니다.
+그러면 pod는 네트워크를 분리하게 되고 새로운 작업은 들어오지 않고 기존 작업 들만 남아있게 됩니다.
+보통 쿠버네티스는 30s를 대기 하고 강제 종료되지 때문에, 30s 이상걸리는 부분이 있다면 관련부분에 대한 개발이 필요합니다.
+
+<br />
+
+## Container Lifecycle Hook
+
+컨테이너의 시작과 종료 시점에 실행되는 명령어입니다.
+사용빈도는 높지 않지만 알아두면 도움이 됩니다.
+
+- 컨테이너의 시작 직전(postStart : created와 running 사이)
+- 컨테이너의 종료 직전(preStop : runing 과 terminated 사이)
+
+<br />
+<br />
+
+# Multi Container Pod
+
+하나의 파드에서 여러 컨테이너를 사용하는 경우에 대해 생각해 봅시다.
+컨테이너는 파드 안에서 물리적/논리적으로 같은 환경이라고 할 수 있습니다.
+좀 더 쉬운 예로는 하나의 노트북에서 여러개의 도커를 띄우는 경우와 같습니다.
+
+<br />
+
+## 실습
+
+2개의 컨테이너를 실행하는 yaml 파일을 만들어보면 아래와 같습니다.
+
+```yaml title="yaml" showLineNumbers
+apiVersion: v1
+kind: Pod
+metadata:
+  name: double-application
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx
+    - name: backend-container
+      image: backend:tag1
+```
+
+단순하게 containers 내부에 2개의 컨테이너를 넣어주면 하나의 Pod에서 2개의 컨테이너를 실행 할 수 있습니다.
+nginx 설정을 조금 더 추가해 보면 아래와 같이 설정이 가능합니다.
+
+```nginx title="nginx" showLineNumbers
+server {
+  listen 80;
+  location/ {
+    proxy_pass http://127.0.0.1:8000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Remote $remote_addr;
+  }
+}
+```
+
+<br />
+
+## Pod Phase with Multi Container
+
+> 파드에 여러 개 컨테이너에 들어가는 경우에 대해 생각을 해봅시다.
+
+- Running
+  - 하나 이상 컨테이너가 실행중이면 Running 상태입니다.
+  - 예를 들어서 3개의 컨테이너 노드에 실행중이라고 가정해 봅시다. 이 경우에 3개 중 하나만 정상이라도 Running 상태입니다.
+- Succeeded
+  - 모든 컨테이너가 다 성공 종료 시 Succeeded 상태입니다.
+- Failed
+  - 모든 컨테이너가 종료되었고 단 하나라도 비정상 종료가 있는 경우 Failed 상태입니다.
+
+<br />
+
+## Restart Policy (재시작 정책)
+
+> 기본적으로 다른 설정이 없으면 Always 상태입니다.
+> 파드 내부에 2개 이상의 컨테이너가 실행되는 경우입니다.
+
+- Always : 모든 컨테이너가 실행되어야 하는 경우로 Error가 하나라도 발생하면 안되는 경우입니다.
+- OnFailure : 특정 컨테이너에서 작업 종료가 필요한 경우에 사용합니다. 보통은 배치 작업 후에 종료 필요 시에 사용하게 됩니다.
+- Never : 종료 된 상태를 확인하고, 그에 따른 별로 처리가 필요한 경우에 사용합니다. 보통은 잘 사용되지 않습니다.
+
+<br />
+
+# Init Container
+
+> 파드의 초기화를 위해 사용하는 컨테이너입니다.
+> Application을 컨테이너로 실행 시키기 전에, Init Container를 활용하여 특정 작업을 실행하고 종료하는 것이 가능합니다.
+
+```yaml title="yaml" showLineNumbers
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-wget-example
+spec:
+  initContainers:
+    - name: my-initializer
+      image: app-initializer
+  containers:
+    - name: main-container
+      image: my-server
+    - name: second-container
+      image: another-server
+    - name: last-container
+      image: sub-server
+```
+
+만약 curl/wget를 통해 초기화가 필요한 부분들이 있다면, 이부분에서 셋팅을 해주면 됩니다.
+초기 셋팅 부분을 분리하여 Init container로 분리하여 준다면 기존 컨테이너에서 관련 로직을 분리하여 slim한 컨테이너 제작이 가능해집니다.
+작업 순서를 확인해보면 Init container를 실행하고 정상종료가 된 후에 containers를 띄우게 됩니다.
+만약 Init container가 정상 종료가 되지 않는다면(exit가 0이 아닌 경우) 다시 Init container를 재실행하게 됩니다.
+
+Init Container는 우선 실행되어 작업 순서를 보장합니다.
+하지만 위의 yaml 내부의 containers에 main-container/second-container/last-container는 작업 순서를 보장하지 않는다는 점을 주의하시길 바랍니다.
