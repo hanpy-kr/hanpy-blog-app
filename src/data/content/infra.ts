@@ -5,10 +5,14 @@ const subCategory: {
     icon: string
   }
 } = {
-  react: { name: 'docker', href: '/', icon: '/docker.svg' },
+  docker: {
+    name: 'docker',
+    href: '/infra/ko/docker/1-1.Introduction',
+    icon: '/docker.svg',
+  },
   kubernetes: {
     name: 'kubernetes',
-    href: '/infra/ko/kubernetes/01.Introduction',
+    href: '/infra/ko/kubernetes/1-1.Introduction',
     icon: '/kubernetes.svg',
   },
 }
