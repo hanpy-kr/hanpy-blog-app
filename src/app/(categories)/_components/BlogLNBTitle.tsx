@@ -23,17 +23,23 @@ type CurrentCategoryInfoType = {
   icon: string
 }
 
+type SUB_CATEGORY_TYPE = 'docker' | 'kubernetes' | 'react'
+
 const BlogLNBTitle = ({
   type,
   subType,
 }: {
   type: 'frontend' | 'backend' | 'infra'
-  subType: 'docker' | 'kubernetes'
+  subType: SUB_CATEGORY_TYPE
 }) => {
   const router = useRouter()
   const [currentCategoryInfo, setCurrentCategoryInfo] =
     useState<CurrentCategoryInfoType>(
-      CONTENT_CATEGORY[type].subCategory[subType],
+      CONTENT_CATEGORY[type].subCategory[subType] ?? {
+        name: '',
+        href: '',
+        icon: '',
+      },
     )
 
   const handleDropdown = (value: string) => {
@@ -41,13 +47,8 @@ const BlogLNBTitle = ({
       (v) => v === value,
     )
     if (!clickData) return
-    setCurrentCategoryInfo(
-      CONTENT_CATEGORY[type].subCategory[clickData as 'docker' | 'kubernetes'],
-    )
-    router.push(
-      CONTENT_CATEGORY[type].subCategory[clickData as 'docker' | 'kubernetes']
-        .href,
-    )
+    setCurrentCategoryInfo(CONTENT_CATEGORY[type].subCategory[clickData])
+    router.push(CONTENT_CATEGORY[type].subCategory[clickData].href)
   }
   return (
     <>
@@ -92,19 +93,21 @@ const BlogLNBTitle = ({
           ))}
         </MenuList>
       </Menu>
-      {/* CONTENT_CATEGORY[type].subCategoryDetail.title */}
+      {/* CONTENT_CATEGORY[type].subCategoryDetail[subType].title */}
       <ul>
-        {CONTENT_CATEGORY[type].subCategoryDetail.title.map((value, index) => {
-          return (
-            <>
-              <li>
-                <h2 className="LBN__title">{value}</h2>
-                <ul
-                  className="LBN__subTitle__container"
-                  key={`${JSON.stringify(value)}_${index}`}
-                >
-                  {CONTENT_CATEGORY[type].subCategoryDetail.subTitle[index].map(
-                    (subValue, subIndex) => {
+        {CONTENT_CATEGORY[type].subCategoryDetail[subType].title.map(
+          (value, index) => {
+            return (
+              <>
+                <li>
+                  <h2 className="LBN__title">{value}</h2>
+                  <ul
+                    className="LBN__subTitle__container"
+                    key={`${JSON.stringify(value)}_${index}`}
+                  >
+                    {CONTENT_CATEGORY[type].subCategoryDetail[subType].subTitle[
+                      index
+                    ].map((subValue, subIndex) => {
                       return (
                         <Link
                           href={subValue.href}
@@ -113,13 +116,13 @@ const BlogLNBTitle = ({
                           <li className="LBN__subTitle">{subValue.title}</li>
                         </Link>
                       )
-                    },
-                  )}
-                </ul>
-              </li>
-            </>
-          )
-        })}
+                    })}
+                  </ul>
+                </li>
+              </>
+            )
+          },
+        )}
       </ul>
     </>
   )

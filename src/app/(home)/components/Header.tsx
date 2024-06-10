@@ -5,7 +5,7 @@ export default function Header() {
   return (
     <header className="header">
       <Link href="/" className="header__logo">
-        Hanpy&apos;s Blog
+        Hanpy&apos;s Blog / Alpha Test VERSION
       </Link>
       <div>
         {/* <Link href="/posts/new">글쓰기</Link>
