@@ -1,0 +1,217 @@
+---
+deployment: true
+category: Frontend
+title: 'Axios'
+summary: 'Axios에 대한 기초를 알아보고 typescript적용을 해보자.'
+pageKey: Frontend_axios
+lng: KOR
+publishedAt: 2024-06-01
+---
+
+# Axios
+
+사실 Axios의 기초를 다루기엔 구글에 자료들이 많기 때문에 사용에 도움이 될 부분들 위주로 적어보려 합니다.
+Axios를 사용하기는 굉장히 쉽기 때문에 현업에서도 자주 사용하는 방법 중 하나입니다.
+하지만 잘 사용하기 위해서는 사용자에게 제공되는 Application에 대한 여러 고민들이 필요합니다.
+
+<br />
+
+## 인터셉터
+
+개발자는 반복되는 코드를 줄이고 효율적인 코드를 작성하기 위해 노력합니다.
+Axios에서는 토큰을 헤더에 포함시키는 경우와 공통 에러처리를 하는 경우에 중복된 코드가 발생합니다.
+이러한 중복 제거와 효율적인 관리를 위해 Axios 인스턴스와 인터셉터를 사용하게 된다.
+이러한 표현을 조금 더 전문적으로 표현하자면, 횡단 관심사 분리(cross-cutting concern)를 반영한 개발이라고도 표현 합니다.
+
+<br />
+
+클래스와 인스턴스의 관계를 생각해 보면, 인스턴스를 사용하는 이유는 중복된 코드 방지라고 할 수 있습니다.
+Axios 라이브러리 내부에 사용되는 클래스가 정의 되어 있고, 이러한 클래스를 기반으로 사용자가 원하는 인스턴스를 생성할 수 있습니다.
+이러한 인스턴스를 기반으로 baseUrl, header, body, params 등을 여러가지를 추가 할 수 있게 됩니다.
+
+<br />
+<br />
+
+## 간단한 예시
+
+간단한 인스턴스를 axios로 만들어 보자.
+
+<br />
+
+### axios 인스턴스 생성
+
+```javascript title="axios" showLineNumbers
+// /api/axios.js
+import axios from 'axios'
+const paymentURL = process.env.REACT_APP_BASE_URL
+
+const paymentInstance = axios.create({
+  baseURL: paymentURL,
+  params: {
+    id: 'hanpy@abc.com',
+  },
+})
+
+export default paymentInstance
+```
+
+- api를 axios로 추상화 한다는 개념으로 api 폴더 안에 만들었습니다.
+- paymentURL는 env 파일에서 불러오도록 설정하였습니다.
+- axios.create를 통해서 인스턴스를 생성해 주었습니다.
+
+<br />
+
+### 세부 request 주소 설정
+
+```javascript title="axios" showLineNumbers
+const requests = {
+  fetchCredit: '/api/credits',
+  fetchSubscript: '/api/subscripts',
+  fetchPlan: '/api/plans',
+}
+
+export default requests
+```
+
+- 인스턴스로 생성한 payment 인스턴스의 세부 주소에 대한 요청 주소를 모아서 만들어 둔 파일입니다.
+- /api/requests/payment.js
+- 이 부분은 추상화된 axios가 아니라도 다른 라이브러리에서도 사용가능합니다.
+
+<br />
+
+### 사용하기
+
+```javascript title="axios" showLineNumbers
+const res = await paymentInstance.get(requests.fetchCredit)
+```
+
+- 위와 같이 사용가능합니다.
+
+<br />
+<br />
+
+---
+
+<br />
+
+## 인터셉터 사용하기
+
+Axios를 사용하는 방식은 다양합니다. api를 직접 사용한다고 가정하고 적어보도록 하겠습니다.
+
+<br />
+
+### 사용할 API 정의하기
+
+```typescript title="axios" showLineNumbers
+const API = {
+  getUser: () => {},
+  getNewAccessToken: () => {},
+}
+```
+
+- API.ts로 사용할 api들을 정의해 보았습니다.
+- useEmail, accessToken을 가지고 오는 API입니다.
+
+<br />
+
+### 인터셉터 설정
+
+```typescript title="axios" showLineNumbers
+import { getToken, isTokenExpired, tokenRefresh } from './token'
+
+const API_ACCOUNT_URL = process.env.REACT_APP_ACCOUNT_URL
+
+const createInstance = () => {
+  const instance = axios.create({
+    baseURL: API_ACCOUNT_URL,
+    timeout: 3000,
+  })
+  setInterceptors(instance)
+
+  return instance
+}
+
+const setInterceptors = (instance: AxiosInstance) => {
+  instance.interceptors.response.use(
+    (response) => {
+      if (response.status === 404) {
+        window.location.href = '/error/404'
+      }
+
+      return response
+    },
+    (error) => {
+      if (error.response?.status === 401) {
+        if (isTokenExpired()) await tokenRefresh()
+
+        const accessToken = getToken()
+
+        error.config.headers = {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        }
+
+        const response = await axios.request(error.config)
+        return response
+      }
+      return Promise.reject(error)
+    },
+  )
+
+  instance.interceptors.request.use(
+    (config) => {
+      const accessToken = getToken()
+
+      config.headers['Content-Type'] = 'application/json'
+      config.headers['Authorization'] = `Bearer ${accessToken}`
+
+      return config
+    },
+    (error: AxiosError) => {
+      console.log('interceptor > error', error)
+      Promise.reject(error)
+    },
+  )
+}
+
+export const clientInstance = createInstance()
+```
+
+- <codeline>instance.interceptors.response</codeline>은 응답에 대한
+  인터셉터입니다.
+- <codeline>instance.interceptors.request</codeline>은 요청에 대한
+  인터셉터입니다.
+- application에 맞게 비즈니스 로직을 추가하여 사용하면 됩니다.
+
+<br />
+
+### 사용하기
+
+```typescript title="axios" showLineNumbers
+const API = {
+  getUser: async () => {
+    const { data } = await clientInstance.get(`/v1/user/access_token_info`)
+    return data
+  },
+  getNewAccessToken: async ({ refreshToken }: { refreshToken: string }) => {
+    const { data } = await clientInstance.post(`/oauth/token`, {
+      refreshToken: `Bearer ${refresh_token}`,
+      grantType: 'refresh_token',
+    })
+    return data
+  },
+}
+
+export default API
+```
+
+- 위와 같이 요청하는 서버에 맞게 로직들을 추가하면 됩니다.
+
+<br />
+<br />
+
+---
+
+## Word
+
+- 횡단 관심사 분리(cross-cutting concern) : 보통 핵심적인 기능이 아닌 중간에 사용하는 공통 기능을 하나의 코드로 분리하여 모듈화를 높이는 것을 의미한다.

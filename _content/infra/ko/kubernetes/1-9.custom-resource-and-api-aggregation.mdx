@@ -1,0 +1,59 @@
+---
+deployment: true
+category: Infra
+title: '[Kubernetes] 09.custom-resource-and-api-aggregation'
+summary: 'Custom Resource Definition and Api Aggregation'
+lng: KOR
+pageKey: kubernetes_9_ko
+publishedAt: 2024-04-01
+---
+
+# Custom Resource Definition(CRD)
+
+쿠버네티스에서 애플리케이션을 개발하다보면 추가적인 기능이 필요할 수 있습니다.
+쿠버네티스에서의 확장(custom resource를 etcd에 등록)은
+CRD(Custom Resource Definition)와 AA(API Aggregation)를 통해서 가능합니다.
+
+<br />
+
+CRD와 AA의 가장 큰 차이점은 CRD는 yaml 파일등록을 통해 간단히 CR(custom resource)가 가능하다.
+
+<br />
+<br />
+
+## Custom Resource Definition(CRD)
+
+yaml 파일을 등록하여 spec을 CR에 전달하면, Operator가 Resource를 모니터링합니다.
+모니터링 시 변경이 발생하면 변경된 스펙을 확인하고 쿠버네티스 API를 호출하여 필요한 작업을 수행합니다.
+
+<br />
+
+CRD를 통해 객체를 새롭게 정의하는 것이 가능하다.
+아래는 cpu 50프로 미만인 경우에 계산을 하고, 제한 시간을 1분으로 설정하고 1분이 넘으면 동작을 멈춘단
+
+```yaml title="yaml" showLineNumbers
+spec:
+  containers:
+    - name: factorial
+      image: hanpy-actor:0.0.1
+      command: ['npm', 'start']
+  timeLimit: '1m'
+  cpuThreshold: 50
+```
+
+<br />
+<br />
+
+## API Aggregation
+
+API Aggregation을 통한 확장 방법은 커스텀 객체가 아니라 쿠버에서 지원하는 API를 추가해 주는 방식입니다.
+쿠버네티스 API 자체를 확장하는 방식으로 이하하시면 됩니다.
+
+---
+
+<br />
+<br />
+
+## Word
+
+- Operator : CRD와 쿠버네티스를 연결하는 작업을 수행한다.
