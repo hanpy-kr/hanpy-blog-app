@@ -2,17 +2,17 @@
 import { useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import './PostList.css'
-import AuthContext from '@/context/AuthContext'
-import {
-  // collection,
-  deleteDoc,
-  doc,
-  // getDocs,
-  // orderBy,
-  // query,
-  // where,
-} from 'firebase/firestore'
-import { db } from '@/utils/firebaseApp.lib'
+// import AuthContext from '@/context/AuthContext'
+// import {
+//   // collection,
+//   deleteDoc,
+//   doc,
+//   // getDocs,
+//   // orderBy,
+//   // query,
+//   // where,
+// } from 'firebase/firestore'
+// import { db } from '@/utils/firebaseApp.lib'
 import { CategoryType, PostListProps, PostProps } from '../types'
 // import { toast } from 'react-toastify'
 import { CATEGORIES } from '../constants'
@@ -28,7 +28,7 @@ export default function PostList({
   const [activeTab, setActiveTab] = useState<CategoryType>(defaultTab)
   const [activeLng, setActiveLng] = useState('ko')
   const [posts, setPosts] = useState<PostProps[]>([])
-  const { user } = useContext(AuthContext)
+  // const { user } = useContext(AuthContext)
   const currentLng = useRecoilValue(withChanged)
 
   const { changeI18N } = useI18N()
@@ -48,7 +48,7 @@ export default function PostList({
       orderBy: 'publishedAt'
     }
 
-    if (activeTab === 'my' && user) {
+    if (activeTab === 'my' && false) {
       // 나의 글만 필터링
       /**
        * 아래와 같이 복합 인덱스(uid와 createdAt)를 쓰게 되면, 색인추가를 해줘야한다. 이는 console에 경고창따라 들어가면 설정 가능하다.

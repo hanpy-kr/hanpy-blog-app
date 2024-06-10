@@ -1,62 +1,62 @@
-"use client";
-import { useState } from "react";
+'use client'
+import { useState } from 'react'
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "@/utils/firebaseApp.lib";
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
+// import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+// import { app } from "@/utils/firebaseApp.lib";
 
-import "./LoginForm.css";
+import './LoginForm.css'
 
 export default function LoginForm() {
-  const [error, setError] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const router = useRouter();
+  const [error, setError] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const router = useRouter()
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
-      const auth = getAuth(app);
-      await signInWithEmailAndPassword(auth, email, password);
-      toast.success("로그인에 성공했습니다.");
-      router.replace("/");
+      // const auth = getAuth(app)
+      // await signInWithEmailAndPassword(auth, email, password)
+      toast.success('로그인에 성공했습니다.')
+      router.replace('/')
     } catch (error: any) {
-      toast.error(error?.code);
-      console.log(error);
+      toast.error(error?.code)
+      console.log(error)
     }
-  };
+  }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name, value },
-    } = e;
+    } = e
 
-    if (name === "email") {
-      setEmail(value);
+    if (name === 'email') {
+      setEmail(value)
 
       const validRegex =
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
       if (!value?.match(validRegex)) {
-        setError("이메일 형식이 올바르지 않습니다.");
+        setError('이메일 형식이 올바르지 않습니다.')
       } else {
-        setError("");
+        setError('')
       }
     }
 
-    if (name === "password") {
-      setPassword(value);
+    if (name === 'password') {
+      setPassword(value)
 
       if (value?.length < 8) {
-        setError("비밀번호는 8자리 이상 입력해주세요");
+        setError('비밀번호는 8자리 이상 입력해주세요')
       } else {
-        setError("");
+        setError('')
       }
     }
-  };
+  }
 
   return (
     <form onSubmit={onSubmit} className="form form--lg">
@@ -103,5 +103,5 @@ export default function LoginForm() {
         />
       </div>
     </form>
-  );
+  )
 }
