@@ -32,7 +32,7 @@ const _fields = {
   },
 }
 
-const _fieldsWithInfra = {
+const _fieldsWithCommon = {
   deployment: {
     type: 'boolean',
     required: true,
@@ -123,20 +123,36 @@ export const FrontendForENG = defineDocumentType(() => ({
   // },
 }))
 
-// 한국어 - 프론트 엔드
+// 한국어 - 인프라
 export const InfraForKOR = defineDocumentType(() => ({
   name: 'InfraForKOR',
   filePathPattern: `infra/ko/**/*.mdx`,
   contentType: 'mdx',
-  fields: _fieldsWithInfra as {},
+  fields: _fieldsWithCommon as {},
 }))
 
-// 영어 - 프론트 엔드
+// 영어 - 인프라
 export const InfraForENG = defineDocumentType(() => ({
   name: 'InfraForENG',
   filePathPattern: `infra/en/**/*.mdx`,
   contentType: 'mdx',
-  fields: _fieldsWithInfra as {},
+  fields: _fieldsWithCommon as {},
+}))
+
+// 한국어 - 디자인 페턴
+export const PatternForKOR = defineDocumentType(() => ({
+  name: 'PatternForKOR',
+  filePathPattern: `design-pattern/ko/**/*.mdx`,
+  contentType: 'mdx',
+  fields: _fieldsWithCommon as {},
+}))
+
+// 영어 - 디자인 페턴
+export const PatternForENG = defineDocumentType(() => ({
+  name: 'PatternForENG',
+  filePathPattern: `design-pattern/en/**/*.mdx`,
+  contentType: 'mdx',
+  fields: _fieldsWithCommon as {},
 }))
 
 export const Backend = defineDocumentType(() => ({
@@ -160,6 +176,8 @@ export default makeSource({
     Backend,
     InfraForKOR,
     InfraForENG,
+    PatternForKOR,
+    PatternForENG,
   ],
   disableImportAliasWarning: true,
 
