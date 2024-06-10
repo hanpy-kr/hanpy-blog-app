@@ -6,8 +6,8 @@ import AuthContext from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
 import { useParams } from 'next/navigation'
 
-import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore'
-import { db } from '@/utils/firebaseApp.lib'
+// import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore'
+// import { db } from '@/utils/firebaseApp.lib'
 import { toast } from 'react-toastify'
 import { CategoryType, PostProps } from '../types'
 import { CATEGORIES } from '../constants'
@@ -17,7 +17,7 @@ export default function PostForm() {
   const [post, setPost] = useState<any | null>(null)
 
   // 현재 user 가 안들어와서 추가가 안되는거다!!!
-  const { user } = useContext(AuthContext)
+  // const { user } = useContext(AuthContext)
   const [title, setTitle] = useState<string>('')
   const [summary, setSummary] = useState<string>('')
   const [content, setContent] = useState<string>('')
@@ -31,19 +31,19 @@ export default function PostForm() {
       // firestore 저장
       if (post && post?.id) {
         // 만약 post 데이터가 있다면, firestore로 데이터 수정
-        const postRef = doc(db, 'posts', post?.id)
-        await updateDoc(postRef, {
-          title: title,
-          summary: summary,
-          content: content,
-          // 한국 기준으로 시간 분 초까지 추가한다.
-          updatedAt: new Date()?.toLocaleDateString('ko', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-          }),
-          category: category,
-        })
+        // const postRef = doc(db, 'posts', post?.id)
+        // await updateDoc(postRef, {
+        //   title: title,
+        //   summary: summary,
+        //   content: content,
+        //   // 한국 기준으로 시간 분 초까지 추가한다.
+        //   updatedAt: new Date()?.toLocaleDateString('ko', {
+        //     hour: '2-digit',
+        //     minute: '2-digit',
+        //     second: '2-digit',
+        //   }),
+        //   category: category,
+        // })
 
         toast?.success('게시글을 수정했습니다.')
         router.push(`/posts/${post.id}`)
@@ -58,26 +58,26 @@ export default function PostForm() {
             minute: '2-digit',
             second: '2-digit',
           }),
-          email: user?.email,
-          uid: user?.uid, // firebase의 고유한 부분을 추가로 넣어준다.
+          // email: user?.email,
+          // uid: user?.uid, // firebase의 고유한 부분을 추가로 넣어준다.
           category: category,
         })
 
         // firestore로 데이터 생성
-        await addDoc(collection(db, 'posts'), {
-          title: title,
-          summary: summary,
-          content: content,
-          // 한국 기준으로 시간 분 초까지 추가한다.
-          createdAt: new Date()?.toLocaleDateString('ko', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-          }),
-          email: user?.email,
-          uid: user?.uid, // firebase의 고유한 부분을 추가로 넣어준다.
-          category: category,
-        })
+        // await addDoc(collection(db, 'posts'), {
+        //   title: title,
+        //   summary: summary,
+        //   content: content,
+        //   // 한국 기준으로 시간 분 초까지 추가한다.
+        //   createdAt: new Date()?.toLocaleDateString('ko', {
+        //     hour: '2-digit',
+        //     minute: '2-digit',
+        //     second: '2-digit',
+        //   }),
+        //   email: user?.email,
+        //   uid: user?.uid, // firebase의 고유한 부분을 추가로 넣어준다.
+        //   category: category,
+        // })
 
         toast?.success('게시글을 생성했습니다.')
         router.push('/')
@@ -115,12 +115,11 @@ export default function PostForm() {
   }
 
   const getPost = async (id: string) => {
-    if (id) {
-      const docRef = doc(db, 'posts', id)
-      const docSnap = await getDoc(docRef)
-
-      setPost({ id: docSnap.id, ...(docSnap.data() as PostProps) })
-    }
+    // if (id) {
+    //   const docRef = doc(db, 'posts', id)
+    //   const docSnap = await getDoc(docRef)
+    //   setPost({ id: docSnap.id, ...(docSnap.data() as PostProps) })
+    // }
   }
 
   useEffect(() => {

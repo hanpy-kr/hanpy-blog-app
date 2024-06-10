@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 // import { Inter } from 'next/font/google'
 import './globals.css'
 import ToastProvider from '@/components/provider/ToastProvider'
-import { AuthContextProvider } from '@/context/AuthContext'
+// import { AuthContextProvider } from '@/context/AuthContext'
 import { ThemeContextProvider } from '@/context/ThemeContext'
 import {
   Roboto,
@@ -39,12 +39,12 @@ export default function RootLayout({
       <body className={roboto.className}>
         <ToastProvider />
         <ThemeContextProvider>
-          <AuthContextProvider>
-            <RecoilRootWrapper>
-              <ClientInitSetup />
-              <ChakraProviders>{children}</ChakraProviders>
-            </RecoilRootWrapper>
-          </AuthContextProvider>
+          {/* <AuthContextProvider> */}
+          <RecoilRootWrapper>
+            <ClientInitSetup />
+            <ChakraProviders>{children}</ChakraProviders>
+          </RecoilRootWrapper>
+          {/* </AuthContextProvider> */}
         </ThemeContextProvider>
       </body>
     </html>
