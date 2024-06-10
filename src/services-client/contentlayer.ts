@@ -1,7 +1,13 @@
 import { CategoryType } from '@/app/(home)/types'
-import { allFrontendForKORs, allFrontendForENGs } from 'contentlayer/generated'
-import { allBackends } from 'contentlayer/generated'
-import { allInfraForKORs, allInfraForENGs } from 'contentlayer/generated'
+import {
+  allFrontendForKORs,
+  allFrontendForENGs,
+  allBackends,
+  allInfraForKORs,
+  allInfraForENGs,
+  allDesignForKORs,
+  allDesignForENGs,
+} from 'contentlayer/generated'
 
 /**
  * blog
@@ -36,9 +42,15 @@ class ContentlayerService {
             if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
             return 1
           })
+        case 'Design':
+          return [...allDesignForENGs].sort((a, b) => {
+            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+            return 1
+          })
         case 'All':
         default:
           return [
+            ...allDesignForENGs,
             ...allFrontendForENGs,
             ...allBackends,
             ...allInfraForENGs,
@@ -65,9 +77,15 @@ class ContentlayerService {
             if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
             return 1
           })
+        case 'Design':
+          return [...allDesignForKORs].sort((a, b) => {
+            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+            return 1
+          })
         case 'All':
         default:
           return [
+            ...allDesignForKORs,
             ...allFrontendForKORs,
             ...allBackends,
             ...allInfraForKORs,
