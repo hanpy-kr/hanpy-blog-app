@@ -140,17 +140,17 @@ export const InfraForENG = defineDocumentType(() => ({
 }))
 
 // 한국어 - 디자인 페턴
-export const PatternForKOR = defineDocumentType(() => ({
-  name: 'PatternForKOR',
-  filePathPattern: `design-pattern/ko/**/*.mdx`,
+export const DesignForKOR = defineDocumentType(() => ({
+  name: 'DesignForKOR',
+  filePathPattern: `design/ko/**/*.mdx`,
   contentType: 'mdx',
   fields: _fieldsWithCommon as {},
 }))
 
 // 영어 - 디자인 페턴
-export const PatternForENG = defineDocumentType(() => ({
-  name: 'PatternForENG',
-  filePathPattern: `design-pattern/en/**/*.mdx`,
+export const DesignForENG = defineDocumentType(() => ({
+  name: 'DesignForENG',
+  filePathPattern: `design/en/**/*.mdx`,
   contentType: 'mdx',
   fields: _fieldsWithCommon as {},
 }))
@@ -176,8 +176,8 @@ export default makeSource({
     Backend,
     InfraForKOR,
     InfraForENG,
-    PatternForKOR,
-    PatternForENG,
+    DesignForKOR,
+    DesignForENG,
   ],
   disableImportAliasWarning: true,
 

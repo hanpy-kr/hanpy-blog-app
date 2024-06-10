@@ -23,13 +23,13 @@ type CurrentCategoryInfoType = {
   icon: string
 }
 
-type SUB_CATEGORY_TYPE = 'docker' | 'kubernetes' | 'react' | 'utils'
+type SUB_CATEGORY_TYPE = 'docker' | 'kubernetes' | 'react' | 'utils' | 'pattern'
 
 const BlogLNBTitle = ({
   type,
   subType,
 }: {
-  type: 'frontend' | 'backend' | 'infra'
+  type: 'frontend' | 'backend' | 'infra' | 'design'
   subType: SUB_CATEGORY_TYPE
 }) => {
   const router = useRouter()
@@ -62,13 +62,15 @@ const BlogLNBTitle = ({
           rightIcon={<ChevronDownIcon />}
         >
           <Flex alignItems={'center'}>
-            <Image
-              boxSize="2rem"
-              borderRadius="full"
-              src={`/icons${currentCategoryInfo.icon}`}
-              alt="Fluffybuns the destroyer"
-              mr="12px"
-            />
+            {currentCategoryInfo.icon.length !== 0 ?? (
+              <Image
+                boxSize="2rem"
+                borderRadius="full"
+                src={`/icons${currentCategoryInfo.icon}`}
+                alt="Fluffybuns the destroyer"
+                mr="12px"
+              />
+            )}
             {currentCategoryInfo.name}
           </Flex>
         </MenuButton>

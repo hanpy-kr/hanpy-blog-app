@@ -29,7 +29,7 @@ export interface PostProps {
 export type CategoryType =
   | 'Frontend'
   | 'Backend'
-  | 'Web'
   | 'Infra'
+  | 'Design'
   | 'All'
   | 'my'
