@@ -3,5 +3,5 @@ export default function HomeWithNextjs() {
     <>
       <h1>Nextjs Home</h1>
     </>
-  );
+  )
 }
