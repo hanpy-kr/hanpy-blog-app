@@ -23,7 +23,7 @@ type CurrentCategoryInfoType = {
   icon: string
 }
 
-type SUB_CATEGORY_TYPE = 'docker' | 'kubernetes' | 'react'
+type SUB_CATEGORY_TYPE = 'docker' | 'kubernetes' | 'react' | 'utils'
 
 const BlogLNBTitle = ({
   type,

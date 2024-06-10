@@ -5,11 +5,10 @@ const subCategory: {
     icon: string
   }
 } = {
-  react: { name: 'docker', href: '/', icon: '/docker.svg' },
-  kubernetes: {
-    name: 'kubernetes',
-    href: '/infra/ko/kubernetes/01.Introduction',
-    icon: '/kubernetes.svg',
+  utils: {
+    name: 'utils',
+    href: '/frontend/ko/utils/axios',
+    icon: '/utils.svg',
   },
 }
 
@@ -22,9 +21,14 @@ const subCategoryDetail: {
     }[][]
   }
 } = {
-  react: {
-    title: [],
-    subTitle: [],
+  utils: {
+    title: ['library'],
+    subTitle: [[
+      {
+        href: '/frontend/ko/utils/axios',
+        title: 'Axios',
+      }
+    ]],
   },
 }
 

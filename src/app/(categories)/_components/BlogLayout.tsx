@@ -9,7 +9,7 @@ const BlogLayout = ({
 }: {
   children: React.ReactNode
   type: 'frontend' | 'backend' | 'infra'
-  subType: 'kubernetes' | 'docker'
+  subType: 'kubernetes' | 'docker' | 'utils'
 }) => {
   return (
     <>
