@@ -1,0 +1,378 @@
+---
+deployment: true
+category: Design-Patterns
+title: 'Builder Pattern'
+summary: 'Builder Pattern에 대한 기초를 알아보고 실습을 해봅시다.'
+pageKey: Builder_Patterns_Typescript_ko
+lng: KOR
+publishedAt: 2024-06-01
+---
+
+# Builder Pattern
+
+Builder Pattern이란 복잡한 객체를 만들때, 객체의 구성을 만드는 부분을 빌더 클래스에 위임하여 단계적으로 생성할 수 있도록 하는 디자인 패턴입니다.
+이는 복잡한 생성 코드를 고립시켜 단일 책임 원칙(SRP)에 적합하게 만드는 것이 가능합니다.
+따라서 디자인 패턴 중에 생성 패턴에 속하고, 객체 생성 시 Builder Pattern을 유용하게 사용할 수 있습니다.
+
+<br />
+
+언어에 따라, 사용방법/목적에 따라 사용법이 조금씩 달라질 수 있습니다.
+단순히 가독성을 위해 사용하는 경우가 있습니다.
+아니면 자동차나 건물을 만들 때, 포함된 기능들에 따른 만드는 절차를 분리하기 위해 사용하는 경우도 있을 것입니다.
+따라서 여러 예들을 제공해 보고자 합니다.
+정답은 없습니다. 참고하여 Application에 가장 필요한 내용을 적용해보시면 좋을 것 같습니다.
+
+<br />
+
+많은 설명보다는 간단히 예제를 우선 확인해 봅시다.
+아래는 객체 생성 시에 Builder Pattern을 사용한 예입니다.
+
+```typescript title="Builder Pattern" showLineNumbers
+// 인터페이스 선언
+interface Credit {
+  plan: string
+  expire: number
+}
+
+// 인터페이스에 따른, 인스턴스 선언
+const credit: Credit = {
+  plan: 'Hanpy',
+  expire: 1717937448327,
+}
+
+// 빌더 클래스 선언
+class CreditBuilder {
+  private readonly _credit: Credit
+
+  constructor() {
+    this._credit = {
+      plan: '',
+      expire: 0,
+    }
+  }
+
+  plan(plan: string): CreditBuilder {
+    this._credit.plan = plan
+    return this
+  }
+
+  expire(expire: number): CreditBuilder {
+    this._credit.expire = expire
+    return this
+  }
+
+  build(): Credit {
+    return this._credit
+  }
+}
+
+// 사용
+const userWithCredit: Credit = new CreditBuilder()
+  .plan('Hanpy')
+  .expire(1717937448327)
+  .build()
+```
+
+위 부분에서 집중적으로 코드를 봐야하는 부분은, 빌드 클래스를 통해서 어떻게 객체를 생성하는지를 확인하면 좋을 것 같습니다.
+위 코드만 봐서는 사실 Builder Pattern의 필요성을 확인하기는 힘듭니다. 하지만 복잡한 경우에는 이야기가 달라집니다.
+조금 더 자세히 알아보도록 합니다.
+
+<br />
+
+보통 java 하는 사람들은 builder을 인스턴스 생성 전략으로 자주 사용합니다. typescript에서
+named parameter가 가능하므로, 단순하게 params가 많다는 이유로 builder 패턴을 사용할
+필요는 없습니다. 빌더 클래스는 생성과 관련된 정보를 클라이언트 코드에서 완전히 가지고
+옵니다. 따라서 클라이언트는 빌터 클래스에서 결과가 가지고 오면 됩니다.
+
+<br />
+<br />
+
+## 언제 사용
+
+Application을 제작하다보면, 새로운 기능이 추가 되고 새로운 객체가 늘어날수록 결합도가 높아지게 됩니다.
+이때, 변수 추가로 인한 Parameter가 많아지거나 생성 조건이 복잡해지는 경우가 생겨나게 됩니다.
+
+<br />
+<br />
+
+### Parameter가 많아지는 경우
+
+```typescript title="Builder Pattern" showLineNumbers
+const API = new APIBuilder(
+  'payment',
+  '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+  'GET',
+  3000,
+  200,
+  true,
+  false,
+  false,
+)
+```
+
+위의 예시를 보면 생성자에 포함된 Parameter들의 의미를 파악하기가 어려워진다.
+또한, 이러한 각각의 Parameter 파악을 위해서는 클래스 선언부로 이동해야하는 문제가 있습니다.
+
+<br />
+
+### 생성 Parameter의 조건이 복잡해지는 경우
+
+```typescript title="Builder Pattern" showLineNumbers
+class APIBuilder {
+  constructor(
+    private readonly _type: string,
+    private readonly _uuid: string,
+    private readonly _method: 'GET' | 'POST',
+    private readonly _timeout: number,
+  ) {
+    if (_timeout < 1000)
+      throw Error('timeout should be greater then or equal to 1000')
+    if (_uuid.lenth !== 36) throw Error('uuid must be 36 characters')
+  }
+}
+```
+
+간단하게 timeout과 uuid에 대한 조건만 만들어 보았다.
+프로퍼티가 많아질 수록 생성자에 추가되는 검증 로직이 거대해집니다.
+이는 클래스 본래 역할을 파악하는데 어려움이 있습니다.
+
+<br />
+
+builder pattern은 이러한 문제점에 대한 해결책을 제시합니다.
+
+<br />
+<br />
+
+## 구현방법
+
+당연한 이야기 이지만, 크게 2가지로 나눌 수 있습니다.
+
+1. 객체 클래스와 빌더 클래스를 분리하여 구현합니다.
+2. 객체 클래스 내부에 빌더 클래스 포함하여 구현합니다.
+
+기본적으로 Typescript는 inner class를 지원하지 않기 때문에 사용할 클래스 밖에 빌더 클래스를 만들어 줘야 합니다.
+
+<br />
+<br />
+
+## [실습1] 방법1
+
+아래의 코드를 바로 사용할 수는 없습니다.
+빌더 패턴의 이해를 위해 임의로 만든 코드입니다.
+참고만 해주시면 좋을 것 같습니다.
+
+```typescript title="Builder Pattern" showLineNumbers
+class APIBuilder {
+  private readonly _uuid: string
+  private readonly _timeout: number
+  constructor() {}
+
+  setUUID(uuid: string): this {
+    if (uuid.lenth !== 36) throw Error('uuid must be 36 characters')
+    this._uuid = uuid
+    return this
+  }
+
+  setTimeout(timeout: number): this {
+    if (timeout <== 1000) {
+      throw Error('timeout should be greater then or equal to 1000')
+    }
+    this._timeout = timeout
+    return this
+  }
+
+  build(): API {
+    return new API(this._uuid, this._timeout)
+  }
+}
+
+class API {
+  constructor(
+    private readonly _uuid: string,
+    private readonly _timeout: number,
+  ) {}
+
+  // fetch 로직 추가
+
+  static builder(): APIBuilder {
+    return new APIBuilder()
+  }
+}
+```
+
+- API 클래스의 생성 부분 로직을 APIBuilder 클래스가 담당합니다.
+- API 클래스는 클래스 자체의 책임(행위)만 담당합니다.
+- 직관적인 이해를 위해, 임의로 uuid와 timeout 부분만 필요하다고 가정하고 작성하였습니다.
+
+<br />
+
+### 사용
+
+```typescript title="Builder Pattern" showLineNumbers
+const api = API.builder()
+  .setUUID('9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d')
+  .setTimeout(3000)
+  .build()
+```
+
+- Builder Pattern을 적용하므로 생성 프로퍼티에 대한 가독성이 증가했습니다.
+- 생성과 관련된 내용을 APIBuilder가 가지고 가므로 도메인 클래스는 조금 더 책임에 맞는 역할을 하게됩니다.
+- 코드가 두 클래스로 분리되어 유지보수가 쉬워집니다.
+
+<br />
+<br />
+
+## [실습2] 방법2
+
+```typescript title="Builder Pattern" showLineNumbers
+class API {
+  private readonly _uuid: string
+  private readonly _timeout: number
+
+  constructor(builder: APIBuilder) {
+    this._uuid = builder.uuid
+    this._timeout = builder.timeout
+  }
+
+  fetch() {
+    // API 로직
+
+    return 데이터 리턴
+  }
+}
+
+
+class APIBuilder {
+  private readonly _url: string
+  private readonly _method: string
+  private readonly _uuid: string
+  private readonly _timeout: number
+
+  constructor(url: string, method: string) {
+    this.url = url;
+    this.method = method;
+  }
+
+  setUUID(uuid: string): this {
+    if (uuid.lenth !== 36) throw Error('uuid must be 36 characters')
+    this._uuid = uuid
+    return this
+  }
+
+  setTimeout(timeout: number): this {
+    if (timeout <== 1000) {
+      throw Error('timeout should be greater then or equal to 1000')
+    }
+    this._timeout = timeout
+    return this
+  }
+
+  public build() {
+    return new API(this);
+  }
+}
+```
+
+실습1과 가장 큰 차이점은 빌더 인스턴스의 주입/생성하는 위치입니다.
+차이점을 비교하여 코드 확인해 주시면 좋을 것 같습니다.
+
+<br />
+
+### 사용
+
+```typescript title="Builder Pattern" showLineNumbers
+const paymentAPI = new APIBuilder(`${PAYMENT_URL}/credit`, 'GET') // required
+  .setUUID('9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d')
+  .setTimeout(3000)
+paymentAPI.fetch() // 생성된 객체를 바탕으로 API Fetch.
+```
+
+<br />
+<br />
+
+## [실습3] 제품별 빌드 구현
+
+아래의 예시는 Director라는 개념을 적용해 보려합니다.
+제품이 다양해지고 기능이 많아질 수록 제품에 따른 구성요소는 달라집니다.
+예를들면 오토바이는 바퀴가 2개이고 승용차는 바퀴가 4개입니다.
+SUV 자동차와 스포츠카의 구성요소도 다릅니다.
+이렇게 제품별로 구성요소가 다른 부분에 대해 Builder Pattern과 Director 클래스를 만들어 구현해 보고자 합니다.
+
+<br />
+
+1. Builder Interface를 만들어줍니다.
+2. Intrface에 따른, 제품별 Builder 클래스를 만들어줍니다.
+3. Director 클래서에서는 제품별 method를 만들어서 제품에 따른 생성 로직을 Builder 패턴으로 생성할 수 있도록 구현합니다.
+
+<br />
+
+```typescript title="Builder Pattern" showLineNumbers
+interface Builder {
+  public setSeat(): void
+  public setWheel(): void
+}
+
+class CarBuilder implements Builder {
+  // Car/Engin 객체 있다고 가정합니다.
+  private _car: Car
+  private _engine: Engine
+  private _seat: string
+  private _wheel: number
+
+  constructor() {
+    this.reset()
+  }
+
+  reset () {
+    this._car = new Car()
+  }
+
+  setSeats(seat: string): this {
+    this._seat = seat
+    return this
+  }
+
+  setWheels(wheel: number): this {
+    this._wheel = wheel
+    return this
+  }
+
+  setEngine(engine: Engine): this {
+    this._engine = engine
+    return this
+  }
+}
+
+class Director {
+  constructMotorcycle(builder: Builder) {
+    builder.reset()
+    builder.setSeats(1)
+    builder.setWheels(2)
+    builder.setEngine(new MotorcycleEngine())
+    builder.setGPS(false)
+  }
+  constructSUVCar(builder: Builder) {
+    builder.reset()
+    builder.setSeats(6)
+    builder.setWheels(4)
+    builder.setEngine(new SUVEngine())
+    builder.setGPS(true)
+  }
+}
+
+// 사용 로직
+const director = new Director()
+const builder = new CarBuilder()
+const director.constructMotorcycle(builder)
+const motorcycleCar = builder
+```
+
+사실 Builder 패턴을 하나만 적용할 수 있는 Application은 없습니다.
+하지만 복잡한 객체를 구성할 때 Builder 패턴을 한번 고려해 보면 좋을 것 같습니다.
+
+---
+
+## Word
+
+- Named Parameter : 함수의 인자에 디폴트 값을 넣어서, 인자값이 없는 경우 디폴트 값을 넣어주는 방식을 Named Parameter라고 합니다.
+- 단일 책임 원칙(SRP) : 모든 클래스는 하나의 책임만 가지며, 클래스는 그 책임을 완전히 캡슐화해야 합니다.
