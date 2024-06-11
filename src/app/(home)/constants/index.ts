@@ -6,5 +6,6 @@ export const CATEGORIES: CategoryType[] = [
   'Backend',
   'Infra',
   'Design',
+  'Language',
   // "Native",
 ]

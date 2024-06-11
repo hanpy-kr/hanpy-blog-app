@@ -155,6 +155,22 @@ export const DesignForENG = defineDocumentType(() => ({
   fields: _fieldsWithCommon as {},
 }))
 
+// 한국어 - language
+export const LanguageForKOR = defineDocumentType(() => ({
+  name: 'LanguageForKOR',
+  filePathPattern: `language/ko/**/*.mdx`,
+  contentType: 'mdx',
+  fields: _fieldsWithCommon as {},
+}))
+
+// 영어 - language
+export const LanguageForENG = defineDocumentType(() => ({
+  name: 'LanguageForENG',
+  filePathPattern: `language/en/**/*.mdx`,
+  contentType: 'mdx',
+  fields: _fieldsWithCommon as {},
+}))
+
 export const Backend = defineDocumentType(() => ({
   name: 'Backend',
   filePathPattern: `backend/*.mdx`,
@@ -178,6 +194,8 @@ export default makeSource({
     InfraForENG,
     DesignForKOR,
     DesignForENG,
+    LanguageForKOR,
+    LanguageForENG,
   ],
   disableImportAliasWarning: true,
 
