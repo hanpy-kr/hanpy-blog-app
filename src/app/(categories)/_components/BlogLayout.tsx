@@ -8,8 +8,8 @@ const BlogLayout = ({
   subType, // kubernetes / docker
 }: {
   children: React.ReactNode
-  type: 'frontend' | 'backend' | 'infra' | 'design'
-  subType: 'kubernetes' | 'docker' | 'utils' | 'pattern'
+  type: 'frontend' | 'backend' | 'infra' | 'design' | 'language'
+  subType: 'kubernetes' | 'docker' | 'utils' | 'pattern' | 'nodejs'
 }) => {
   return (
     <>

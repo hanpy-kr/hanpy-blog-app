@@ -23,13 +23,19 @@ type CurrentCategoryInfoType = {
   icon: string
 }
 
-type SUB_CATEGORY_TYPE = 'docker' | 'kubernetes' | 'react' | 'utils' | 'pattern'
+type SUB_CATEGORY_TYPE =
+  | 'docker'
+  | 'kubernetes'
+  | 'react'
+  | 'utils'
+  | 'pattern'
+  | 'nodejs'
 
 const BlogLNBTitle = ({
   type,
   subType,
 }: {
-  type: 'frontend' | 'backend' | 'infra' | 'design'
+  type: 'frontend' | 'backend' | 'infra' | 'design' | 'language'
   subType: SUB_CATEGORY_TYPE
 }) => {
   const router = useRouter()

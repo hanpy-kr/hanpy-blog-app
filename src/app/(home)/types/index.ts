@@ -31,5 +31,6 @@ export type CategoryType =
   | 'Backend'
   | 'Infra'
   | 'Design'
+  | 'Language'
   | 'All'
   | 'my'

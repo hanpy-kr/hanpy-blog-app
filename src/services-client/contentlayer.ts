@@ -7,6 +7,8 @@ import {
   allInfraForENGs,
   allDesignForKORs,
   allDesignForENGs,
+  allLanguageForKORs,
+  allLanguageForENGs,
 } from 'contentlayer/generated'
 
 /**
@@ -47,6 +49,11 @@ class ContentlayerService {
             if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
             return 1
           })
+        case 'Language':
+          return [...allLanguageForENGs].sort((a, b) => {
+            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+            return 1
+          })
         case 'All':
         default:
           return [
@@ -54,6 +61,7 @@ class ContentlayerService {
             ...allFrontendForENGs,
             ...allBackends,
             ...allInfraForENGs,
+            ...allLanguageForENGs,
           ].sort((a, b) => {
             if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
             return 1
@@ -82,6 +90,11 @@ class ContentlayerService {
             if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
             return 1
           })
+        case 'Language':
+          return [...allLanguageForKORs].sort((a, b) => {
+            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
+            return 1
+          })
         case 'All':
         default:
           return [
@@ -89,6 +102,7 @@ class ContentlayerService {
             ...allFrontendForKORs,
             ...allBackends,
             ...allInfraForKORs,
+            ...allLanguageForKORs,
           ].sort((a, b) => {
             if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
             return 1
