@@ -28,6 +28,8 @@ export const metadata: Metadata = {
   description: "Let's play coding",
 }
 
+
+
 export default function RootLayout({
   children,
 }: {
@@ -35,6 +37,10 @@ export default function RootLayout({
 }) {
   return (
     <html>
+      <head>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8185415229814052"
+          crossOrigin="anonymous"></script>
+      </head>
       {/* <body> */}
       <body className={roboto.className}>
         <ToastProvider />
