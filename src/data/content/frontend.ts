@@ -5,6 +5,11 @@ const subCategory: {
     icon: string
   }
 } = {
+  nextjs: {
+    name: 'nextjs',
+    href: '/frontend/ko/nextjs/seo/next-sitemap',
+    icon: '/nextjs.svg',
+  },
   utils: {
     name: 'utils',
     href: '/frontend/ko/utils/axios',
@@ -21,14 +26,27 @@ const subCategoryDetail: {
     }[][]
   }
 } = {
+  nextjs: {
+    title: ['nextjs'],
+    subTitle: [
+      [
+        {
+          href: '/frontend/ko/nextjs/seo/next-sitemap',
+          title: 'sitemap',
+        },
+      ],
+    ],
+  },
   utils: {
     title: ['library'],
-    subTitle: [[
-      {
-        href: '/frontend/ko/utils/axios',
-        title: 'Axios',
-      }
-    ]],
+    subTitle: [
+      [
+        {
+          href: '/frontend/ko/utils/axios',
+          title: 'Axios',
+        },
+      ],
+    ],
   },
 }
 

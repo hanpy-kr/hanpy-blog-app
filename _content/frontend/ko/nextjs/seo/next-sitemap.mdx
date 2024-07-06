@@ -1,36 +1,99 @@
 ---
-deployment: false
+deployment: true
 category: Frontend
 title: 'next-sitemap'
 summary: 'sitemap에 대해 알아보고, nextjs에 sitemap을 적용시켜 봅시다.'
-pageKey: frontend-nextjs-sitemap
 lng: KOR
-publishedAt: 2022-03-01
+pageKey: frontend-nextjs-sitemap
+publishedAt: 2024-07-01
 ---
 
 # Nextjs Sitemap
 
 ## Sitemap이란
 
-Sitemap이란, 검색 사이트(google)의 크롤링 봇들이 우리 Application을 사용할 수 있도록 정보를 주기위해 활용됩니다. 따라서 서비스를 배포한다면, 관련 설정들을 추가하여 만든 Application에 많이 접속할 수 있도록 만들 필요가 있습니다.
+Sitemap이란, 검색 사이트(google)의 크롤링 봇들이 우리 Application을 사용할 수 있도록 정보를 주기위해 활용됩니다. 따라서 서비스를 배포한다면, 관련 설정들을 추가하여 만든 Application에 많이 접속할 수 있도록 Sitemap을 사용해야합니다.
+
+<br />
+
+### XML Sitemap에서 사용하는 태그
+
+> 우선 sitemap에 대한 간단한 개념을 확인해 봅시다. 페이지에 대한 sitemap은 주소 뒤에 /sitemap.xml을 작성해서 확인 할 수 있습니다.
+
+```xml title="sitemap" showLineNumbers
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+      <loc>http://www.example.com/</loc>
+      <lastmod>2024-08-01</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.8</priority>
+   </url>
+</urlset>
+```
+
+각 테그에 대한 설명은 아래와 같습니다.
+
+<br />
+<codeline>urlset Tag</codeline>
+
+- 필수 입력 사항으로, url Tag를 감싸는 부모 요소 입니다.
+
+<br />
+<codeline>url Tag</codeline>
+
+- 필수 입력 사항으로, url 관련 정보들을 감싸는 부모 요소 입니다.
+
+<br />
+<codeline>loc Tag</codeline>
+
+- 필수 입력 사항으로, url 주소를 적는 부분 입니다. 여기까지는 필수적으로 입력이 필요합니다.
+
+<br />
+<codeline>lastmod Tag</codeline>
+
+- 선택 입력 사항으로, 마지막으로 수정된 날짜를 적어야 하며, w3 표준시로 작성되어야 합니다.
+
+<br />
+<codeline>changefreq Tag</codeline>
+
+- 선택 입력 사항으로, 얼마나 자주 컨텐츠가 변경되는지 적는 곳입니다.
+- always, hourly, daily, weekly, monthly, yearly, never 적용 가능
+  - always : 방문할 때마다 바뀌는 부분이 있는 경우 작성합니다.
+  - never : 앞으로 바뀔 일이 절대 없는 경우 작성합니다
+- 어느 주기로 크롤링을 해야 될지 기준을 제공해 주지만, 그렇다고 반드시 그런 것은 아닙니다..
+
+<br />
+<codeline>priority Tag</codeline>
+
+- 선택 입력 사항으로, 내 사이트에서 어떤 걸 우선 순위로 두어야 될지를 정하는 부분입니다. changefreq Tag와 마찬가지로 우선순위를 크롤러에 제공할 뿐, 무조건 우선 순위대로 크롤링이 되는 건 아닙니다. 내 사이트 내에서의 상대적인 우선 순위를 정하는 거기 때문에, 전부 1로 넣는다고 해서 좋은 건 아닙니다.
+- 기본값은 0.5 / 최소 값은 0.0 / 최댓값은 1.0 입니다.
+
 
 ## robots.txt
 
-Sitemap을 통해 Application이 검색 될 수 있도록 등록을 하였다면, 만든 Application에서 크롤링을 하면 안되는 부분에 대해 명시를 하는 것도 필요합니다. 이러한 명시를 적어주는 곳이 roboots.txt 입니다.
+Sitemap을 통해 Application이 검색 될 수 있도록 등록을 하였다면, 만든 Application에서 크롤링을 하면 안되는 부분에 대해 명시를 하는 것도 필요합니다. 이러한 명시를 적어주는 곳이 roboots.txt로 할 수 있습니다.
 
-Sitemap과 Robots.txt는 검색엔진최적화(SEO) 설정에서 기초적인 부분이라 할 수 있다. 이러한 기본설정을 next-sitemap을 통해 간단히 설정 가능하다.
+<br />
 
-## Nextjs Sitemap 시작하기
+Sitemap과 Robots.txt는 검색엔진최적화(SEO) 설정에서 기초적인 부분이라 할 수 입니다. 이러한 기본설정을 next-sitemap 라이브러리를 통해 간단히 설정 가능합니다.
+
+<br />
+
+## next-sitemap 사용하기
 
 ### 1. 설치
 
-```bash
+```bash title="sitemap" showLineNumbers
 $ npm install -D next-sitemap
 ```
 
 ### 2. postbuild 추가
 
-```json
+build 스크립트 전후에 작동하는 스크립트가 있다.
+prebuild가 빌드 전에 작동하는 스크립트고, postbuild가 build 이후에 작동하는 스크립트이다.
+
+```json title="sitemap" showLineNumbers
 // package.json
 {
   "scripts": {
@@ -43,32 +106,31 @@ $ npm install -D next-sitemap
 
 root경로에 next-sitemap.config.js 파일을 하나 생성해 줍니다.
 
-```javascript
+```javascript title="sitemap" showLineNumbers
 /** @type {import('next-sitemap').IConfig} */
 
 module.exports = {
-  siteUrl: 'http://localhost:8088', // .게시하는 site의 url
+  siteUrl: 'http://localhost:3000', //  site의 url
   generateRobotsTxt: true, // robots.txt generate 여부 (자동생성 여부)
-  sitemapSize: 7000, // sitemap별 최대 크기 (최대 크기가 넘어갈 경우 복수개의 sitemap으로 분리됨)
+  sitemapSize: 3000, // sitemap별 최대 크기 (최대 크기가 넘어갈 경우 복수개의 sitemap으로 분리됨)
   changefreq: 'daily', // 페이지 주소 변경 빈도 (검색엔진에 제공됨) - always, daily, hourly, monthly, never, weekly, yearly 중 택 1
-  priority: 1, // 페이지 주소 우선순위 (검색엔진에 제공됨, 우선순위가 높은 순서대로 크롤링함)
-  exclude: [
-    '/exclude/review', // 페이지 주소 하나만 제외시키는 경우
+  priority: 1, // 페이지 주소 우선순위 (검색엔진에 제공됨, 우선순위가 높은 순서대로 크롤링)
+  exclude: [ // sitemap 제외 페이지 주소
+    '/exclude/admin', // 페이지 주소 하나만 제외시키는 경우
     '/exclude/**', // 하위 주소 전체를 제외시키는 경우
-  ], // sitemap 등록 제외 페이지 주소
-  robotsTxtOptions: {
+  ], 
+  robotsTxtOptions: { // robots.txt 옵션 설정
     // 정책 설정
-    policies: [
+    policies: [ // 추가 정책이 필요할 경우 배열 요소로 추가 작성
       {
         userAgent: '*', // 모든 agent 허용
         allow: '/', // 모든 페이지 주소 크롤링 허용
         disallow: [
-          '/exclude', // exclude로 시작하는 페이지 주소 크롤링 금지
+          '/admin', // exclude로 시작하는 페이지 주소 크롤링 금지
         ],
       },
-      // 추가 정책이 필요할 경우 배열 요소로 추가 작성
     ],
-  }, // robots.txt 옵션 설정
+  },
 }
 ```
 
@@ -80,8 +142,49 @@ $ npm run build
 
 ---
 
+<br />
+<br />
+
+## Nextjs 공식문서 활용하기
+
+> 위의 라이브러리를 활용해도 쉽고 간단히 sitemap을 적용가능합니다. <codeline>https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap</codeline> 을 보면 아래와 같이 app/sitemap.ts 를 적기만 해도 sitemap을 사용할 수 있습니다. 본 블로그는 아래와 같은 형식으로 sitemap이 작성되었습니다.
+
+
+
+```javascript title="sitemap" showLineNumbers
+import { MetadataRoute } from 'next'
+
+const BASE_URL = 'https://blog.han-py.com'
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const datas = fetch('데이터 GET') // blog들의 meta데이터를 가지고 오는 로직입니다.
+  const sitmapDatas = datas.map((data) => {
+    return {
+      url: `${BASE_URL}/${data['_raw']['flattenedPath']}`,
+      lastModified: new Date(data['publishedAt']),
+    }
+  })
+  
+  return [
+    {
+      url: 'https://blog.han-py.com',
+      lastModified: new Date(),
+      priority: 1,
+    },
+    ...sitmapDatas,
+  ]
+}
+```
+
+<br />
+
+기본적으로 root 홈페이지에서만 priority를 적용해주었고, 나머지 글에서는 lastModified와 url 정도만 추가해 주었습니다.
+
+<br />
+<br />
+
+
 ## Reference
 
-배포 후에 다시 정리를 하자
-
-- https://jforj.tistory.com/311
+- https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
+- https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots

@@ -11,7 +11,8 @@ const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
 })
 
-const PREFIX_PATH = 'frontend/ko/nextjs/seo'
+const SUB_TITLE = 'nextjs'
+const PREFIX_PATH = `frontend/ko/${SUB_TITLE}/seo`
 
 export default function Page({ params }: { params: { slug: string } }) {
   const post = allFrontendForKORs.find(
@@ -23,9 +24,9 @@ export default function Page({ params }: { params: { slug: string } }) {
   const MDXComponent = useMDXComponent(post.body.code)
   return (
     <div className={robotoFlex.className}>
-      <BlogLayout type="frontend" subType="docker">
+      <BlogLayout type="frontend" subType={SUB_TITLE}>
         <div className="frontend__content">
-          <p className="frontend__header">nextjs</p>
+          <p className="frontend__header">{SUB_TITLE}</p>
 
           <MDXComponent />
         </div>
