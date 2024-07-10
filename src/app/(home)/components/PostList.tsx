@@ -84,7 +84,9 @@ export default function PostList({
     }
     const datas = contentlayer.query(postsQuery)
 
-    setPosts(datas)
+    // datas 에서 우선 10개 필터를 한다.
+    // 10개중에 deployment가 false인 부분은 ui 부분에서 필터 된다.
+    setPosts(datas.slice(0, 10))
 
     // datas?.forEach((doc) => {
     //   const dataObj = { ...doc.data(), id: doc.id } // data를 모드 가져오고, id는 id로 합쳐준다.

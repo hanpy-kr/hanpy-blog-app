@@ -1,0 +1,43 @@
+---
+deployment: false
+category: Frontend
+title: '[Web] Web Worker API'
+summary: 'Web Worker API에 대해 알아봅니다'
+pageKey: web_worker_api
+lng: KOR
+publishedAt: 2024-07-01
+---
+
+# Web Worker API
+
+기존적으로 자바스크립트는 Single Thread(싱글 스레드)로 작동한다.
+일반적으로는 단일 스레드로 출분하지만, 로딩과 실행이 오래 걸리는 코드의 경우에는 다중 스레드가 필요하다.
+이러한 경우 Web Worker를 통해서 자바스크립트에서 Multi Thread(다중 스레드)가 가능해진다.
+
+<br />
+
+Web Worker는 다중 스레드를 제어할 수 있는 자바스크립트 API로, 다른 스레드를 읽고 사용하는 것이 가능하다.
+Web Worker를 통해 Main Thread와 별도로 동작하는 스레드를 생성할 수 있다.
+
+<br />
+
+기본적으로 HTML에서 HTML 페이지에서 script를 실행할때, 실행이 완료 될때까지 아무 작업을 할 수 없다.
+Web Worker를 통해서 Main Thread의 렌더링을 방해하지 않고 다른 작업을들 할 수 있게 된다.
+
+<br />
+
+<br />
+<br />
+
+## 실습 1
+
+> 코드를 통해 조금 더 이해도를 높여보도록 하자.
+
+```javascript
+
+```
+
+# reference
+
+- https://velog.io/@wejaan/Web-Worker
+- https://engineering.linecorp.com/ko/blog/dont-block-the-event-loop

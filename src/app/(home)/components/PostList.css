@@ -15,6 +15,9 @@
   font-size: 16px;
   color: gray;
   cursor: pointer;
+
+  overflow: auto;
+  max-width: 40vw;
   /* padding: 48px 20px 0px 20px; */
 }
 

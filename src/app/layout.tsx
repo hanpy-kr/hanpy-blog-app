@@ -25,10 +25,30 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: 'Hanpy Blog',
-  description: "Let's play coding",
+  description:
+    "Welcome to my web development blog! Dive into expert tips on frontend frameworks, backend technologies, and cutting-edge infrastructure. Whether you're a seasoned developer or a newbie, explore tutorials and insights to enhance your coding skills and optimize your projects. Stay updated with the latest trends in web development, DevOps, and more. Join our community of developers to learn, grow, and innovate together.",
+  metadataBase: new URL('https://blog.han-py.com'),
+  openGraph: {
+    title: 'Hanpy Blog',
+    description: 'Welcome to my web development blog',
+    url: 'https://blog.han-py.com',
+    siteName: 'Hanpy Blog',
+    images: [
+      {
+        url: '/meta/image.jpeg', // Must be an absolute URL
+        width: 800,
+        height: 600,
+      },
+      {
+        url: '/meta/image.jpeg', // Must be an absolute URL
+        width: 1800,
+        height: 1600,
+        alt: 'Hanpy Logo',
+      },
+    ],
+    type: 'article',
+  },
 }
-
-
 
 export default function RootLayout({
   children,
@@ -38,8 +58,11 @@ export default function RootLayout({
   return (
     <html>
       <head>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8185415229814052"
-          crossOrigin="anonymous"></script>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8185415229814052"
+          crossOrigin="anonymous"
+        ></script>
       </head>
       {/* <body> */}
       <body className={roboto.className}>

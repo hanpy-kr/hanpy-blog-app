@@ -1,4 +1,5 @@
 import Header from '@/app/(home)/components/Header'
+import Footer from '@/app/(home)/components/Footer'
 import './BlogLayout.css'
 import BlogLNBTitle from './BlogLNBTitle'
 
@@ -20,6 +21,7 @@ const BlogLayout = ({
         </section>
         <section className="blog__content__container">{children}</section>
       </section>
+      <Footer />
     </>
   )
 }
