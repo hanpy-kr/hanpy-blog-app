@@ -5,13 +5,18 @@ const subCategory: {
     icon: string
   }
 } = {
+  react: {
+    name: 'React',
+    href: '/frontend/ko/react/react-data-crud',
+    icon: '/react.svg',
+  },
   nextjs: {
-    name: 'nextjs',
+    name: 'Nextjs',
     href: '/frontend/ko/nextjs/seo/next-sitemap',
     icon: '/nextjs.svg',
   },
   utils: {
-    name: 'utils',
+    name: 'Utils',
     href: '/frontend/ko/utils/axios',
     icon: '/utils.svg',
   },
@@ -26,6 +31,17 @@ const subCategoryDetail: {
     }[][]
   }
 } = {
+  react: {
+    title: ['react'],
+    subTitle: [
+      [
+        {
+          href: '/frontend/ko/react/react-data-crud',
+          title: 'React Data Management',
+        },
+      ],
+    ],
+  },
   nextjs: {
     title: ['nextjs'],
     subTitle: [
@@ -51,7 +67,7 @@ const subCategoryDetail: {
 }
 
 export const CONTENT_FRONTEND = {
-  mainCategory: 'Infra',
+  mainCategory: 'Frontend',
   subCategory,
   subCategoryDetail,
 }

@@ -103,7 +103,7 @@ h2 {
   display: block;
   font-size: 1.5em;
   margin-bottom: 0.23em;
-  margin-top: 0.83em;
+  margin-top: 1.5em;
 
   /* margin-top: 0.83em;
   margin-bottom: 0.83em;
@@ -114,6 +114,9 @@ h2 {
 h3 {
   display: block;
   font-size: 1.17em;
+  margin-top: 1em;
+  margin-bottom: 0.17em;
+
   /* margin-top: 1em;
   margin-bottom: 1em;
   margin-left: 0;
@@ -122,6 +125,8 @@ h3 {
 }
 h4 {
   display: block;
+  margin-top: 1em;
+  margin-bottom: 0.14em;
   /* margin-top: 1.33em;
   margin-bottom: 1.33em;
   margin-left: 0;
@@ -131,6 +136,7 @@ h4 {
 h5 {
   display: block;
   font-size: 0.83em;
+  margin-bottom: 0.1em;
   /* margin-top: 1.67em;
   margin-bottom: 1.67em;
   margin-left: 0;
@@ -145,6 +151,9 @@ h6 {
   margin-left: 0;
   margin-right: 0; */
   font-weight: bold;
+}
+hr {
+  margin: 50px 0px 20px 0px;
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -254,7 +263,9 @@ codeline {
 /* contentlayer - layout */
 
 [data-rehype-pretty-code-figure] {
-  margin: 1rem 0;
+  margin: 1.5rem 0;
+  border-radius: 7px;
+  overflow: hidden;
 }
 
 [data-rehype-pretty-code-figure] pre {
@@ -298,7 +309,7 @@ ex. showLineNumbers{n}
 }
 
 [data-line-numbers] > [data-line]::before {
-  padding: 4px;
+  padding: 0px;
 
   content: counter(line);
 

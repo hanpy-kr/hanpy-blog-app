@@ -10,7 +10,14 @@ const BlogLayout = ({
 }: {
   children: React.ReactNode
   type: 'frontend' | 'backend' | 'infra' | 'design' | 'language'
-  subType: 'kubernetes' | 'docker' | 'utils' | 'pattern' | 'nodejs' | 'nextjs'
+  subType:
+    | 'kubernetes'
+    | 'docker'
+    | 'utils'
+    | 'pattern'
+    | 'nodejs'
+    | 'nextjs'
+    | 'react'
 }) => {
   return (
     <>

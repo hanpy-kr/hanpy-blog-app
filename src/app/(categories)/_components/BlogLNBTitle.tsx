@@ -31,6 +31,7 @@ type SUB_CATEGORY_TYPE =
   | 'pattern'
   | 'nodejs'
   | 'nextjs'
+  | 'react'
 
 const BlogLNBTitle = ({
   type,
