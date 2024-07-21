@@ -52,7 +52,7 @@ const BlogLNBTitle = ({
 
   const handleDropdown = (value: string) => {
     const clickData = Object.keys(CONTENT_CATEGORY[type].subCategory).find(
-      (v) => v === value,
+      (v) => v === value.toLowerCase(),
     )
     if (!clickData) return
     setCurrentCategoryInfo(CONTENT_CATEGORY[type].subCategory[clickData])

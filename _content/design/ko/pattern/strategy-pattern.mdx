@@ -1,0 +1,291 @@
+---
+deployment: true
+category: Design
+title: 'Strategy Pattern'
+summary: 'Strategy Pattern이란, 유사한 동작을 수행하는 알고리즘 집합을 정의하고 캡슐화하여, 동적(수정가능)으로 선택하여 사용하는 방식입니다.'
+pageKey: Strategy_Patterns_ko
+lng: KOR
+publishedAt: 2024-07-21
+---
+
+# 전략 패턴
+
+유사한 동작을 수행하는 알고리즘 집합을 정의하고 캡슐화하여, 동적(수정가능)으로 선택하여 사용하는 방식입니다. 알고리즘에서 사용하는 행동 인터페이스를 통해 분리함으로써, 런타임 시에 다른 알고리즘을 선택하는 것이 가능합니다.
+
+<br />
+
+예를 들어 로그인과 관련된 Auth class를 만들었다고 해봅시다. Auth 클래스에는 여러 기능들이 포함되게 됩니다. 많은 기능 둘 중에 third party 로그인을 만들었다고 생각해 보겠습니다. Auth 클래스에는 네이버 로그인, 카카오 로그인, 구글 로그인이 포함됩니다. 우리는 추후 github 로그인을 추가 할 수도 있도록 확정성 있는 코드를 만들고 싶습니다. 이러한 경우 third party 로그인을 Auth 클래스에서 분리합니다. 분리하는 방식은 Auth 클래스의 기능 분리를 사용합니다. 이를 조금 더 고급지게 말하자면, 메인 클래스(Auth 클래스)가 각각의 행동을 다른 클래스에 위임한다고 합니다.
+
+<br />
+
+위임하는 방식 이외에도, 클래스를 확장하는 방식에는 공통 기능에 대한 상속하는 방식도 가능합니다. 이러한 상속받은 메소드를 오버라이딩을 통해 변경합니다. 하지만 전략패턴에서는 상속보다는 위임 방식으로 구현하는 것이 좋습니다. 예를 들여 햄버거 가게를 메인 클래스라고 하고, 햄버거를 유지보수 한다고 생각해 보겠습니다. 위임과 상속의 관점에서 접근해 보면, 위임은 햄버거 종류를 클래스로 따로 위임받아 불고기버거/새우버거 와 같이 완성된 제품을 추가하고 삭제한다고 생각할 수 있습니다. 상속의 개념은 재료를 줄테니 상속 받은 클래스에서 만들어서 쓴다고 보면 될것 같습니다. 여기서 햄버거의 종류가 100개가 있는데, 특정 햄버거의 제작 방식을 수정한다고 해봅시다. 상속의 경우에는 100개의 오버라이드된 햄버거를 하나씩 체크해서 변경사항이 필요한지 확인을 해야합니다. 하지만 위임의 경우는 특정 햄버거만 찾아서 변경을 하면 됩니다. (전략 패턴을 이해하기 쉽도록 작성한 예시로 항상 상속보다 위임이 좋다고 할 수는 없습니다.)
+
+<br />
+
+정리는 해봅시다. 위임은 완제품으로 만들어진 도구를 가져다 쓰면 됩니다. 상속은 인터페이스만 받아서 내가 필요한 도구를 만드는 개념입니다. 약간의 느낌이 온다면 아래에서 조금 더 디테일하게 고민해 보도록 합시다.
+
+## 전략 패턴 예시 1.
+
+전략 패턴을 활용하여 로그인 로직을 작성한다면 대략적으로 아래와 같을 것입니다.
+
+```javascript title="strategy pattern" showLineNumbers
+class AuthProgram {
+  constructor(authStrategy) {
+    this._authStrategy = authStrategy
+  }
+
+  authenticate() {
+    if (!this._authStrategy) {
+      console.log('No Authentication Strategy!')
+      return
+    }
+    this._authStrategy.auth()
+  }
+}
+
+// interface
+class AuthStrategy {
+  auth() {
+    throw new Error('Authenticating Interface')
+  }
+}
+
+class Basic extends AuthStrategy {
+  auth() {
+    console.log('Authenticating using Basic Strategy')
+  }
+}
+
+class kakao extends AuthStrategy {
+  auth() {
+    console.log('Authenticating using OAuth Strategy')
+  }
+}
+
+class google extends AuthStrategy {
+  auth() {
+    console.log('Authenticating using OAuth Strategy')
+  }
+}
+```
+
+위 로직인 인증을 다른 클래스에 위임한 것을 알 수 있습니다. 사용 예시는 아래와 같습니다.
+
+```javascript title="strategy pattern" showLineNumbers
+const authProgram = new AuthProgram(new Kakao())
+authProgram.authenticate()
+```
+
+kakao든 google이든 authProgram.authenticate()를 사용하는 방식은 동일합니다. 이는 조건문의 사용이 필요가 없어지게 됩니다.
+
+## 전략 패턴 구성
+
+전략 페턴은 크게 Context(컨텍스트)와 Strategy(전략)으로 구성됩니다. Context는 Strategy 객체를 외부에서 주입받아 사용됩니다. 이 때, Strategy는 여러 개가 될 수 있기 때문에 Strategy에 대한 포인터가 존재한다고 할 수 있습니다. 선택받은 Strategy는 활성화 상태이고 나머지는 비활성화 상태입니다. 위의 예시에서는 AuthProgram가 Context가 되고 Kakao나 Google이 Strategy라고 할 수 있습니다.
+
+## 전략 패턴 예시 2.
+
+전략 패턴은 큰 방법론이지 반드시 정해진 사용법이 존재하는 것은 아닙니다. 런타임 환경에서도 전략을 변경하여 사용하는 겻이 가능합니다. <codeline>prototype</codeline>을 활용하여 코드를 작성해 보도록 하겠습니다.
+
+```javascript title="strategy pattern" showLineNumbers
+// context
+let Strategy = (function () {
+  function Strategy() {
+    this._strategy = null
+  }
+  Strategy.prototype.setStrategy = function (strategy) {
+    this._strategy = strategy
+  }
+  Strategy.prototype.execute = function () {
+    this._strategy.execute()
+  }
+})()
+
+// Strategy1
+let TrainStrategy = (function () {
+  function TrainStrategy() {}
+  TrainStrategy.prototype.execute = function () {
+    console.log('기차를 탑니다')
+  }
+  return TrainStrategy
+})()
+
+// Strategy2
+let AirplaneStrategy = (function () {
+  function AirplaneStrategy() {}
+  AirplaneStrategy.prototype.execute = function () {
+    console.log('비행기를 탑니다')
+  }
+  return AirplaneStrategy
+})()
+
+// USE
+const movement = new Strategy()
+const train = new TrainStrategy()
+const airplain = new AirplaneStrategy()
+movement.setStrategy(train)
+movement.setStrategy(airplain)
+movement.execute()
+```
+
+위의 예시에서의 포인트는 runtime 중간에 전략을 변경할 수 있다는 점입니다. 결국에는 비행기를 타는 콘솔이 찍히게 됩니다. 위와 같은 예를 조금더 직관적으로 확인가능한 예시는 Sort 부분입니다.
+
+```javascript title="strategy pattern" showLineNumbers
+// Context
+class Sorter {
+  constructor(strategy) {
+    this.strategy = strategy
+  }
+
+  setStrategy(strategy) {
+    this.strategy = strategy
+  }
+
+  sort(array) {
+    return this.strategy.sort(array)
+  }
+}
+
+// strategy interface
+class SortStrategy {
+  sort(array) {}
+}
+
+// strategy 1
+class BubbleSortStrategy extends SortStrategy {
+  sort(array) {
+    console.log('Sorting using Bubble Sort')
+    // Implement Bubble Sort algorithm here
+    return array
+  }
+}
+
+// strategy 2
+class QuickSortStrategy extends SortStrategy {
+  sort(array) {
+    console.log('Sorting using Quick Sort')
+    // Implement Quick Sort algorithm here
+    return array
+  }
+}
+
+// USE
+const array = [9, 11, 234, 32, 238, 2, 52]
+const bubbleSortStrategy = new BubbleSortStrategy()
+const quickSortStrategy = new QuickSortStrategy()
+
+const sorter = new Sorter(bubbleSortStrategy)
+console.log(sorter.sort(array))
+
+sorter.setStrategy(quickSortStrategy)
+console.log(sorter.sort(array))
+```
+
+Sorter 클래스의 인스턴스를 만든 후에, 클래스 자체에 대한 변경 없이 sort Strategy를 변경이 가능하다는 것이 포인트 입니다. Sorter 클래스의 sort 메서드를 SortStrategy 객체에 위임되었음을 위 코드에서 확인 할 수 있습니다. 그리고 사용 부분에서 확인 가능하듯이, setStrategy를 통해 런타임 중간에 strategy를 변경하여 사용하는 것이 가능합니다.
+
+## 전략 패턴 예시 3.
+
+```javascript title="strategy pattern" showLineNumbers
+class ShoppingCart {
+  constructor() {
+    this.items = []
+  }
+
+  pay(paymentMethod) {
+    let amount = 0
+    this.items.forEach((element) => {
+      amount += element.price
+    })
+    paymentMethod.pay(amount)
+  }
+
+  addItem(item) {
+    this.items.push(item)
+  }
+}
+
+class PaymentStategy {
+  pay(amount) {}
+}
+
+class PYCardStrategy extends PaymentStategy {
+  constructor(email, pw) {
+    this.email = email
+    this.pw = pw
+  }
+
+  pay(amount) {
+    // PYCard 결제 로직
+    console.log(amount, '결재!')
+  }
+}
+class KAKAOCardStrategy extends PaymentStategy {
+  constructor(name, cardNum, cvv, expiryDate) {
+    this.name = name
+    this.cardNum = cardNum
+    this.cvv = cvv
+    this.expiryDate = expiryDate
+  }
+
+  pay(amount) {
+    // KAKAO 결제 로직
+    console.log(amount, '결재!')
+  }
+}
+```
+
+위와 같이 입력값을 객체로 할당받는 것은 생성자의 매개변수를 다양하게 가질 수 있다는 점에서 장점이라고 할 수 있습니다. 사용하는 부분의 예시는 아래와 같습니다. 위의 코드에서 USE라 명명된 코드를 포함하여, 아래의 사용부분을 Client 부분이라고 부르기도 합니다.
+
+```javascript title="strategy pattern" showLineNumbers
+// context 등록
+const cart = new ShooppingCart()
+
+// itme 등록
+const chip = new Item('과자', 2000)
+const con = new Item('아이스크림', 4000)
+cart.addItem(chip)
+cart.addItem(con)
+
+// PYCard로 결제 전략 실행
+cart.pay(new PYCardStrategy('hanpy@example.com', 'han-py'))
+
+// KAKAOBank > 결제 전략 실행
+cart.pay(new KAKAOCardStrategy('han-py', '1234-1234-1234-1234', '123', '01/01'))
+```
+
+## 전략 패턴 예시 4.
+
+마지막 예시로 passport라이브러리를 가지고 왔습니다. 아래에서 확인가능 하듯, passport도 전략 패턴을 바탕으로 로직이 구현되어 있는 것을 확인 할 수 있습니다.
+
+```javascript title="strategy pattern" showLineNumbers
+const passport = require('passport')
+const KakaoStrategy = require('passport-kakao').Strategy
+const NaverStrategy = require('passport-naver-v2').Strategy
+const GoogleStrategy = require('passport-google-oauth20').Strategy
+
+// 카카오
+passport.use(new KakaoStrategy({ clientID, callbackURL }, async (accessToken, refreshToken, profile, done) => {
+	// ...
+})
+
+// 네이버
+passport.use(new NaverStrategy({ clientID, clientSecret, callbackURL }, async (accessToken, refreshToken, profile, done) => {
+	// ...
+})
+
+// 구글
+passport.use(new GoogleStrategy({ clientID, clientSecret, callbackURL }, async (accessToken, refreshToken, profile, done) => {
+	// ...
+})
+```
+
+## 정리
+
+요구사항에 따른 코드 변경 시 기존 코드에 미치는 영향을 최소한으로 줄이면서 작업이 가능해야합니다. 코드에서 변경되는 부분과 변경되지 않는 부분을 구분하고, 변경되는 부분을 따로 뽑아서 캡슐화를 진행해야합니다. 이러한 코드는 변경되지 않는 부분에 영향을 미치지 않고 확장이 가능하게 됩니다.
+
+<br />
+
+전략 패턴은 런타임 환경에서 쉽게 변경이 가능해야합니다. 우리는 별도의 Strategy에 구체적인 로직을 구현하였습니다. 이는 Context에서 구제적인 로직을 구현할 필요가 없게 됩니다. 이러한 방식은 직관적으로 생각하면 Context에서 Strategy의 로직을 가져다 쓴다고 생각 할 수 있습니다.하지만 여기서 고려해야할 것은 같은 인터페이스로 Strategy를 만들어야 합니다. 이는 상위 형식에 맞춰서 프로그래밍을 한다는 것과 같은 말로, 예시 3에서 확인한 것과 같이 Client는 Strategy와 관련없이 cart.pay()만 실행하면 된다는 말입니다. 즉, 런타임 시 객체가 코드에 의존하지 않도록 지정된 인터페이스에 맞춰 작성하여 다형성을 활용해야 합니다.
+
+<br />
+
+결제에는 인증과 지불의 방법이 있다면, 전략 패턴을 통해 인증/지불을 Strategy Class에 위임합니다. 그리고 이러한 두 클래스들을 합쳐 사용하는 것을 구성(composition)이라 합니다. 위에서 알아본 바와 같이, 일반적으로 우리는 상속보다 구성을 사용해야합니다.
