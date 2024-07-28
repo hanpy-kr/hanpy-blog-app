@@ -1,0 +1,34 @@
+---
+deployment: true
+category: Infra
+title: 'Kubernetes Probe'
+summary: 'Kubernetes에서 Probe 라는 개념을 통해 파드 내부의 상태를 모니터링 할 수 있습니다.'
+lng: KOR
+pageKey: kubernetes_2_4_ko
+publishedAt: 2024-08-01
+---
+
+# Probe
+
+프로드 라는 개념을 통해 파드 내부의 상태를 모니터링 할 수 있습니다.
+
+프로브는 명령어를 계속 실행하여 확인하거나 API호출을 통해 정상적으로 오는지를 확인하는 역할을 한다. 종류는 3개다.
+
+#### readiness
+
+- 파드를 네트워크에 연결할 지 결정합니다.(네트워크)
+- http 호출을 하여 200이 온다면 프로브는 성공이고 정상 호출로 판별합니다.
+
+#### liveness
+
+- 파드를 재시작을 판별합니다.
+- 파드 정상 체크를 하여, 실패 시 프로세스만 살아있고 정상동작 못한다 판단하여 재시작합니다.
+- ffmpeg 같이 무거운 작업 도중에 cpu 터지는 경우 재시작을 진행합니다.
+
+#### startup
+
+- Readiness Probe와 Liveness Probe를 보내도 될지 사전 체크하는 부분입니다.
+- 즉 startup을 성공해야 readiness와 liveness를 호출합니다.
+- 사실 상 startup이 있는 이유는 바로 위 2개를 바로 쓰면 장애날 수도 있다. 약간의 서비스를 안정화한 이후에 위 2개를 쓰기 위해 startup 단계가 있다고 보면 된다.
+
+<br />

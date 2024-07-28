@@ -77,8 +77,28 @@ const subCategoryDetail: {
       ],
       [
         {
+          href: '/infra/ko/kubernetes/2-0.yaml-command',
+          title: 'yaml & command',
+        },
+        {
           href: '/infra/ko/kubernetes/2-1.pod',
           title: 'Pod',
+        },
+        {
+          href: '/infra/ko/kubernetes/2-2.multi-container-pod',
+          title: 'Multi Container Pod',
+        },
+        {
+          href: '/infra/ko/kubernetes/2-3.init-container',
+          title: 'Init Container',
+        },
+        {
+          href: '/infra/ko/kubernetes/2-4.probe',
+          title: 'Probe',
+        },
+        {
+          href: '/infra/ko/kubernetes/2-5.gracefull-shutdown',
+          title: 'Gracefull Shutdown',
         },
       ],
       [

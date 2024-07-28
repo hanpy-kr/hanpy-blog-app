@@ -1,0 +1,17 @@
+---
+deployment: true
+category: Infra
+title: 'Gracefull Shutdown'
+summary: 'Gracefull Shutdown이란 파드가 종료 될때, 작업 중인 데이터 유실을 막기 위해 종료 유예 기간을 주는 개념입니다.'
+lng: KOR
+pageKey: kubernetes_2_5_ko
+publishedAt: 2024-08-02
+---
+
+## Gracefull Shutdown
+
+Gracefull Shutdown이란 파드가 종료 될때, 작업 중인 데이터 유실을 막기 위해 종료 유예 기간을 주는 개념입니다.
+전체 작동 순서는 우선은 추가적인 작업이 들어오지 못하게 막는 작업을 하고, 남을 작업들을 처리하게 됩니다.
+kubelet에서 pod로 SIGTERM을 줍니다.
+그러면 pod는 네트워크를 분리하게 되고 새로운 작업은 들어오지 않고 기존 작업 들만 남아있게 됩니다.
+보통 쿠버네티스는 30s를 대기 하고 강제 종료되지 때문에, 30s 이상걸리는 부분이 있다면 관련부분에 대한 개발이 필요합니다.
