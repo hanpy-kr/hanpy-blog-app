@@ -12,12 +12,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
   const datas = contentlayer.query(postsQuery as any)
 
-  const sitmapDatas = datas.map((data) => {
-    return {
-      url: `${BASE_URL}/${data['_raw']['flattenedPath']}`,
-      lastModified: new Date(data['publishedAt']),
-    }
-  })
+  const sitmapDatas = datas
+    .filter((item) => {
+      if (item && item?.deployment) {
+        return true
+      } else {
+        return false
+      }
+    })
+    .map((data) => {
+      return {
+        url: `${BASE_URL}/${data['_raw']['flattenedPath']}`,
+        lastModified: new Date(data['publishedAt']),
+      }
+    })
 
   return [
     {

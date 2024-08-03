@@ -100,6 +100,10 @@ const subCategoryDetail: {
           href: '/infra/ko/kubernetes/2-5.gracefull-shutdown',
           title: 'Gracefull Shutdown',
         },
+        {
+          href: '/infra/ko/kubernetes/2-6.pod-scheduling',
+          title: 'Pod Scheduling',
+        },
       ],
       [
         // {

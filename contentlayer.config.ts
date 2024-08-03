@@ -17,21 +17,6 @@ const computedFields: ComputedFields = {
   },
 }
 
-const _fields = {
-  title: {
-    type: 'string',
-    required: true,
-  },
-  publishedAt: {
-    type: 'string',
-    required: true,
-  },
-  summary: {
-    type: 'string',
-    required: true,
-  },
-}
-
 const _fieldsWithCommon = {
   deployment: {
     type: 'boolean',
@@ -176,7 +161,7 @@ export const Backend = defineDocumentType(() => ({
   filePathPattern: `backend/*.mdx`,
   // filePathPattern: `**/*.mdx`,
   contentType: 'mdx',
-  fields: _fields as {},
+  fields: _fieldsWithCommon as {},
 }))
 
 const rehypeOptions = {

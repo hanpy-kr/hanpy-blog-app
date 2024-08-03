@@ -148,7 +148,7 @@ export default function PostList({
       <div className="post__list">
         {posts?.length > 0 ? (
           posts?.map((post) => {
-            if (!post.deployment) return
+            if (!post.deployment) return null
             return (
               <div key={post?._id} className="post__box">
                 <Link href={`/${post._raw.flattenedPath}`}>
