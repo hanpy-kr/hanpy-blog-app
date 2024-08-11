@@ -1,0 +1,172 @@
+---
+deployment: false
+category: Frontend
+title: 'yarn workspaces'
+summary: 'yarn workspaces는 yarn을 통해 모노레포를 관리할 수 있는 패키지 매니저입니다.'
+pageKey: Frontend_yarn_workspaces_ko
+lng: KOR
+publishedAt: 2024-08-13
+---
+
+# yarn workspaces
+
+## Yarn 1.x(classic) 워크스페이스 구성과 한계
+
+yarn은 대부분 npm 과 비슷하다고 할 수 있습니다. yarn에서 루트 프로젝트에 private: true가 필수적으로 설정되어 있어야합니다.(이후 버전 부터는 필요없음)
+
+```typescript title="Yarn Classic" showLineNumbers
+# Node.js 버전 확인
+➜ node -v
+v20.9.0
+
+# v20.9.0 가 설치되어 있지 않다면
+➜ nvm install 20.9.0
+
+# v20.9.0 를 사용하고 있지 않다면
+➜ nvm use 20.9.0
+
+# Node.js 버전 다시 확인
+➜ node -v
+v20.9.0
+```
+
+```typescript title="Yarn Classic" showLineNumbers
+# npm 버전 확인
+➜ npm -v
+10.2.1
+
+# 최신 버전 npm 으로 업그레이드
+➜ npm i npm@10.2.1 -g
+
+# npm 버전 다시 확인
+➜ npm -v
+10.2.1
+```
+
+```typescript title="Yarn Classic" showLineNumbers
+# yarn 설치 확인 및 버전 확인
+➜ yarn -v
+1.22.19
+
+# 최신 버전 npm 으로 업그레이드
+➜ npm i yarn@1.22.19 -g
+
+# yarn 설치 다시 확인 및 버전 다시 확인
+➜ yarn -v
+1.22.19
+```
+
+```typescript title="Yarn Classic" showLineNumbers
+➜ mkdir yarn-classic-workspaces-example
+
+➜ cd yarn-classic-workspaces-example
+
+➜ yarn init -y -p
+
+➜ cat package.json
+```
+
+```json title="Yarn Classic" showLineNumbers
+{
+  "name": "yarn-classic-workspaces-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true
+}
+```
+
+```bash title="Yarn Classic" showLineNumbers
+➜ mkdir packages packages/a packages/b
+
+➜ cd package/a
+
+➜ yarn init -y
+
+➜ cd ../b
+
+➜ yarn init -y
+
+➜ cd ...
+
+➜ code .
+```
+
+```json title="Yarn Classic" showLineNumbers
+{
+  "name": "yarn-classic-workspaces-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "workspaces": ["packages/*"]
+}
+```
+
+```typescript title="Yarn Classic" showLineNumbers
+➜ yarn
+```
+
+```typescript title="Yarn Classic" showLineNumbers
+➜ yarn workspace a add axios
+```
+
+```typescript title="Yarn Classic" showLineNumbers
+// yarn-classic-workspaces-example/package-b/index.js
+
+const axios = require('axios')
+
+module.exports = async function () {
+  const response = await axios.get('https://api.github.com/users')
+
+  return response.data
+}
+```
+
+```typescript title="Yarn Classic" showLineNumbers
+// yarn-classic-workspaces-example/package-a/index.js
+
+const b = require('b')
+
+;(async function main() {
+  const users = await b()
+
+  console.log(users.map((user) => user.login).join(', '))
+})()
+```
+
+```json title="Yarn Classic" showLineNumbers
+{
+  "name": "a",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.5.1"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
+```
+
+```typescript title="Yarn Classic" showLineNumbers
+#
+➜ yarn workspace a start
+
+#
+➜ yarn workspaces run start
+```
+
+```typescript title="Yarn Classic" showLineNumbers
+#
+➜ yarn workspaces info
+```
+
+```typescript title="Yarn Classic" showLineNumbers
+
+```
+
+## Yarn Berry 워크스페이스 구성과 한계
+
+https://2woongjae.notion.site/yarn-berry-workspaces-example-b9d4d5c47f7d46cfbbb8e0bbcd7260b7
