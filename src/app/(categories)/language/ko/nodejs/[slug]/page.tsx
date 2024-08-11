@@ -7,6 +7,7 @@ import { Roboto_Flex } from 'next/font/google'
 import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
 import useI18N from '@/hooks/useI18N'
+import Link from 'next/link'
 
 const SUB_TITLE = 'nodejs'
 const PREFIX_PATH = `language/ko/${SUB_TITLE}`
@@ -21,7 +22,14 @@ export default function Page({ params }: { params: { slug: string } }) {
     return p._raw.flattenedPath === `${PREFIX_PATH}/${params.slug}`
   })
 
-  if (!post) throw new Error(`Post not found for slug: ${params.slug}`)
+  if (!post)
+    return (
+      <div>
+        <h2>Not Found</h2>
+        <p>Could not find requested resource</p>
+        <Link href="/">Return Home</Link>
+      </div>
+    )
 
   const MDXComponent = useMDXComponent(post.body.code)
   return (
