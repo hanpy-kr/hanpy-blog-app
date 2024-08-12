@@ -18,7 +18,6 @@ const robotoFlex = Roboto_Flex({
 
 export default function Page({ params }: { params: { slug: string } }) {
   const post = allLanguageForKORs.find((p) => {
-    console.log(p)
     return p._raw.flattenedPath === `${PREFIX_PATH}/${params.slug}`
   })
 
@@ -32,6 +31,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     )
 
   const MDXComponent = useMDXComponent(post.body.code)
+
   return (
     <div className={robotoFlex.className}>
       <BlogLayout type="language" subType={SUB_TITLE}>
