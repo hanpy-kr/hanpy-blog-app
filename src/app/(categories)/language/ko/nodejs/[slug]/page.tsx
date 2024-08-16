@@ -6,7 +6,6 @@ import { Roboto_Flex } from 'next/font/google'
 
 import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
-import useI18N from '@/hooks/useI18N'
 import Link from 'next/link'
 
 const SUB_TITLE = 'nodejs'
@@ -36,7 +35,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     <div className={robotoFlex.className}>
       <BlogLayout type="language" subType={SUB_TITLE}>
         <div className="infra__content">
-          <p className="infra__header">Kubernetes</p>
+          <p className="infra__header">{SUB_TITLE}</p>
           {/* My Post: {params.slug} */}
           <MDXComponent />
         </div>
