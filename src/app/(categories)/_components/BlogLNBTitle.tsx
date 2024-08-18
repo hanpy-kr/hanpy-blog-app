@@ -74,7 +74,7 @@ const BlogLNBTitle = ({
               <Image
                 boxSize="2rem"
                 borderRadius="full"
-                src={`/icons${currentCategoryInfo.icon}`}
+                src={`${currentCategoryInfo.icon}`}
                 alt="Fluffybuns the destroyer"
                 mr="12px"
               />
@@ -92,7 +92,7 @@ const BlogLNBTitle = ({
               <Image
                 boxSize="2rem"
                 borderRadius="full"
-                src={`/icons${data.icon}`}
+                src={`${data.icon}`}
                 // src={`/icons/docker.svg`}
                 alt="Fluffybuns the destroyer"
                 mr="12px"

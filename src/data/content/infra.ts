@@ -8,12 +8,12 @@ const subCategory: {
   docker: {
     name: 'docker',
     href: '/infra/ko/docker/1-1.Introduction',
-    icon: '/docker.svg',
+    icon: '/icons/docker.svg',
   },
   kubernetes: {
     name: 'kubernetes',
     href: '/infra/ko/kubernetes/1-1.Introduction',
-    icon: '/kubernetes.svg',
+    icon: '/icons/kubernetes.svg',
   },
 }
 

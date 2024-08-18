@@ -24,7 +24,6 @@ cite,
 del,
 dfn,
 em,
-img,
 ins,
 kbd,
 q,
@@ -85,6 +84,11 @@ video {
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+}
+
+img {
+  margin: auto;
+  display: block;
 }
 
 /* css overridding */

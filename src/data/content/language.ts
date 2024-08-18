@@ -6,9 +6,9 @@ const subCategory: {
   }
 } = {
   nodejs: {
-    name: 'Design Pattern',
-    href: '/design/ko/pattern/01.Introduction',
-    icon: '',
+    name: 'Nodejs',
+    href: '/language/ko/nodejs/introduction',
+    icon: 'https://resource.han-py.com/blog/logs/nodejs_logo.svg',
   },
 }
 
@@ -22,8 +22,15 @@ const subCategoryDetail: {
   }
 } = {
   nodejs: {
-    title: [],
-    subTitle: [],
+    title: ['Beginner'],
+    subTitle: [
+      [
+        {
+          href: '/language/ko/nodejs/introduction',
+          title: 'Introduction',
+        },
+      ],
+    ],
   },
 }
 

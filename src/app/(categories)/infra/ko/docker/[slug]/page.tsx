@@ -18,7 +18,6 @@ const robotoFlex = Roboto_Flex({
 
 export default function Page({ params }: { params: { slug: string } }) {
   const post = allInfraForKORs.find((p) => {
-    console.log(p)
     return p._raw.flattenedPath === `${PREFIX_PATH}/${params.slug}`
   })
 

@@ -1,7 +1,7 @@
 ---
 deployment: true
 category: 'Language'
-title: 'Nodejs 기초 정리'
+title: 'Nodejs 기초 및 성능'
 summary: 'nodejs란 Chrome V8 Javascript 엔진으로 빌드된 Javascript 런타임입니다.'
 pageKey: language_nodejs_1_ko
 lng: KOR
@@ -14,11 +14,19 @@ nodejs란 Chrome V8 Javascript 엔진으로 빌드된 Javascript 런타임입니
 
 <br />
 
+![image](https://resource.han-py.com/blog/logs/nodejs_logo.svg)
+
+<br />
+
 개발자가 보통 말하는 nodejs란 무엇일까요? 우리는 보통 nodejs를 웹 서버라고 이해합니다. 하지만, nodejs는 웹 서버를 만들 수 있는 기능을 제공할 뿐이지, 웹 서버는 아닙니다. 공식문서에 들어가 보면, Node.js는 크롬 V8 자바스크립트 엔진으로 빌드된 자바스크립트 런타임이라고 설명이 되어 있습니다. 쉽게 말하면, js 파일을 실행하기 위해 필요한 환경이 nodejs입니다.
 
 <br />
 
 여기서 주의해야 할 점은 html의 javascript와 nodejs가 실행하는 javascript가 다르다는 것을 입니다. nodejs 이전의 javascript는 .js 파일을 단독으로 실행하지 못했고, 웹의 브라우저에서만 javascript를 실행할 수 있었습니다. nodejs라는 javascript 실행기의 등장으로, 현재 우리가 VScode에서 npm run start / node index.js 와 같은 방식으로 javascript 파일을 실행할 수 있게 되었습니다. 정리하면, nodejs이전에는 html에서 브라우저가 javascript를 읽은 것이고, nodejs 이후에는 nodejs 파일명.js 로 javscript도 실행 할 수 있는 방법이 생긴 것이라고 할 수 있습니다. 이러한 변화로 인해 javascript를 독립적으로 실행이 가능해졌고, javascript를 활용한 웹 서버를 만들고 실행 할 수 있게 되었습니다.
+
+<br />
+
+Node.js는 현대 웹 개발에서 중요한 역할을 하고 있습니다. 이벤트 루프오 논블로킹 I/O모델을 활용하여 높은 처리량과 낮은 지연 시간을 가지기 때문에 효율적인 네트워크 Application 개발을 가능하게 합니다. 단일 스레드이지만 이벤트 기반 모델과 비동기 처리 덕분에 높은 성능을 유지할 수 있으며, 특히 I/O가 집중적인 웹 애플리케이션에 좋은 성능을 가집니다.
 
 ## Nodejs 특징
 
@@ -37,7 +45,7 @@ build scalable network applications.
 
 nodejs의 모든 API는 비동기로 non-blocking이라고 할 수 있습니다. 쉽게 말하면 nodejs에서의 API 요청 시 반환되는 데이터를 기다리지 않고 다음 API 작업을 수행합니다. 이러한 작업 프로세스는 nodejs는 내부적으로 이전에 보낸 API에 대한 응답을 받는다고 할 수 있습니다. 아래의 코드만으로 우리는 웹 서버를 만드는 것이 가능합니다.
 
-```TypeScript title="Builder Pattern" showLineNumbers
+```javascript title="Nodejs" showLineNumbers
 const http = require('http')
 
 const hostname = '127.0.0.1'
@@ -72,4 +80,14 @@ nodejs는 단일 스레드를 사용하기 때문에, 기존의 다른 서버보
 
 데이터를 보낼 때, 한 번에 보내는 방식과 데이터를 쪼개서 여러 번 보내는 방식이 있습니다. 일반적인 버퍼(Buffering) 방식은 파일을 한 번에 보내는 방식을 의미합니다. nodejs는 데이터를 한번에 보내는 게 아니라 덩어리로 나눠서 보냅니다. 이는 우리가 파일 다운로드하는 방식과 비슷하다고 생각하면 됩니다. 관련 내용은 추가로 다룰 예정입니다.
 
-![image](/hanpy.jpeg)
+## Nodejs 성능 최적화
+
+Nodejs의 장접을 극대화 하는 방식으로는 비동기 I/O 작업을 효율적으로 관리하는 것입니다. 비동기 I/O처리는 논블로킹 작업을 가능하게 하여 Application 작업량과 응답 시간을 개선할 수 있습니다.
+
+<br />
+
+Nodejs 클러스터 모듈을 사용합니다. 단일 Node.js 인스턴스가 멀티 코어 시스템의 모든 CPU 코어를 사용할 수 있게 됩니다. 이는 높은 트래픽 처리하는 Application에서는 큰 장점이 됩니다.
+
+<br />
+
+성능을 모니터링합니다. 일반적인 PM2/Clicin/Relic과 같은 다양한 성능 모니터링이 존재합니다. 이는 성능 모니터링을 하고 병목 현상을 식별하여 최적화에 도움을 줄 수 있습니다.

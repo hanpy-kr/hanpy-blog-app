@@ -8,17 +8,17 @@ const subCategory: {
   react: {
     name: 'React',
     href: '/frontend/ko/react/react-data-crud',
-    icon: '/react.svg',
+    icon: '/icons/react.svg',
   },
   nextjs: {
     name: 'Nextjs',
     href: '/frontend/ko/nextjs/seo/next-sitemap',
-    icon: '/nextjs.svg',
+    icon: '/icons/nextjs.svg',
   },
   utils: {
     name: 'Utils',
     href: '/frontend/ko/utils/axios',
-    icon: '/utils.svg',
+    icon: '/icons/utils.svg',
   },
 }
 

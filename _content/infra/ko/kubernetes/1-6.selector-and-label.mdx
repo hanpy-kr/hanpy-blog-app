@@ -29,9 +29,10 @@ http {
   server {
     listen 80; // client 요청 포트
 
+    //  / 로 시작하는 path에 접근하면 http://backend로 리턴하겠다.
     location / {
-      proxy_set_header Connection ""; //upstream서버를 사용
-      proxy_pass http://backend; //  / 로 시작하는 path에 접근하면 http://backend로 리턴한다는 의미이다.
+      proxy_set_header Connection ""; // upstream서버를 사용
+      proxy_pass http://backend;
     }
   }
 }

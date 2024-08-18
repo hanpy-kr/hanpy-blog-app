@@ -48,20 +48,20 @@ export default function PostForm() {
         toast?.success('게시글을 수정했습니다.')
         router.push(`/posts/${post.id}`)
       } else {
-        console.log({
-          title: title,
-          summary: summary,
-          content: content,
-          // 한국 기준으로 시간 분 초까지 추가한다.
-          createdAt: new Date()?.toLocaleDateString('ko', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-          }),
-          // email: user?.email,
-          // uid: user?.uid, // firebase의 고유한 부분을 추가로 넣어준다.
-          category: category,
-        })
+        // console.log({
+        //   title: title,
+        //   summary: summary,
+        //   content: content,
+        //   // 한국 기준으로 시간 분 초까지 추가한다.
+        //   createdAt: new Date()?.toLocaleDateString('ko', {
+        //     hour: '2-digit',
+        //     minute: '2-digit',
+        //     second: '2-digit',
+        //   }),
+        //   // email: user?.email,
+        //   // uid: user?.uid, // firebase의 고유한 부분을 추가로 넣어준다.
+        //   category: category,
+        // })
 
         // firestore로 데이터 생성
         // await addDoc(collection(db, 'posts'), {
