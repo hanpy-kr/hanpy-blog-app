@@ -1,0 +1,190 @@
+---
+deployment: true
+category: Design
+title: '옵저버 패턴(Observer Pattern)'
+summary: '옵저버 패턴(observer pattern)은 객체의 상태 변화를 관찰하는 관찰자들, 즉 옵저버들의 목록을 객체에 등록하여 상태 변화가 있을 때마다 메서드 등을 통해 객체가 직접 목록의 각 옵저버에게 통지하도록 하는 디자인 패턴입니다.'
+pageKey: Observer_Patterns_ko
+lng: KOR
+publishedAt: 2024-08-20
+---
+
+# 옵저버 패턴(Observer Pattern)
+
+옵저버 패턴(observer pattern)은 객체의 상태 변화를 관찰하는 관찰자들, 즉 옵저버들의 목록을 객체에 등록하여 상태 변화가 있을 때마다 메서드 등을 통해 객체가 직접 목록의 각 옵저버에게 통지하도록 하는 디자인 패턴입니다. 주로 분산 이벤트 핸들링 시스템을 구현하는 데 사용됩니다. 발행/구독 모델도 비슷한 패턴중 하나입니다.
+
+<br />
+
+간단하게 말하자면 어떤 객체의 상태가 변할 때 그와 연관된 객체들에게 알림을 보내는 디자인 패턴이며 1 대 1 또는 1 대 N 관계를 가질 수 있습니다. 옵저버 패턴을 활용하면 다른 객체의 상태 변화를 별도의 함수 호출 없이 즉각적으로 알 수 있기 때문에 이벤트에 대한 처리를 자주해야 하는 프로그램이라면 매우 효율적인 프로그램을 작성할 수 있습니다.
+
+<br />
+
+## 구조
+
+Subject 클래스와 Observer 클래스로 나누어 집니다. Subject에서는 여러개의 Observer를 등록/제거하는 기능을 가지며, 등록된 OBserver에게 알림을 줄 수 있습니다.
+
+```typescript title="Observer Pattern" showLineNumbers
+class Subject {
+  constructor() {
+    this.observers = []
+  }
+
+  addObserver(observer) {
+    this.observers.push(observer)
+  }
+
+  removeObserver(observer) {
+    this.observers = this.observers.filter((obs) => obs !== observer)
+  }
+
+  notifyObservers(message) {
+    this.observers.forEach((observer) => observer.update(message))
+  }
+}
+
+class Observer {
+  constructor(name) {
+    this.name = name
+  }
+
+  update(message) {
+    console.log(`${this.name} received message: ${message}`)
+  }
+}
+```
+
+위의 예에서는 Observer의 update 메소드를 인터페이스로 추상화 클래스를 만들어서 사용하는 것도 가능합니다. 이는 느슨한 결합을 유지하고 있음을 나타냅니다. Client에서 사용하는 방법은 아래와 같습니다.
+
+```typescript title="Observer Pattern" showLineNumbers
+const subject = new Subject()
+const observer1 = new Observer('CASE 1')
+const observer2 = new Observer('CASE 2')
+
+subject.addObserver(observer1)
+subject.addObserver(observer2)
+
+subject.notifyObservers('옵저버에게 메시지 전달합니다.')
+
+subject.removeObserver(observer1)
+subject.notifyObservers('CASE 2에게만 메시지가 전달 됩니다.')
+```
+
+## Frontend 활용
+
+Frontend에서 간단한 Observer-pattern의 활용 예시를 확인해 봅시다.
+
+```html title="Observer Pattern" showLineNumbers
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Observer Pattern Example</title>
+  </head>
+  <body>
+    <button id="btn__hanpy">Click me</button>
+
+    <script>
+      class ButtonSubject {
+        constructor() {
+          this.observers = []
+        }
+
+        addObserver(observer) {
+          this.observers.push(observer)
+        }
+
+        notifyObservers(event) {
+          this.observers.forEach((observer) => observer.update(event))
+        }
+      }
+
+      class ClickObserver {
+        update(event) {
+          console.log(`clicked at: ${event.clientX}, ${event.clientY}`)
+        }
+      }
+
+      const buttonSubject = new ButtonSubject()
+      const clickObserver = new ClickObserver()
+
+      buttonSubject.addObserver(clickObserver)
+
+      const button = document.getElementById('btn__hanpy')
+      button.addEventListener('click', (event) => {
+        buttonSubject.notifyObservers(event)
+      })
+    </script>
+  </body>
+</html>
+```
+
+위와 같이 eventListener로 Click 이벤트를 활용하여 버튼 클릭 시에 console 알림을 보내줄 수 있습니다.
+
+## 알림 기능 적용 예시
+
+아래는 주식 추자자에게 가격을 알려주는 로직을 확인해 보도록 하겠습니다.
+
+```javascript title="Observer Pattern" showLineNumbers
+class StockSubject {
+  constructor() {
+    this.observers = []
+    this.stockPrice = 0
+  }
+
+  addObserver(observer) {
+    this.observers.push(observer)
+  }
+
+  removeObserver(observer) {
+    this.observers = this.observers.filter((obs) => obs !== observer)
+  }
+
+  setStockPrice(price) {
+    this.stockPrice = price
+    this.notifyObservers()
+  }
+
+  notifyObservers() {
+    this.observers.forEach((observer) => observer.update(this.stockPrice))
+  }
+}
+
+class InvestorObserver {
+  constructor(name) {
+    this.name = name
+  }
+
+  update(stockPrice) {
+    console.log(
+      `${this.name} is notified of stock price change: $${stockPrice}`,
+    )
+  }
+}
+```
+
+사실 상 이해를 돕기 위해 같은 update 메소드를 활용한 Observer를 사용하고 있습니다. client 사용부는 아래와 같습니다.
+
+```javascript title="Observer Pattern" showLineNumbers
+const stockSubject = new StockSubject()
+const investor1 = new InvestorObserver('han-py')
+const investor2 = new InvestorObserver('two-py')
+const investor2 = new InvestorObserver('three-py')
+const investor2 = new InvestorObserver('four-py')
+
+stockSubject.addObserver(investor1)
+stockSubject.addObserver(investor2)
+stockSubject.addObserver(investor3)
+stockSubject.addObserver(investor4)
+
+stockSubject.setStockPrice(100)
+```
+
+옵저버 패턴은 등록된 객체에게 일괄적으로 정보를 전달 하는 것에 있습니다. 이때 subject와 Observer간의 결합도를 낮추어 의존성을 낮추는 방향으로 코드를 작성해야합니다.
+
+<br />
+
+지금까지 옵저버 패턴의 기초 부분에 대해 알아보았습니다. 위의 예시에서는 데이터를 Subject 클래스에서 주는 데이터만 받을 수 있었습니다. 이를 옵저버 패턴에서 PUSH 방식으로 데이터를 받았다고 표현합니다. 하지만, 데이터의 양이 많아진다면, 필요한 데이터들만 Observer에서 선택하여 가지고 오는 방식도 존재합니다. 또한, 추상화 인터페이스를 제작하여 확장에 유연하게 대응할 수도 있습니다. 이러한 내용들은 심화 부분에서 다시 알아보도록 합니다.
+
+<br />
+
+![image](/hanpy.jpeg 'observer-patthen')
