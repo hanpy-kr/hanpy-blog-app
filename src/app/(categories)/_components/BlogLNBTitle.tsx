@@ -69,14 +69,15 @@ const BlogLNBTitle = ({
           as={Button}
           rightIcon={<ChevronDownIcon />}
         >
-          <Flex alignItems={'center'}>
-            {currentCategoryInfo.icon.length !== 0 ?? (
+          <Flex alignItems={'center'} justifyContent={'flex-start'}>
+            {currentCategoryInfo.icon.length !== 0 && (
               <Image
-                boxSize="2rem"
+                boxSize="1.5rem"
                 borderRadius="full"
                 src={`${currentCategoryInfo.icon}`}
                 alt="Fluffybuns the destroyer"
                 mr="12px"
+                ml="1px"
               />
             )}
             {currentCategoryInfo.name}
@@ -89,15 +90,15 @@ const BlogLNBTitle = ({
               key={data.name}
               onClick={() => handleDropdown(data.name)}
             >
-              {data.name.length !== 0 ?? (
+              {data.icon.length !== 0 && (
                 <Image
-                  boxSize="2rem"
+                  boxSize="1.5rem"
                   borderRadius="full"
                   src={`${data.icon}`}
                   // src={`/icons/docker.svg`}
                   alt="Fluffybuns the destroyer"
                   mr="12px"
-                  ml="8px"
+                  ml="1px"
                 />
               )}
               <span>{data.name}</span>

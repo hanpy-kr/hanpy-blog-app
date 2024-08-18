@@ -43,6 +43,10 @@ const subCategoryDetail: {
           href: '/design/ko/pattern/observer-pattern',
           title: 'Observer Pattern',
         },
+        {
+          href: '/design/ko/pattern/strategy-pattern',
+          title: 'Strategy Pattern',
+        },
       ],
       [
         // {

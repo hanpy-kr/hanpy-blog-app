@@ -17,7 +17,7 @@ const subCategory: {
   },
   utils: {
     name: 'Utils',
-    href: '/frontend/ko/utils/axios',
+    href: '/frontend/ko/utils/Monorepo',
     icon: '/icons/utils.svg',
   },
 }
@@ -54,8 +54,18 @@ const subCategoryDetail: {
     ],
   },
   utils: {
-    title: ['library'],
+    title: ['Administration', 'library'],
     subTitle: [
+      [
+        {
+          href: '/frontend/ko/utils/Monorepo',
+          title: 'Monorepo',
+        },
+        {
+          href: '/frontend/ko/utils/monorepo-pm',
+          title: 'Package Manager',
+        },
+      ],
       [
         {
           href: '/frontend/ko/utils/axios',
