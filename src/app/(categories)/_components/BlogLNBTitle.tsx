@@ -89,15 +89,17 @@ const BlogLNBTitle = ({
               key={data.name}
               onClick={() => handleDropdown(data.name)}
             >
-              <Image
-                boxSize="2rem"
-                borderRadius="full"
-                src={`${data.icon}`}
-                // src={`/icons/docker.svg`}
-                alt="Fluffybuns the destroyer"
-                mr="12px"
-                ml="8px"
-              />
+              {data.name.length !== 0 ?? (
+                <Image
+                  boxSize="2rem"
+                  borderRadius="full"
+                  src={`${data.icon}`}
+                  // src={`/icons/docker.svg`}
+                  alt="Fluffybuns the destroyer"
+                  mr="12px"
+                  ml="8px"
+                />
+              )}
               <span>{data.name}</span>
             </MenuItem>
           ))}

@@ -29,11 +29,19 @@ const subCategoryDetail: {
           href: '/design/ko/pattern/01.Introduction',
           title: 'Introduction',
         },
+        {
+          href: '/design/ko/pattern/polymorphism',
+          title: 'polymorphism',
+        },
       ],
       [
         {
           href: '/design/ko/pattern/builder-pattern',
           title: 'Builder Pattern',
+        },
+        {
+          href: '/design/ko/pattern/observer-pattern',
+          title: 'Observer Pattern',
         },
       ],
       [
