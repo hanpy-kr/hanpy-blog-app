@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 // import { Inter } from 'next/font/google'
 import './globals.css'
 import ToastProvider from '@/components/provider/ToastProvider'
@@ -57,13 +58,11 @@ export default function RootLayout({
 }) {
   return (
     <html>
-      <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8185415229814052"
-          crossOrigin="anonymous"
-        ></script>
-      </head>
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8185415229814052"
+        crossOrigin="anonymous"
+      />
       {/* <body> */}
       <body className={roboto.className}>
         <ToastProvider />
