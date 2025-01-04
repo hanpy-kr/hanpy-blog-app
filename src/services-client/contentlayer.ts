@@ -2,7 +2,8 @@ import { CategoryType } from '@/app/(home)/types'
 import {
   allFrontendForKORs,
   allFrontendForENGs,
-  allBackends,
+  allBackendForKORs,
+  allBackendForENGs,
   allInfraForKORs,
   allInfraForENGs,
   allDesignForKORs,
@@ -35,7 +36,7 @@ class ContentlayerService {
             return 1
           })
         case 'Backend':
-          return [...allBackends].sort((a, b) => {
+          return [...allBackendForENGs].sort((a, b) => {
             if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
             return 1
           })
@@ -59,7 +60,7 @@ class ContentlayerService {
           return [
             ...allDesignForENGs,
             ...allFrontendForENGs,
-            ...allBackends,
+            ...allBackendForENGs,
             ...allInfraForENGs,
             ...allLanguageForENGs,
           ].sort((a, b) => {
@@ -76,7 +77,7 @@ class ContentlayerService {
             return 1
           })
         case 'Backend':
-          return [...allBackends].sort((a, b) => {
+          return [...allBackendForKORs].sort((a, b) => {
             if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
             return 1
           })
@@ -100,7 +101,7 @@ class ContentlayerService {
           return [
             ...allDesignForKORs,
             ...allFrontendForKORs,
-            ...allBackends,
+            ...allBackendForKORs,
             ...allInfraForKORs,
             ...allLanguageForKORs,
           ].sort((a, b) => {

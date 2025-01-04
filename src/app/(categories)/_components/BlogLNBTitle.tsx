@@ -23,7 +23,7 @@ type CurrentCategoryInfoType = {
   icon: string
 }
 
-type SUB_CATEGORY_TYPE =
+export type SUB_CATEGORY_TYPE =
   | 'docker'
   | 'kubernetes'
   | 'react'
@@ -32,6 +32,7 @@ type SUB_CATEGORY_TYPE =
   | 'nodejs'
   | 'nextjs'
   | 'react'
+  | 'base'
 
 const BlogLNBTitle = ({
   type,

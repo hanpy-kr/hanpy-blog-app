@@ -1,0 +1,33 @@
+---
+deployment: true
+category: Frontend
+title: 'React 데이터 관리'
+summary: 'React에서 데이터 추가/변경/삭제 방법에 대해 알아봅시다.'
+lng: KOR
+pageKey: react_data_Management_ko
+publishedAt: 2024-07-20
+---
+
+```TypeScript
+export const postDetectionPreprocessing = async (info: any) => {
+  // set parameter
+  let formData = new FormData()
+  formData.append(
+    'file',
+    await convertFileUrlToFileObjectWithFile(
+      info.uploadSection.file,
+      info.fileName,
+      info.uploadSection.type,
+    ),
+  )
+
+  formData.append('info', JSON.stringify(info))
+
+  const response = await detectionFormDataApi.post<any>(
+    '/pre-processing',
+    formData,
+  )
+
+  return checkResponse(response.data)
+}
+```

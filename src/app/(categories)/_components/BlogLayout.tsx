@@ -1,7 +1,7 @@
 import Header from '@/app/(home)/components/Header'
 import Footer from '@/app/(home)/components/Footer'
 import './BlogLayout.css'
-import BlogLNBTitle from './BlogLNBTitle'
+import BlogLNBTitle, { SUB_CATEGORY_TYPE } from './BlogLNBTitle'
 
 const BlogLayout = ({
   children,
@@ -10,14 +10,7 @@ const BlogLayout = ({
 }: {
   children: React.ReactNode
   type: 'frontend' | 'backend' | 'infra' | 'design' | 'language'
-  subType:
-    | 'kubernetes'
-    | 'docker'
-    | 'utils'
-    | 'pattern'
-    | 'nodejs'
-    | 'nextjs'
-    | 'react'
+  subType: SUB_CATEGORY_TYPE
 }) => {
   return (
     <>

@@ -156,9 +156,17 @@ export const LanguageForENG = defineDocumentType(() => ({
   fields: _fieldsWithCommon as {},
 }))
 
-export const Backend = defineDocumentType(() => ({
-  name: 'Backend',
-  filePathPattern: `backend/*.mdx`,
+export const BackendForKOR = defineDocumentType(() => ({
+  name: 'BackendForKOR',
+  filePathPattern: `backend/ko/**/*.mdx`,
+  // filePathPattern: `**/*.mdx`,
+  contentType: 'mdx',
+  fields: _fieldsWithCommon as {},
+}))
+
+export const BackendForENG = defineDocumentType(() => ({
+  name: 'BackendForENG',
+  filePathPattern: `backend/en/**/*.mdx`,
   // filePathPattern: `**/*.mdx`,
   contentType: 'mdx',
   fields: _fieldsWithCommon as {},
@@ -174,7 +182,8 @@ export default makeSource({
   documentTypes: [
     FrontendForKOR,
     FrontendForENG,
-    Backend,
+    BackendForKOR,
+    BackendForENG,
     InfraForKOR,
     InfraForENG,
     DesignForKOR,
