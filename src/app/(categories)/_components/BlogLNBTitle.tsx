@@ -13,7 +13,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons'
 
 import './BlogLNBTitle.css'
 import { useState } from 'react'
-import { CONTENT_CATEGORY } from '@/data/content'
+import { CONTENT_CATEGORY } from '@/data/const'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 

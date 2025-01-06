@@ -1,0 +1,163 @@
+---
+deployment: true
+category: 'Language'
+title: '인코딩과 디코딩'
+summary: '소프트웨어 시스템을 관심사 별로 여러개의 계층로 분리(계층화)한 아키텍처에 대해 알아봅시다.'
+pageKey: nodejs_install_and_env_setup_ko
+lng: KOR
+publishedAt: 2025-01-03
+---
+
+# 인코딩과 디코딩(Encoder / Decoder)
+
+javascript를 하다 보면 인코딩과 디코딩에 대하여 알아야 할 시기가 오게 됩니다. ASCII 인코딩, URL인코딩, HTML 인코딩, Base64 인코딩 비교하여 알아 봅시다. 그리고 javascript에서는 decodeURIComponent(), encodeURIComponent(), encodeURI(), decodeURI() 함수를 통해 인코딩과 디코딩을 할 수 있습니다.
+
+<br />
+<br />
+
+![image](https://resource.han-py.com/blog/logs/encode-decode.png)
+
+<br />
+
+## 인코딩(Encoding)이란
+
+인코딩의 정의는 여러 상황에 따라 다르게 적용된다고 할 수 있습니다. 큰 범위에서 인코딩이란 특정 정보를 정해진 규칙에 따라 변환하는 것을 의미합니다. 컴퓨터 내부에서의 인코딩은 컴퓨터가 스스로가 이해할 수 있는 0과 1로 변환하는 것( 문자를 바이트로 변환 )도 인코딩이라는 표현을 합니다. 인코딩의 목적에 따라 여러 인코딩이 존재합니다. 종류로는 ASCII 인코딩, URL인코딩, HTML 인코딩, Base64 인코딩 등등이 있습니다.
+
+## 디코딩(Decoding)이란
+
+디코딩이란 인코딩과는 반대 개념으로 컴퓨터의 언어를 사람이 이해 할 수 있도록 변경하는 것을 의미합니다. 컴퓨서가 인식하고 있는 바이트를 사람이 인지 할 수 있도록 문자로 변환하는 것을 의미합니다.
+
+---
+
+## ASCII 아스키
+
+기본적으로 컴퓨터는 알파벳인 a, b, c.. 조차도 무엇인지 알지 못합니다. 그리고 각각의 컴퓨터마다 다른 규칙을 통해 인코딩/디코딩을 한다면 중구난방이 됩니다. 이러한 이유로 국제적으로 통일된 규칙을 만들게 되는데 이를 아스키 코드라고 합니다. 그러나 아스키 코드는 영어만을 표현힙니다. 이러한 이유로 다른 나라 언어를 아스키 코드로 사용하면 충돌이 일어나 글자가 깨지게 됩니다. 따라서 여러 언어들을 합치기 위한 기준이 필요해지게 됩니다.
+
+## Unicode 유니코드
+
+위의 아스키 코드의 문제를 해결하기 위해 나온 것이 바로 유니코드입니다. 유니코드는 기본적으로 영어는 1바이트로 표현이 된고 한국어는 2바이트로 표현이 됩니다. 이러한 형식으로 특정 언어에서는 3바이트까지 표현이 되는 문자들이 생기다 보니, 통일된 인코딩을 하기 힘들어 집니다. (유니코드는 기본적으로 1바이트에서 4바이트까지 사용된다.) 따라서 UTF-7, UTF-8, UTF-16, UTF-32 인코딩과 같이 여러 인코딩 방식이 생겨나게 되었습니다.
+
+## UTF-8(8-bit Unicode Transformation Format)
+
+UTF-8은 이름에서 알 수 있듯, 8비트 단위로 인코딩을 하는 것입니다. 만약 1비트로 표현 가능한 문자를 4비트로 표현한다면 자원낭비가 커지게 됩니다. UTF-8은 문자의 표현 비트에 따라 가변적으로 조절을 하기 때문에 자원낭비를 줄일 수 있습니다. 또한 UTF-8의 장점은 유니코드와 백프로 호환이 된는 장점을 가집니다.
+
+## URL 인코딩
+
+홈페이지에 접속하기 위해 <codeline>https://www.aaaa.aaa/home?han=111&py=222</codeline>와 같은 주소를 사용합니다. 기본적으로 주소에 영문자와 숫자만 포함되어 있다면, 인코딩이 필요 없지만, 특수문자나 한글이 포함되는 경우 간혹 페이지를 불러오지 못하는 경우가 발생한다. 따라서 왜곡이 가능한 문자들은 <codeline>%XX</codeline> 와 같이 16진수로 변환을 하는 것을 URL 인코딩이라 합니다.
+
+## HTML 인코딩
+
+개발을 하다보면 한글이 깨져서 나오는 경우가 있습니다. 이는 웹 브라우저마다 사용하는 인코딩 방식이 다르기 때문에 생기는 현상입니다. 이를 해결하기 위해서는 하나의 인코딩 방식으로 통일하는 것이 필요합니다. 한국에서는 보통 인코딩 방식으로 EUC-KR과 UTF-8을 주로 사용합니다. 둘이 충돌을 한다면 당연히 한글이 깨진다. EUC-KR은 ASCII 인코딩 방식인 영어만 1byte로 인코딩하는 방식을 확장하여 2byte로 한글을 인코딩할 수 있도록 만든 것 입니다. 이러한 이유로 공통으로 사용되는 인코딩 방식이 아닙니다. 따라서 우리나라에서만 사용 가능하고 외국에서는 한글이 깨져서 나올 수 밖에 없습니다. EUC-KR은 용량이 적어 이전 인터넷 환경이 좋지 않은 곳에서는 선호하지만, 최근에는 좀 더 표준화된 3byte의 UTF-8 방식을 더 선호합니다.
+
+## Base64 인코딩
+
+Base64 인코딩은 바이너리 데이터(컴퓨터가 이해하는 0과 1로 이루어진 데이터)를 문자에 영향을 받지 않는 ASCII 문자열로 변경하는 것을 의미합니다. 그렇다면 다른 인코딩과는 무슨 차이점이 있을까요? 각각의 프로그램이 데이터를 주고받을 때, 인코딩 방식이 조금씩 다른 경우가 있습니다. 이러한 경우에 같은 데이터도 다르게 해석할 가능성이 있습니다. 따라서 데이터 전송 시 다양한 문자(한국어, 인도어, 일본어 등등)와 상관없는 ASCII 문자열로만 구성하는 Base64 인코딩을 사용하여 인코딩을 통일시키는데 목적이 있다고 할 수 있습니다. 이러한 장점 때문에 추가적으로는 HTTP 프로토콜에서 특수문자 파싱 문제를 해결하는 것도 가능합니다. 또한 용량이 적은 파일 전송 시에도 사용됩니다.
+
+---
+
+## JavaScript 함수
+
+### encodeURI() decodeURI()
+
+<codeline>encodeURI</codeline>는 특정한 문자를 UTF-8로 인코딩하여 연속된
+이스케이프 문자로 변경해 줍니다. 기본적으로 인터넷 url에 사용하는 :, ;, /, =, ?,
+& 등을 제외하고 인코딩을 합니다. decodeURI는 encodeURI와 반대로 인코딩한
+문자열을 디코딩하는 함수라고 할 수 있고, 변경하지 않는 문자는 아래와 같습니다.
+
+```
+A-Z a-z 0-9 ; , / ? : @ & = + $ - _ . ! ~ * ' ( ) #
+```
+
+### encodeURIComponent() decodeURIComponent()
+
+기본적으로 위의 <codeline>encodeURI()</codeline>와 다르게 <codeline>encodeURIComponent()</codeline>은 모든 문자를 인코딩합니다.
+
+---
+
+## 실습
+
+> 아래의 내용을 통해 직관적으로 실습을 해봅시다.
+
+### 한글 인코딩
+
+한국어는 변환되어 인코딩이 되어 표출됩니다.
+
+```javascript title="javascript" showLineNumbers
+let uri = '강'
+console.log(encodeURI( uri ))
+console.log(encodeURIComponent( uri ))
+console.log(decodeURI( uri ))
+console.log(decodeURIComponent( uri ))
+
+'''
+%EA%B0%95
+%EA%B0%95
+강
+강
+'''
+```
+
+### 영어 인코딩
+
+영어는 변환되는 것이 없습니다.
+
+```javascript title="javascript" showLineNumbers
+let uri = 'hanpy'
+console.log(encodeURI( uri ))
+console.log(encodeURIComponent( uri ))
+console.log(decodeURI( uri ))
+console.log(decodeURIComponent( uri ))
+
+'''
+hanpy
+hanpy
+hanpy
+hanpy
+'''
+```
+
+### 숫자 인코딩
+
+숫자는 변환되지 않습니다.
+
+```javascript title="javascript" showLineNumbers
+
+```
+
+### 특수문자 인코딩
+
+특수문자 같은 경우 encodeURI와 encodeURIComponent의 차이를 아래와 같이 확인 할 수 있습니다.
+
+```javascript title="javascript" showLineNumbers
+let uri = ':, ;, /, =, ?, &'
+console.log(encodeURI( uri ))
+console.log(encodeURIComponent( uri ))
+console.log(decodeURI( uri ))
+console.log(decodeURIComponent( uri ))
+
+'''
+:,%20;,%20/,%20=,%20?,%20&
+%3A%2C%20%3B%2C%20%2F%2C%20%3D%2C%20%3F%2C%20%26
+:, ;, /, =, ?, &
+:, ;, /, =, ?, &
+'''
+```
+
+### Url 인코딩
+
+url 인코딩 시에는 <codeline>encodeURI</codeline>를 사용하는 것이 좋습니다.
+
+```javascript title="javascript" showLineNumbers
+let uri = 'https://www.hanpy.com/encode?a=b&b=배고프다'
+console.log(encodeURI( uri ))
+console.log(encodeURIComponent( uri ))
+console.log(decodeURI( uri ))
+console.log(decodeURIComponent( uri ))
+
+'''
+https://www.hanpy.com/encode?a=b&b=%EB%B0%B0%EA%B3%A0%ED%94%84%EB%8B%A4
+https%3A%2F%2Fwww.hanpy.com%2Fencode%3Fa%3Db%26b%3D%EB%B0%B0%EA%B3%A0%ED%94%84%EB%8B%A4
+https://www.hanpy.com/encode?a=b&b=배고프다
+https://www.hanpy.com/encode?a=b&b=배고프다
+'''
+```

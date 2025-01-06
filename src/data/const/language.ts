@@ -29,6 +29,14 @@ const subCategoryDetail: {
           href: '/language/ko/nodejs/introduction',
           title: 'Introduction',
         },
+        {
+          href: '/language/ko/nodejs/install-env-path',
+          title: 'Nodejs Install',
+        },
+        {
+          href: '/language/ko/nodejs/encoder-decoder',
+          title: 'Encoding and Decoding',
+        },
       ],
     ],
   },
