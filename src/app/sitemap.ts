@@ -39,7 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ]
 }
 // {
-//   url: 'https://blog.han-py.com',
+//   url: 'https://hanpy-blog.com',
 //   lastModified: new Date(),
 //   changeFrequency: 'yearly',
 //   priority: 1,

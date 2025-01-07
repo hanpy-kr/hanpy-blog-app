@@ -28,11 +28,11 @@ export const metadata: Metadata = {
   title: 'Hanpy Blog',
   description:
     "Welcome to my web development blog! Dive into expert tips on frontend frameworks, backend technologies, and cutting-edge infrastructure. Whether you're a seasoned developer or a newbie, explore tutorials and insights to enhance your coding skills and optimize your projects. Stay updated with the latest trends in web development, DevOps, and more. Join our community of developers to learn, grow, and innovate together.",
-  metadataBase: new URL('https://blog.han-py.com'),
+  metadataBase: new URL('https://hanpy-blog.com'),
   openGraph: {
     title: 'Hanpy Blog',
     description: 'Welcome to my web development blog',
-    url: 'https://blog.han-py.com',
+    url: 'https://hanpy-blog.com',
     siteName: 'Hanpy Blog',
     images: [
       {
