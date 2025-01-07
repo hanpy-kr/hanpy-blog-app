@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 import contentlayer from '@/services-client/contentlayer'
 
-const BASE_URL = 'https://blog.han-py.com'
+const BASE_URL = 'https://hanpy-blog.com'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const postsQuery = {
@@ -29,7 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     {
-      url: 'https://blog.han-py.com',
+      url: BASE_URL,
       // lastModified: new Date().toISOString(),
       lastModified: new Date(),
       // changeFrequency: 'yearly',
