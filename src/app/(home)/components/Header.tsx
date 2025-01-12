@@ -5,7 +5,8 @@ export default function Header() {
   return (
     <header className="header">
       <Link href="/" className="header__logo">
-        Hanpy&apos;s Blog - 🔓 BETA TEST
+        Hanpy&apos;s Blog
+        {/* Hanpy&apos;s Blog - 🔓 BETA TEST */}
         {/* &gt;&gt;  TEST VERSION 0.0.1 🔓 */}
       </Link>
       <div>

@@ -36,6 +36,10 @@ const subCategoryDetail: {
     subTitle: [
       [
         {
+          href: '/frontend/ko/react/env-setup',
+          title: 'Environment Variables Settings',
+        },
+        {
           href: '/frontend/ko/react/react-data-crud',
           title: 'React Data Management',
         },
