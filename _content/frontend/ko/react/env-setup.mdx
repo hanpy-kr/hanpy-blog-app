@@ -1,0 +1,207 @@
+---
+deployment: true
+category: Frontend
+title: 'React env 환경변수 사용하여 개발/배포 환경 설정'
+summary: '리액트로 개발 시 개발 환경과 배포 환경에서 env를 변수설정을 할 수 있습니다.'
+lng: KOR
+pageKey: react_env_ko
+publishedAt: 2025-01-11
+---
+
+# React env 환경변수 사용하여 개발/배포 환경 설정
+
+리액트로 개발 시 개발 환경과 배포 환경에 대한 기본 설정을 해봅시다. 기본적으로 우리는 Nodejs 위에서 개발을 합니다. 따라서 Nodejs의 기본설정인 package.json 파일에 기본 설정을 하게 됩니다. 하지만, 개발을 진행하다보면, 개발 환경과 배포환경을 다르게 설정해야 합니다.
+
+<br />
+
+예를 들면, DB를 mysql로 진행한다면, 현재 운영하는 DB와 개발 시 동작이 가능한지를 판단하는 DB는 다르게 만들어야 하기 때문에, 접근 설정을 다르게 하여 시작 시 필요한 DB를 설정에 따라 실행 시킬 수 있도록 해야합니다. 정리하면 개발환경과 운영환경에서의 변수 값을 다르게 설정해야 할 수 있도록 아래의 방법을 숙지합니다.
+
+<br />
+
+이렇게 개발환경과 배포환경을 설정하는 방법으로는 환경변수 선언(.env)을 통해 진행합니다. <codeline>.env</codeline>의 종류는 여러가지가 있습니다. <codeline>.env.local, .env.development, .env.test, .env.production</codeline>와 같이 다양하게 존재합니다. 기본적으로 리액트 웹 애플리케이션을 만들기 위한 환경을 쉽게 구축 할 수 있는 create-react-app을 사용하여 프로젝트를 시작했다고 가정하고 글을 시작해 보겠습니다.
+
+## 환경 변수란
+
+기본적으로 node.js는 production(배포)와 development(개발), test(테스트)로 구분하여 사용합니다. 그리고 create-react-app의 실행 명령어에 따라 자동으로 NODE_ENV값이 정해집니다.
+
+```bash title="Start Cmd" showLineNumbers
+# production 배포 env실행
+➜ npm run build
+
+# development 개발 env실행
+➜ npm start
+
+# test 개발 env실행
+➜ npm run test
+```
+
+리엑트에서는 위와 같이 기본적인 환경 변수 실행을 자동으로 도와줍니다.
+
+## Cross-env 사용
+
+여러 정보 공유사이트를 확인해 보면 cross-env 사용하는 방법들이 많이 보입니다. cross-env를 사용하는 것은 권장 되지 않습니다. 우선은 사용법을 먼저 알아보도록 합시다. 아래와 같이 설치할 수 있습니다.
+
+```bash title="Start Cmd" showLineNumbers
+➜ npm i cross-env
+```
+
+실행 OS에 따라 환경변수를 설정하는 방법이 다르기 때문에, 환경 변수 설정 시 <codeline>undefined</codeline>가 나오는 경우가 있습니다. 따라서 아래의 명령어를 실행하여 cross-env 모듈을 사용하여 환경변수를 설정하는 것이 좋습니다. cross-env의 사용법은 단순하게 cmd 안에 env를 넣어주는 방식이라고 할 수 있습니다.
+
+```json title="Start Cmd" showLineNumbers
+// 사용법
+// cross-env 환경변수1=값 환경변수2=값 실행명령어
+
+// 예시
+{
+  "scripts": {
+    "local": "cross-env REACT_APP_API_URL=localhost react-scripts start",
+    "build": "cross-env REACT_APP_API_URL=999.99.99.99 react-scripts start"
+  }
+}
+```
+
+리액트에서 .env 환경 설정 시 변수명에 <codeline>REACT_APP\_</codeline>이라는 접두사를 붙여줘야 환경변수로 인식을 합니다. 붙이지 않으면 작동되지 않으니 확인이 필요합니다. 하지만, cross-env 방식의 단점은 환경변수가 노출된다는 것입니다. 이는 secret key를 탈취 당할 수 있음을 의미합니다. 이러한 단점 때문에 우리는 아래의 방식처럼 <codeline>.env.local, .env.development, .env.test, .env.production</codeline> 라는 파일을 만들어고 실행환경에 따라 변수를 넣어서 실행합니다.
+
+## .env.local
+
+.env.local 파일은 .env를 덮어쓰는 파일로, test 환경 외의 모든 환경에서 로딩됩니다.
+
+## .env.development
+
+.env.development 파일은 개발환경 시 아래의 명령어로 사용가능하게 됩니다. 만약, .env.development.local이 있다면, .env.development을 덮어쓴다.
+
+```bash title="Cmd" showLineNumbers
+# npm 환경
+➜ npm run start
+
+# yarn 환경
+➜ yarn start
+```
+
+npm start 시 .env 파일도 실행되는 우선순위가 있습니다. 우선순위는 아래와 같습니다.
+
+```json title="우선순위"
+  .env.development.local > .env.development > .env.local > .env
+```
+
+위 우선 순위 기준으로 오른쪽 파일이 우선적으로 실행됩니다. .env 파일이 하나만 있다면, .env 파일이 실행됩니다. 그리고 .env.development.local 파일이 있다면, 다른 파일들은 무시됩니다. 보통은 .env.development으로 사용하면 되나 상황에 따라 여러 설정파일을 사용해도 됩니다.
+
+## .env.production
+
+.env.production 파일은 배포 환경 시 사용되며, 아래의 명령어를 치면 자동으로 사용됩니다. 만약, .env.production.local이 있다면, .env.production을 덮어쓸 수 있습니다.
+
+```bash title="Cmd" showLineNumbers
+# npm 환경
+➜ npm run build
+
+# yarn 환경
+➜ yarn build
+```
+
+npm run build 시 .env 파일도 실행되는 우선순위가 있습니다. 우선순위는 아래와 같습니다.
+
+```json title="우선순위"
+  .env.production.local > .env.production > .env.local > .env
+```
+
+오른쪽 파일이 우선 실행 됩니다. 여기서 우선 실행된다는 말은 우선적으로 실행할 수 있으며, 왼쪽 파일이 없을시 실행됨을 의미합니다. .env 파일과 .env.local 파일이 같이 있다면 .env.local 파일이 실행됩니다.
+
+## .env.test
+
+.env.test 파일은 테스트 환경 시 사용됩니다. 만약, .env.test.local이 있다면, .env.test을 덮어씁니다.
+
+```bash title="Cmd" showLineNumbers
+# npm 환경
+➜ npm run test
+
+# yarn 환경
+➜ yarn test
+```
+
+npm run test시 .env 파일도 실행되는 우선순위가 있다. 우선순위는 아래와 같다.
+
+```json title="우선순위"
+  .env.production.local > .env.production > .env.local > .env
+```
+
+## 실습
+
+보통 production(배포)와 development(개발)환경에서 많이 사용하니 2개의 파일만 만들어봅시다. 파일을 만드는 위치는 package.json이 존재하는 위치에 .env.development 파일과 .env.production 파일을 생성해 줍니다. 리액트에서 .env 환경 설정 시 변수명에 <codeline>REACT_APP\_</codeline>이라고 앞에 붙여줘야 인식을 합니다.
+
+### 1. 환경변수 설정
+
+#### .env.development 파일
+
+```env title=".env.development" showLineNumbers
+REACT_APP_HOST=localhost
+REACT_APP_PASSWORD=kne7jae!oher
+REACT_APP_ABC=dev-test
+```
+
+#### .env.production 파일
+
+```env title=".env.development" showLineNumbers
+REACT_APP_HOST=prod-server.com
+REACT_APP_PASSWORD=3g275rtghjaf1@
+REACT_APP_ABC=prod-test
+```
+
+### 2. 환경변수 사용
+
+만약 아래의 JSX를 작성하고 실습해 봅시다.
+
+```jsx title="sample" showLineNumbers
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <h1>{process.env.REACT_APP_HOST}</h1>
+      </div>
+    )
+  }
+}
+```
+
+npm start로 서버를 켰을 경우에는 localhost가 뜹니다. 그러나 npm run build로 서버를 키면 prod-server.com라는 문자가 보입니다. 만약, 자바스트립트 로직에 넣고 싶다면 아래와 같이 사용하면 됩니다.
+
+```jsx title="sample" showLineNumbers
+class App extends Component {
+  const object = {
+    host : process.env.REACT_APP_HOST,
+    password : process.env.REACT_APP_PASSWORD,
+    abc : process.env.REACT_APP_ABC
+  }
+  render() {
+    return (
+      <div className="App">
+          <h1>env 사용법</h1>
+      </div>
+    );
+  }
+}
+```
+
+그냥 process.env.REACT_APP_HOST 와 같이 셋팅한 변수는 바로 사용해서 넣어주면 됩니다.
+
+## 3. package.json 설정
+
+위의 개념만으로도 충분히 프로젝트가 사용가능 합니다. 그러나 위의 설정이 안먹히는 경우에는 아래의 내용으로 package.json 설정을 합시다. 기본적으로 $ npm i env-cmd 를 설치해 줍니다. 또한, 아래의 방법으로 상황에 따른 env 설정값을 추가할 수 있습니다.
+
+```json title="package.json" showLineNumbers
+"scripts": {
+    "start": "react-scripts start",
+    "build": "env-cmd -f .env react-scripts build",
+  },
+```
+
+- env-cmd -f .env는 우선순위가 높은 .env.production가 아닌 .env 를 실행하도록 지정한 것입니다.
+- -f를 안적으면 .env 파일을 찾을 수 없으니 주의해 주세요.
+
+```json title="package.json" showLineNumbers
+"scripts": {
+    "start": "react-scripts start",
+    "build": "env-cmd -f .env.production react-scripts build",
+  },
+```
+
+- $ npm run build 실행 시 .env.production이 적용됩니다.
