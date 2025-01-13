@@ -12,7 +12,7 @@ const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
 })
 
-const SUB_TITLE = 'base'
+const SUB_TITLE = 'database'
 const PREFIX_PATH = `backend/ko/${SUB_TITLE}`
 
 export default function Page({ params }: { params: { slug: string } }) {

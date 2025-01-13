@@ -33,6 +33,7 @@ export type SUB_CATEGORY_TYPE =
   | 'nextjs'
   | 'react'
   | 'base'
+  | 'database'
 
 const BlogLNBTitle = ({
   type,
@@ -59,6 +60,7 @@ const BlogLNBTitle = ({
     setCurrentCategoryInfo(CONTENT_CATEGORY[type].subCategory[clickData])
     router.push(CONTENT_CATEGORY[type].subCategory[clickData].href)
   }
+
   return (
     <>
       <Menu>

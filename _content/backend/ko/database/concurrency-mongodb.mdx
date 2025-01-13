@@ -1,0 +1,188 @@
+---
+deployment: true
+category: Backend
+title: '몽고db에서의 동시성 이슈 해결'
+summary: 'mongodb 사용 시 발생되는 동시성 이슈(Optimistic Lock, Pessimistic Lock)에 대해 알아보고, 해결책을 확인해 봅시다.'
+pageKey: Backend_concurrency_mongodb_ko
+lng: KOR
+publishedAt: 2025-01-18
+---
+
+# Mongodb에서 낙관적 락(Optimistic Lock) 적용하기
+
+낙관적 락(Optimistic Lock)은 데이터의 동시성을 제어하기 위해 사용하는 기법으로, 주로 데이터베이스에서 활용됩니다. 이 접근법은 충돌이 드물 것이라고 가정하고 작업을 진행하며, 최종 업데이트 단계에서 데이터가 변경되지 않았는지를 검증합니다. MongoDB 4.0 이상에서는 트랜잭션을 사용하여 여러 문서를 원자적으로 업데이트할 수 있습니다. 낙관적 락과 트랜잭션을 함께 사용하면 더욱 안전하게 동시성 문제를 처리할 수 있습니다.
+
+<br />
+
+MongoDB에서 낙관적 락(Optimistic Lock)을 구현하려면 주로 version 필드 또는 타임스탬프 기반의 필드를 사용하여 동시성 충돌을 감지합니다. MongoDB는 기본적으로 락킹 메커니즘이 없으므로, 낙관적 락은 애플리케이션 레벨에서 구현해야 합니다.
+
+## version 필드를 사용하여 구현
+
+#### 1. 저장 document
+
+```json title="document" showLineNumbers
+// collection : product
+{
+  "_id": "product123",
+  "name": "Sample Product",
+  "inventory": 10,
+  "version": 1
+}
+```
+
+#### 2. 데이터 조회
+
+```typescript title="typescript" showLineNumbers
+const product = db.products.findOne({ _id: 'product123' })
+```
+
+#### 3. 데이터 업데이트
+
+데이터 업데이트 시에는 version 필드를 조건으로 추가합니다.
+
+```typescript title="typescript" showLineNumbers
+const result = db.products.updateOne(
+  {
+    _id: 'product123', // 문서 ID
+    version: product.version, // 현재 버전
+  },
+  {
+    $set: { inventory: product.inventory - 3 }, // 새로운 재고 값
+    $inc: { version: 1 }, // 버전 증가
+  },
+)
+
+if (result.matchedCount === 0) {
+  throw new Error('Concurrent update detected. Please retry.')
+}
+```
+
+- 성공 시 문서가 업데이트되고 version 값이 증가합니다.
+- 실패 시 다른 트랜잭션이 먼저 업데이트를 완료했기 때문에 matchedCount가 0이 됩니다.
+
+## 타임스탬프를 사용한 구현
+
+#### 1. 저장 document
+
+```json title="document" showLineNumbers
+// collection : product
+{
+  "_id": "product123",
+  "name": "Sample Product",
+  "inventory": 10,
+  "updatedAt": "2025-01-13T12:00:00.000Z"
+}
+```
+
+#### 2. 데이터 조회
+
+```typescript title="typescript" showLineNumbers
+const product = db.products.findOne({ _id: 'product123' })
+```
+
+#### 3. 데이터 업데이트
+
+데이터 업데이트 시에는 version 필드를 조건으로 추가합니다.
+
+```typescript title="typescript" showLineNumbers
+const result = db.products.updateOne(
+  {
+    _id: 'product123',
+    updatedAt: product.updatedAt, // 마지막 수정 시간
+  },
+  {
+    $set: {
+      inventory: product.inventory - 3, // 새로운 재고 값
+      updatedAt: new Date(), // 현재 시간으로 갱신
+    },
+  },
+)
+
+if (result.matchedCount === 0) {
+  throw new Error('Concurrent update detected. Please retry.')
+}
+```
+
+- 성공 시 문서가 업데이트되고 version 값이 증가합니다.
+- 실패 시 다른 트랜잭션이 먼저 업데이트를 완료했기 때문에 matchedCount가 0이 됩니다.
+
+## Mongoose를 사용한 구현
+
+Node.js 환경에서 MongoDB를 사용하는 경우, Mongoose는 내장된 versionKey 필드(\_\_v)를 통해 낙관적 락을 기본적으로 지원합니다.
+
+```typescript title="typescript" showLineNumbers
+const ProductSchema = new mongoose.Schema(
+  {
+    name: String,
+    inventory: Number,
+  },
+  { versionKey: true },
+) // __v 필드 활성화
+
+const Product = mongoose.model('Product', ProductSchema)
+
+// 업데이트 예시
+async function updateProduct(productId, inventoryChange) {
+  const product = await Product.findById(productId)
+  product.inventory -= inventoryChange
+  await product.save() // __v 필드를 통해 낙관적 락 동작
+}
+```
+
+https://example.com
+
+## 정리
+
+MongoDB에서 낙관적 락(Optimistic Lock)의 사용은 낙관적 락에 대한 기초적인 개념만 있다면, 크게 어렵지 않게 이해할 수 있습니다.
+
+## 참고
+
+---
+
+# Mongodb에서 비관적 락(Pessimistic Lock) 적용하기
+
+비관적 락(Pessimistic Lock)은 데이터의 동시성 제어를 위해 락(lock)을 사용하는 기법으로, 데이터가 동시에 수정될 가능성이 높은 환경에서 주로 사용됩니다. 데이터에 접근할 때, 수정 중인 데이터에 다른 프로세스가 접근하지 못하도록 차단하는 방식입니다.
+
+MongoDB는 기본적으로 비관적 락을 지원하지 않지만, 트랜잭션이나 일부 작업 패턴을 활용하여 유사한 동작을 구현할 수 있습니다.
+
+## 트랜잭션 기반 락
+
+MongoDB 트랜잭션을 사용하여 작업 중인 데이터를 다른 작업에서 수정하지 못하도록 보장 할 수 있습니다. 작업이 완료되거나 트랜잭션이 종료될 때까지 데이터는 잠긴 상태로 유지됩니다.
+
+```typescript title="typescript" showLineNumbers
+const session = await mongoose.startSession()
+
+try {
+  await session.startTransaction()
+
+  // 계좌 데이터 읽기
+  const account = await Account.findOne({ _id: 'accountA' }).session(session)
+
+  // 잔액 확인
+  if (account.balance >= 700) {
+    account.balance -= 700
+    await account.save() // 트랜잭션 내에서 업데이트
+  } else {
+    throw new Error('Insufficient funds')
+  }
+
+  await session.commitTransaction() // 트랜잭션 종료
+} catch (error) {
+  await session.abortTransaction() // 롤백
+  console.error(error)
+} finally {
+  session.endSession()
+}
+```
+
+## findAndModify를 통한 단일 작업 락
+
+findAndModify 명령어는 읽기와 쓰기를 하나의 원자적 작업으로 처리합니다. 이는 비관적 락과 유사한 효과를 제공합니다.
+
+```typescript title="typescript" showLineNumbers
+db.accounts.findAndModify({
+  query: { _id: 'accountA', balance: { $gte: 700 } }, // 조건
+  update: { $inc: { balance: -700 } }, // 잔액 감소
+  new: true, // 업데이트된 문서 반환
+})
+```

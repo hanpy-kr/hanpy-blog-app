@@ -1,5 +1,5 @@
 ---
-deployment: true
+deployment: False
 category: Frontend
 title: 'React/TypeScript 파일 업로드'
 summary: 'React에서 파일 업로드 방법에 대해 알아봅시다.'

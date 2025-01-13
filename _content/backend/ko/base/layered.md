@@ -1,5 +1,5 @@
 ---
-deployment: true
+deployment: false
 category: Backend
 title: 'Layered Architecture'
 summary: '소프트웨어 시스템을 관심사 별로 여러개의 계층로 분리(계층화)한 아키텍처에 대해 알아봅시다.'

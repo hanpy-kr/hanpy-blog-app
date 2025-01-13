@@ -5,12 +5,7 @@ const subCategory: {
     icon: string
   }
 } = {
-  react: { name: 'docker', href: '/', icon: '/icons/docker.svg' },
-  kubernetes: {
-    name: 'kubernetes',
-    href: '/infra/ko/kubernetes/01.Introduction',
-    icon: '/icons/kubernetes.svg',
-  },
+  database: { name: 'database', href: '/backend/ko/database/concurrency-optimistic-lock', icon: '/icons/database.svg' },
 }
 
 const subCategoryDetail: {
@@ -22,14 +17,31 @@ const subCategoryDetail: {
     }[][]
   }
 } = {
+  database: {
+    title: ['Database'],
+    subTitle: [[        
+      {
+        href: '/backend/ko/database/concurrency-optimistic-lock',
+        title: 'Optimistic Lock',
+      },
+      {
+        href: '/backend/ko/database/concurrency-pessimistic-lock',
+        title: 'Pessimistic Lock',
+      },
+    ]],
+  },
+  base: {
+    title: [''],
+    subTitle: [[]],
+  },
   docker: {
     title: [],
-    subTitle: [],
+    subTitle: [[]],
   },
 }
 
 export const CONTENT_BACKEND = {
-  mainCategory: 'Infra',
+  mainCategory: 'Backend',
   subCategory,
   subCategoryDetail,
 }
