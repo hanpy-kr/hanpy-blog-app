@@ -1,0 +1,119 @@
+---
+deployment: true
+category: Backend
+title: 'Mongodb Data Modeling'
+summary: 'MongoDB 데이터 모델링: Embedding, Referencing, 그리고 Mapping Collection 패턴'
+pageKey: Backend_Optimistic_lock_ko
+lng: KOR
+publishedAt: 2025-01-19 
+---
+
+# Mongodb Modeling Pattern
+
+MongoDB는 관계형 데이터베이스와는 다른 방식으로 데이터를 관리합니다. 비구조적(NoSQL) 특성 덕분에 스키마 설계가 유연하지만, 설계 패턴에 따라 데이터 조회 성능이나 관리 복잡도가 달라질 수 있습니다. 이번 글에서는 MongoDB에서 자주 사용되는 Embedding, Referencing, 그리고 Mapping Collection 설계 패턴을 살펴보고, 각각의 특징과 사용 사례를 정리해 봅시다.
+
+<br />
+
+아래에서 예시로 사용할 부분은 SaaS 구독형 시스템에서 사용자가 구독할 Plan과 user와의 관계를 설계하는 부분입니다. 관계형 데이터베이스와 다르게 어떠한 방식으로 MongoDB에서 데이터를 관리할 수 있을 지 확인해 봅시다.
+
+## Embedding Pattern
+
+Embedding Pattern은 관련 데이터를 한 문서 안에 포함하여 함께 저장하는 방식입니다.
+
+```json title="Embedding Pattern" showLineNumbers
+{
+  "_id": "user_id",
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "plan": {
+    "plan_id": "basic_plan_id",
+    "name": "Basic Plan",
+    "features": ["feature1", "feature2"],
+    "price": 10
+  }
+}
+```
+
+위 document에서 확인 할 수 있듯, 단일 조회로 필요한 정보를 가지고 올 수 있기 때문에 성능이 좋고 일관성 유지가 용이 합니다. 하지만, plan에 포함되는 내용들이 많아지면 성능이 저하되고 관리가 어려워집니다. 따라서 위와 같은 방식은 1:1 관계에서 주로 사용되고 변경이 거의 없는 경우에 유용하게 사용 될 수 있습니다.
+
+## Referencing Pattern
+
+Referencing Pattern은 관련 데이터를 별도 컬렉션으로 저장하고, 식별자를 통해 연결하는 방식입니다.
+
+```json title="Referencing Pattern" showLineNumbers
+// user collection
+{
+  "_id": "user_id",
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "plan_id": "basic_plan_id"
+}
+
+// plan collection
+{
+  "_id": "basic_plan_id",
+  "name": "Basic Plan",
+  "features": ["feature1", "feature2"],
+  "price": 10
+}
+```
+
+위 구조는 관계가 복잡해질수록 구조가 깔끔해지는 것을 확인 할 수 있습니다. 하지만 user에서 plan을 조회하기 위해서는 추가적인 조회가 필요하기 때문에 성능이 저하될 수 있습니다. 데이터간 독립성이 유지되기 때문에 데이터 변경이 자주 이루어 지고, 여러 엔티티가 공유되는 경우에 주로 사용됩니다.
+
+---
+
+## Mapping Collection (lookup)
+
+Mapping Collection Pattern은 User와 Plan 간의 관계를 별도의 컬렉션으로 관리하는 방식입니다. RDBMS에서 "Join 테이블"과 유사합니다. 
+
+```json title="Referencing Pattern" showLineNumbers
+{
+  "_id": "mapping_id",
+  "user_id": "user_id",
+  "plan_id": "basic_plan_id",
+  "start_date": "2025-01-01",
+  "end_date": "2025-12-31"
+}
+```
+
+데이터가 정규화 되어 있어, N:M 관계를 효율적으로 처리 및 관리할 수 있습니다. 하지만 데이터를 조회하려면 추가적인 join작업이 필요합니다. Mapping Collection의 경우에는 관계에 추가적인 데이터에 대한 정보(시작일, 종료일 등)를 저장해야할 때 사용합니다.
+
+---
+
+## 설계
+
+아래의 설계 목표에 따라 여러가지 선택이 가능합니다.
+
+### 1. collection 관계
+
+- 1:1 관계: Embedding이 간단하고 효율적
+- 1:N 관계: 데이터 규모에 따라 Embedding 또는 Referencing을 선택
+- N:M 관계: Mapping Collection이 적합
+
+### 2. 데이터 Update 빈도
+
+- 데이터가 자주 변경되면 Referencing 선택
+- 변경이 적다면 Embedding으로 간단하게 구성
+
+### 3. 조회 빈도
+
+- 데이터가 자주 함께 조회된다면 Embedding
+- 독립적인 조회가 많으면 Referencing
+
+---
+
+## 정리
+
+처음에 예시로 들었던 SaaS 서비스의 User와 Plan의 관계를 확인해 보면, 정해진 Plan을 User가 사용하는 개념입니다. 따라서 Plan의 데이터는 정책에 따라 자주 변경되고, 여러 사용자들이 사용합니다. 따라서 이러한 요구사항에서는 Referencing Pattern이 적합하다고 할 수 있습니다. 만약, 1:1 관계이고 Plan 정보가 단순하다면, User 컬렉션에 Plan 정보를 Embedding을 사용하면 됩니다. 
+
+
+<br />
+
+정리하면, 데이터가 자주 함께 조회되고, 관계가 단순하면 Embedding Pattern을 사용하고, 독립적인 데이터 관리가 필요하면 Referencing Pattern을 사용합니다. 만약 관계가 복잡하거나 추가 메타데이터가 필요하면 Mapping Collection Pattern이 적합하다고 할 수 있습니다.
+
+---
+
+## 참고 링크
+
+- https://www.mongodb.com/docs/manual/data-modeling
+- https://www.mongodb.com/ko-kr/docs/manual/data-modeling

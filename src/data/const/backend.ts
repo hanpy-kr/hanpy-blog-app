@@ -18,8 +18,15 @@ const subCategoryDetail: {
   }
 } = {
   database: {
-    title: ['Database'],
-    subTitle: [[        
+    title: ['MongoDB','Database'],
+    subTitle: [
+    [      
+      {
+        href: '/backend/ko/database/mongodb-modeling-pattern',
+        title: 'Mongodb Data Modeling',
+      },
+    ],
+    [        
       {
         href: '/backend/ko/database/concurrency-optimistic-lock',
         title: 'Optimistic Lock',
