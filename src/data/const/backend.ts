@@ -23,7 +23,15 @@ const subCategoryDetail: {
     [      
       {
         href: '/backend/ko/database/mongodb-modeling-pattern',
-        title: 'Mongodb Data Modeling',
+        title: 'Data Modeling',
+      },
+      {
+        href: '/backend/ko/database/mongodb-indexes',
+        title: 'Indexes',
+      },
+      {
+        href: '/backend/ko/database/mongodb-compound-indexes',
+        title: 'Compound Indexes',
       },
     ],
     [        
