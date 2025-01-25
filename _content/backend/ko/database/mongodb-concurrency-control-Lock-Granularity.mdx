@@ -1,0 +1,97 @@
+---
+deployment: true
+category: Backend
+title: 'Mongodb - Lock Granularity'
+summary: 'MongoDB에서는 문서(Document) 단위로 락이 걸린다고 알려져 있지만, 실제로는 컬렉션·데이터베이스 수준 등 다양한 단계(Granularity)에서 락이 발생할 수 있습니다. 이번 글에서는 문서·컬렉션·인덱스 등 어디에 어떻게 락이 걸리는지 살펴보고, MongoDB 내부에서 사용하는 Intent Lock, Shared Lock, Exclusive Lock 개념을 설명합니다.'
+pageKey: backend_mongodb_concurrency_control_ko
+lng: KOR
+publishedAt: 2025-01-27
+---
+
+<span style={{ fontWeight: "bold" }}>
+
+</span>
+
+# MongoDB - Lock Granularity와 Lock 동작 방식
+
+MongoDB에서는 문서(Document) 단위로 락이 걸린다고 알려져 있지만, 실제로는 컬렉션·데이터베이스 수준 등 다양한 단계(Granularity)에서 락이 발생할 수 있습니다. 이번 글에서는 문서·컬렉션·인덱스 등 어디에 어떻게 락이 걸리는지 살펴보고, MongoDB 내부에서 사용하는 <span style={{ fontWeight: "bold" }}>Intent Lock, Shared Lock, Exclusive Lock</span> 개념을 설명합니다. 또한 락 경합(Contestion)이 생기는 상황과 이를 모니터링하기 위한 명령어(db.currentOp(), profiler 등)에 대해서도 구체적으로 알아보겠습니다.
+
+## MongoDB에서의 Lock Granularity
+
+1. Document-Level Lock (실질적 동시성 제어의 기본)
+
+MongoDB의 WiredTiger 엔진은 업데이트가 발생할 때 해당 문서를 중심으로 락을 획득합니다. 덕분에 다른 문서에 대한 읽기/쓰기는 동시에 처리될 수 있어 높은 동시성을 확보할 수 있습니다.
+
+2.  Collection-Level Lock (메타데이터 변경 등)
+
+컬렉션에 대한 구조적 변경(예: 컬렉션 생성, 삭제, 인덱스 생성/제거) 시에는 컬렉션 레벨 락이 걸립니다.
+이 락은 짧은 시간 동안만 유지되도록 설계되었지만, 빈번하게 발생하면 전체 컬렉션을 대상으로 병행 처리를 방해할 수 있습니다.
+
+3.  Database-Level Lock (제한적 상황)
+
+데이터베이스 설정 변경, 스키마 메타데이터 변경, 일부 관리 작업 등은 DB 전체 범위에 영향을 미칠 수 있으므로, 이 과정에서 더 확장된 락이 발생하기도 합니다.
+일반적인 읽기/쓰기는 DB 레벨 락을 거의 사용하지 않으나, 대규모 작업(예: DB 복제·이동) 시 발생하는 예외 케이스를 이해해둘 필요가 있습니다.
+
+## 2. Intent Lock, Shared Lock, Exclusive Lock
+
+MongoDB는 락을 계층적으로 관리하기 위해, Intent Lock과 Shared Lock, Exclusive Lock을 조합해 사용합니다. 이는 다중 수준(예: DB, 컬렉션, 문서)에서 동시에 발생할 수 있는 락을 효율적으로 처리하기 위함입니다.
+
+Intent Lock (IS, IX)
+
+상위 객체(예: DB)에 대해 “이 객체에 Shared나 Exclusive 락을 걸 예정임”을 표시하는 개념적 락
+IS(Intent Shared): 추후 Read(Shared) 락을 걸고자 함
+IX(Intent Exclusive): 추후 Write(Exclusive) 락을 걸고자 함
+상위 수준에서 명시적으로 ‘공유/배타’ 여부를 예약해두어, 하위 수준(예: 문서)에 실제 락을 획득할 때 충돌을 줄이는 방식
+Shared Lock (S)
+
+읽기 전용 락(Read Lock)
+여러 트랜잭션(또는 쿼리)이 동시에 걸어도 충돌하지 않습니다(동시에 읽기는 가능).
+하지만 Write(Exclusive) 락과는 양립 불가능하므로, S 락이 걸린 상태에서는 다른 트랜잭션이 X 락을 획득할 수 없습니다.
+Exclusive Lock (X)
+
+쓰기 전용 락(Write Lock)
+동시에 다른 어떤 락(S 또는 X)도 허용하지 않는 배타적 모드입니다.
+하나의 문서 또는 컬렉션에 X 락이 걸리면, 해당 트랜잭션이 작업을 마칠 때까지 다른 모든 접근이 대기하게 됩니다.
+이러한 락 모드를 동시에 적용함으로써, MongoDB는 상위 객체(데이터베이스나 컬렉션)에서 Intent Lock을 가볍게 걸어두고, 구체적인 작업이 필요한 순간 문서나 인덱스 수준에서 Shared/Exclusive 락을 취득하여 동시성 충돌을 제어합니다.
+
+## 3. Lock 경합 상황과 모니터링 방법
+
+1. Lock 경합(Contestion)이란?
+
+여러 클라이언트가 동시에 특정 자원(문서, 컬렉션 등)에 대해 서로 다른 락 모드를 요구할 때, 충돌이 발생해 대기 시간이 길어지거나 데드락이 발생할 수 있습니다.
+예: 대량의 Batch Update가 컬렉션 레벨 락을 장시간 점유하면, 그 컬렉션을 읽으려는 쿼리들도 지연될 수 있습니다.
+
+2. db.currentOp()
+
+현재 실행 중인 쿼리와 해당 쿼리가 획득/대기 중인 락 상태를 확인할 수 있습니다.
+Lock을 잡고 오래 대기 상태에 있는 쿼리가 있다면, db.killOp() 명령으로 강제로 중단할 수도 있습니다.
+
+```javascript title="mongoDB" showLineNumbers
+db.currentOp({
+  active: true,
+  secs_running: { $gt: 5 },
+})
+```
+
+위 쿼리를 통해 5초 이상 실행 중인 작업을 찾아볼 수 있습니다.
+
+3.  Profiler
+
+MongoDB 프로파일러를 활성화하면, 쿼리 실행 계획뿐 아니라 락 대기 시간(lockStats) 등의 정보를 볼 수 있습니다.
+프로파일링 레벨을 높이면 세밀한 정보를 얻을 수 있지만, 성능에 약간 영향이 있을 수 있으니 주의가 필요합니다.
+
+## 결론: 세분화된 락과 체계적인 모니터링
+
+MongoDB는 문서 단위의 미세 락(Document-Level Lock)부터 컬렉션·DB 수준의 제한적 락까지 다양한 계층을 갖추고 있습니다. 이를 내부적으로 Intent/Shared/Exclusive 락 모드를 조합해 운용함으로써 높은 동시성과 데이터 정합성을 동시에 추구합니다.
+
+하지만 아무리 세분화된 락 체계를 갖추고 있어도, 운영 환경에서 대규모 업데이트나 빈번한 인덱스 변경이 발생하면 락 경합이 심해질 수 있습니다. 이때는 db.currentOp(), Profiler 등을 사용해 병목 지점을 파악하고, 쿼리 구조를 최적화하거나 스키마 설계를 개선하여 락 충돌을 줄이는 접근이 필요합니다.
+
+다음 파트 예고
+다음 글에서는 MongoDB의 Multi-Document Transactions와 ACID 보장 범위에 대해 알아봅니다. 단일 문서 락을 넘어, 여러 문서에 걸쳐 원자적으로 쓰기 연산을 처리하려면 어떤 점을 주의해야 하는지, 실제 운영 시 성능 면에서 어떤 트레이드오프가 있는지 다룰 예정이니 기대해 주세요!
+
+참고 문서
+
+MongoDB Manual: Concurrency
+db.currentOp() 공식 문서
+Profiler Settings
+이상으로 MongoDB 락 체계와 그 동작 방식을 살펴보았습니다. 중급 개발자·운영자 입장에서는 단순히 “문서 단위 락”이라는 말만 믿고 구현하기보다는, 실제로 내부 락 모드가 어떻게 작동하고 언제 컬렉션/DB 레벨 락이 발생하는지를 파악해야 안정적인 운영이 가능합니다. 필요한 경우 모니터링 툴을 적극 활용하길 권장합니다.

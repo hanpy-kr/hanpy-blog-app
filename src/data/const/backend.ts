@@ -41,11 +41,23 @@ const subCategoryDetail: {
           href: '/backend/ko/database/mongodb-compound-indexes',
           title: 'Compound Indexes',
         },
+        {
+          href: '/backend/ko/database/mongodb-concurrency-control',
+          title: 'Concurrency Control',
+        },
+        // {
+        //   href: '/backend/ko/database/mongodb-concurrency-control-Lock-Granularity',
+        //   title: 'Lock Granularity',
+        // },
       ],
       [
         {
           href: '/backend/ko/database/concurrency-control',
           title: 'Concurrency Control',
+        },
+        {
+          href: '/backend/ko/database/basebase-transaction',
+          title: 'Transaction',
         },
         {
           href: '/backend/ko/database/concurrency-optimistic-lock',

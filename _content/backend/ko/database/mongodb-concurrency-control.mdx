@@ -1,0 +1,40 @@
+---
+deployment: true
+category: Backend
+title: 'MongoDB - Concurrency Control'
+summary: 'MongoDB를 비롯해 대부분의 데이터베이스가 지향하는 핵심 목표 중 하나는 동시성 제어(Concurrency Control)입니다. 문서 수준 잠금(Document-Level Lock)과 과거의 전역 잠금(Global Lock) 개념을 중심으로 설명합니다.'
+pageKey: backend_mongodb_concurrency_control_ko
+lng: KOR
+publishedAt: 2025-01-26
+---
+
+# MongoDB - Concurrency Control
+
+MongoDB를 비롯해 대부분의 데이터베이스가 지향하는 핵심 목표 중 하나는 <span style={{ fontWeight: "bold" }}>동시성 제어(Concurrency Control)</span>입니다. 여러 사용자가 동시에 데이터를 읽고 쓸 때, 어떻게 하면 <span style={{ fontWeight: 'bold' }}>정합성(Consistency)</span>과 <span style={{ fontWeight: 'bold' }}>성능(Performance)</span>을 모두 만족시킬 수 있을까요? 이번 글에서는 MongoDB의 동시성 제어 개념을 기초부터 살펴보겠습니다. 특히 MongoDB 버전별로 달라진 동시성 모델과 WiredTiger 스토리지 엔진, 그리고 문서 수준 잠금(Document-Level Lock)과 과거의 전역 잠금(Global Lock) 개념을 중심으로 설명합니다.
+
+<br />
+
+동시성 제어는 여러 사용자가 동시에 데이터베이스를 이용할 때 발생할 수 있는 데이터 충돌과 무결성 저하 문제를 해결하기 위한 기법입니다. 예를 들어, 동시에 같은 데이터를 갱신하려 할 때 한쪽의 변경이 덮어쓰여지거나, 아직 확정되지 않은(커밋되지 않은) 데이터를 읽어오는 등 다양한 문제가 생길 수 있습니다. 성능 측면에서도 락(lock)이 지나치게 광범위하게 걸리면 쓰기·읽기 성능이 급격히 떨어지고, 반대로 너무 느슨하게 걸면 데이터의 정합성이 깨질 수 있습니다. 관계형 DB D의B 시절에는 트랜잭션과 엄격한 락 메커니즘을 통해 동시성 이슈를 해결해왔으나, MongoDB 같은 NoSQL 계열은 설계 초기부터 고성능·고확장성을 목표로 다른 접근 방식을 택했습니다.
+
+## MongoDB 스토리지 엔진
+
+MongoDB는 초기 버전에서 <codeline>MMAPv1</codeline>이라는 스토리지 엔진을 사용했습니다. MongoDB 2.x 시절에는 한 데이터베이스 단위로 락을 걸거나, 어떤 경우에는 서버 전체(global) 단위로 락이 확장되기도 했습니다. 이로 인해 한 번에 많은 쓰기 작업이 발생하면 동시성 병목이 심해지는 문제가 있었습니다. MongoDB 3.0 이후로 새로운 스토리지 엔진인 <codeline>WiredTiger</codeline>가 도입되었고, MongoDB 3.2 버전부터는 WiredTiger가 기본 스토리지 엔진으로 설정되었습니다. WiredTiger는 문서(Document) 수준 동시성 제어를 제공함으로써 이전보다 훨씬 높은 동시성을 구현했습니다. 이처럼 버전별로 락 범위가 세분화·최적화되어 왔고, 현재는 대부분의 운영 환경에서 WiredTiger를 사용해 더 미세하고 유연한 락 메커니즘을 활용할 수 있습니다.
+
+## Mongodb Lock
+
+MongoDB는 현대 버전에서 문서 레벨 락(실제로는 내부적으로 복합적인 락과 MVCC 기법이 혼합돼 있지만, 외부 개념상 ‘문서 단위로 동시에 처리 가능’에 가깝습니다)을 통해 여러 사용자가 동시에 서로 다른 문서에 접근하고 수정할 수 있게 합니다.
+
+<br />
+
+- 문서(Document) 레벨 락: 한 문서를 수정하고 있을 때, 다른 트랜잭션이나 쿼리는 그 문서가 아닌 다른 문서를 동시에 수정할 수 있습니다. 이는 고도의 병행 처리(High Concurrency)를 가능하게 합니다.
+- 전역(Global) 락: 초창기 MongoDB에서는 엔진 내부에서 전역 혹은 DB 단위 락이 자주 발생해, 한 트랜잭션이 쓰기 작업을 시작하면 다른 트랜잭션이 대기해야 하는 상황이 잦았습니다. 현재는 이러한 전역 락이 일반적인 읽기·쓰기에 대해서는 거의 사용되지 않고, 메타데이터 변경처럼 제한적인 작업에만 적용됩니다.
+
+<br />
+
+정리하자면, MongoDB가 제공하는 동시성 모델은 문서(Document) 단위 락을 근간으로 하며, WiredTiger 스토리지 엔진 도입으로 인해 과거 대비 훨씬 향상된 병행 처리 성능을 제공합니다. 기존 관계형 DB에서의 엄격한 행(row) 단위 락이나 테이블 단위 락에 익숙했던 분이라면, MongoDB의 문서 수준 락 전략이 다소 낯설 수 있습니다. 하지만 WiredTiger가 제공하는 복수의 락·MVCC 기법 덕분에, 동시에 수많은 쓰기·읽기 작업이 발생하는 환경에서도 보다 효율적으로 동시성을 처리할 수 있습니다. 다음 파트에서는 MongoDB가 구체적으로 어떤 수준의 락을 어떻게 사용하는지, 그리고 락 경합(Lock Contention)을 모니터링하는 방법을 더 깊이 파고들 예정입니다. MongoDB의 동시성 모델을 이해하면, 단순히 쓰기·읽기 성능을 높일 뿐 아니라, 여러 클라이언트가 동시에 접속하는 대규모 서비스를 안전하고 일관되게 운영할 수 있게 됩니다.
+
+---
+
+## 참고 링크
+
+- [MongoDB 공식 문서: WiredTiger Storage Engine](https://www.mongodb.com/docs/manual/core/wiredtiger/)
