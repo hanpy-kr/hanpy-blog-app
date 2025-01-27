@@ -14,7 +14,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const sitmapDatas = datas
     .filter((item) => {
-      if (item && item?.deployment) {
+      if (
+        item &&
+        item?.deployment &&
+        new Date(item['publishedAt']).getTime() < new Date().getTime()
+      ) {
         return true
       } else {
         return false
