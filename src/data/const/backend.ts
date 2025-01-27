@@ -45,6 +45,18 @@ const subCategoryDetail: {
           href: '/backend/ko/database/mongodb-concurrency-control',
           title: 'Concurrency Control',
         },
+        {
+          href: '/backend/ko/database/mongodb-concurrency-control-2-Lock-Granularity',
+          title: 'Lock Granularity',
+        },
+        {
+          href: '/backend/ko/database/mongodb-concurrency-control-3-transaction',
+          title: 'Transaction',
+        },
+        {
+          href: '/backend/ko/database/mongodb-concurrency-control-4-sharding',
+          title: 'Sharding',
+        },
         // {
         //   href: '/backend/ko/database/mongodb-concurrency-control-Lock-Granularity',
         //   title: 'Lock Granularity',
