@@ -31,7 +31,7 @@ export type SUB_CATEGORY_TYPE =
   | 'pattern'
   | 'nodejs'
   | 'nextjs'
-  | 'react'
+  | 'web'
   | 'base'
   | 'database'
 

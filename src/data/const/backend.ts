@@ -72,6 +72,14 @@ const subCategoryDetail: {
           title: 'Transaction',
         },
         {
+          href: '/backend/ko/database/concurrency-shared-lock',
+          title: 'Shared Lock',
+        },
+        {
+          href: '/backend/ko/database/concurrency-exclusive-lock',
+          title: 'Exclusive Lock',
+        },
+        {
           href: '/backend/ko/database/concurrency-optimistic-lock',
           title: 'Optimistic Lock',
         },

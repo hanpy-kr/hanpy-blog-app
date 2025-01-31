@@ -5,6 +5,11 @@ const subCategory: {
     icon: string
   }
 } = {
+  web: {
+    name: 'Web Browser',
+    href: '/frontend/ko/web/worker',
+    icon: '/icons/web.svg',
+  },
   react: {
     name: 'React',
     href: '/frontend/ko/react/react-data-crud',
@@ -74,6 +79,17 @@ const subCategoryDetail: {
         {
           href: '/frontend/ko/utils/axios',
           title: 'Axios',
+        },
+      ],
+    ],
+  },
+  web: {
+    title: ['Core'],
+    subTitle: [
+      [
+        {
+          href: '/frontend/ko/web/worker',
+          title: 'Web Worker',
         },
       ],
     ],
