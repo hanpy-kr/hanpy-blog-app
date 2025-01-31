@@ -6,7 +6,7 @@ const subCategory: {
   }
 } = {
   web: {
-    name: 'Web Browser',
+    name: 'Web',
     href: '/frontend/ko/web/worker',
     icon: '/icons/web.svg',
   },
@@ -88,8 +88,16 @@ const subCategoryDetail: {
     subTitle: [
       [
         {
+          href: '/frontend/ko/web/web-browser-definition-and-features',
+          title: 'Browser',
+        },
+        {
+          href: '/frontend/ko/web/web-browser-network',
+          title: 'Network',
+        },
+        {
           href: '/frontend/ko/web/worker',
-          title: 'Web Worker',
+          title: 'Worker API',
         },
       ],
     ],
