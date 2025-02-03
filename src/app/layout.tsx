@@ -24,7 +24,9 @@ const roboto = Roboto({
   variable: '--roboto',
 })
 
-export const metadata: Metadata = {
+type CustomMetaDataType = Metadata | { "naver-site-verification" : string}
+
+export const metadata: CustomMetaDataType = {
   title: 'Hanpy Blog',
   description:
     "Welcome to my web development blog! Dive into expert tips on frontend frameworks, backend technologies, and cutting-edge infrastructure. Whether you're a seasoned developer or a newbie, explore tutorials and insights to enhance your coding skills and optimize your projects. Stay updated with the latest trends in web development, DevOps, and more. Join our community of developers to learn, grow, and innovate together.",
@@ -49,6 +51,9 @@ export const metadata: Metadata = {
     ],
     type: 'article',
   },
+
+  // Naver Search Advisor
+  "naver-site-verification" : "9cd2d8ecd2c271066df07e901055b7f7736a7061"
 }
 
 export default function RootLayout({
