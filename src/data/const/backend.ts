@@ -10,6 +10,11 @@ const subCategory: {
     href: '/backend/ko/database/concurrency-optimistic-lock',
     icon: '/icons/database.svg',
   },
+  nestjs: {
+    name: 'NestJS',
+    href: '/backend/ko/nestjs/nestjs-overview',
+    icon: '/icons/nestjs.svg',
+  },
 }
 
 const subCategoryDetail: {
@@ -21,6 +26,10 @@ const subCategoryDetail: {
     }[][]
   }
 } = {
+  base: {
+    title: [''],
+    subTitle: [[]],
+  },
   database: {
     title: ['MongoDB', 'Database'],
     subTitle: [
@@ -42,7 +51,7 @@ const subCategoryDetail: {
           title: 'Compound Indexes',
         },
         {
-          href: '/backend/ko/database/mongodb-concurrency-control',
+          href: '/backend/ko/database/mongodb-concurrency-control-1',
           title: 'Concurrency Control',
         },
         {
@@ -90,9 +99,30 @@ const subCategoryDetail: {
       ],
     ],
   },
-  base: {
-    title: [''],
-    subTitle: [[]],
+  nestjs: {
+    title: ['Beginner', 'Middle', 'Trouble-Shooting'],
+    subTitle: [
+      [
+        {
+          href: '/backend/ko/nestjs/nestjs-overview',
+          title: 'Overview',
+        },
+        {
+          href: '/backend/ko/nestjs/nestjs-quick-start',
+          title: 'QuickStart',
+        },
+        {
+          href: '/backend/ko/nestjs/nestjs-dynamic-modules',
+          title: 'Dynamic Module',
+        },
+        {
+          href: '/backend/ko/nestjs/nestjs-config-service',
+          title: 'ConfigService',
+        },
+      ],
+      [],
+      [],
+    ],
   },
   docker: {
     title: [],

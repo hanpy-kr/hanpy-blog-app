@@ -1,0 +1,66 @@
+---
+deployment: true
+category: Backend
+title: 'NestJS ConfigService'
+summary: 'ConfigService의 기본 개념과 사용법, 그리고 이를 통해 애플리케이션의 환경 설정을 어떻게 효율적으로 관리할 수 있는지에 대해 알아봅시다.'
+pageKey: backend_nestjs_configservice_ko
+lng: KOR
+publishedAt: 2025-02-15
+---
+
+# NestJS ConfigService
+
+NestJS 애플리케이션을 개발하다 보면, 환경 변수, 설정 파일, 외부 API 키 등 다양한 설정 값을 관리해야 하는 상황이 많습니다. 이러한 설정을 코드 전반에 흩뿌리지 않고 한 곳에서 체계적으로 관리할 수 있도록 도와주는 것이 바로 NestJS ConfigService입니다. 이 글에서는 ConfigService의 기본 개념과 사용법, 그리고 이를 통해 애플리케이션의 환경 설정을 어떻게 효율적으로 관리할 수 있는지에 대해 살펴보겠습니다.
+
+## ConfigService
+
+NestJS의 ConfigService는 애플리케이션의 환경 설정을 중앙 집중식으로 관리할 수 있도록 해주는 도구입니다. 이를 통해 개발자는 환경 변수나 설정 파일에 정의된 값들을 손쉽게 읽어오고, 코드에서 사용하는 다양한 설정을 통합적으로 관리할 수 있습니다. ConfigService는 보통 @nestjs/config 패키지에 포함되어 있으며, 모듈화된 설정 관리 방식을 지원합니다.
+
+<br />
+
+NestJS 애플리케이션은 배포 환경(개발, 스테이징, 프로덕션 등)에 따라 서로 다른 설정 값을 필요로 합니다. ConfigService를 사용하면 이러한 환경별 설정을 하나의 구조체 또는 객체로 관리할 수 있어, 설정 값이 변경되어도 코드 수정 없이 환경 변수나 설정 파일만 업데이트하면 되므로 유지보수성이 크게 향상됩니다.
+
+## 2. ConfigModule과 ConfigService의 통합 사용
+
+@nestjs/config 모듈은 ConfigService를 제공하며, 이를 통해 설정 파일이나 환경 변수에 쉽게 접근할 수 있습니다. 일반적인 사용 방법은 다음과 같습니다. 먼저, 애플리케이션의 루트 모듈(app.module.ts)에서 ConfigModule을 임포트하여 전역(Global)으로 설정합니다:
+
+```typescript title="Async Dynamic Module" showLineNumbers
+import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // 애플리케이션 전체에서 ConfigService를 사용할 수 있도록 설정
+      envFilePath: '.env', // 환경 변수 파일 경로 지정
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+이렇게 설정하면, 이제 애플리케이션 어디에서든 ConfigService를 주입 받아 환경 변수에 정의된 값을 쉽게 사용할 수 있습니다. 예를 들어, 서비스나 컨트롤러에서 ConfigService를 사용하는 방법은 다음과 같습니다.
+
+```typescript title="Async Dynamic Module" showLineNumbers
+import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+
+@Injectable()
+export class AppService {
+  constructor(private configService: ConfigService) {}
+
+  getDatabaseHost(): string {
+    return this.configService.get<string>('DB_HOST')
+  }
+}
+```
+
+이 코드에서 configService.get\<string\>('DB_HOST')는 환경 변수 파일(.env)에 정의된 DB_HOST 값을 읽어오며, 이를 통해 데이터베이스 연결이나 다른 설정에 필요한 값을 쉽게 관리할 수 있습니다.
+
+## 3. ConfigService의 장점과 확장성
+
+ConfigService를 사용 시 중앙 집중식 관리가 가능합니다. 애플리케이션의 설정 값들을 한 곳에서 관리함으로써, 코드 전반에 흩어진 설정값들을 하나하나 수정할 필요 없이 환경 파일만 업데이트하면 됩니다. 개발, 테스트, 프로덕션 등 각 환경에 맞는 설정 파일을 분리하여 관리할 수 있으며, envFilePath 옵션을 통해 쉽게 전환할 수 있습니다. TypeScript와 결합하여 설정 값을 타입 안전(Type Safety)하게 다룰 수 있어, 잘못된 타입의 값 사용으로 인한 오류를 방지할 수 있습니다. 복잡한 환경 설정이 필요한 경우, ConfigService와 함께 비동기적으로 설정 값을 불러올 수 있으며, 의존성 주입과 결합하여 유연하게 환경 설정을 처리할 수 있습니다.
+
+<br />
+
+또한, ConfigService는 단순한 환경 변수 관리뿐 아니라, 다양한 설정 값을 동적으로 처리할 수 있는 확장성을 제공합니다. 예를 들어, 비밀번호나 API 키 등 민감한 정보를 안전하게 관리하기 위한 암호화 로직을 추가하거나, 외부 설정 서비스에서 데이터를 가져오는 로직을 구성할 수도 있습니다.

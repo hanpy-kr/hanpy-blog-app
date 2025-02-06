@@ -32,8 +32,11 @@ export type SUB_CATEGORY_TYPE =
   | 'nodejs'
   | 'nextjs'
   | 'web'
+  // backend
   | 'base'
   | 'database'
+  | 'nestjs'
+  | 'test'
 
 const BlogLNBTitle = ({
   type,
