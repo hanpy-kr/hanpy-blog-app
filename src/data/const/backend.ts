@@ -31,7 +31,7 @@ const subCategoryDetail: {
     subTitle: [[]],
   },
   database: {
-    title: ['MongoDB', 'Database'],
+    title: ['MongoDB', 'Database', 'Redis'],
     subTitle: [
       [
         {
@@ -95,6 +95,16 @@ const subCategoryDetail: {
         {
           href: '/backend/ko/database/concurrency-pessimistic-lock',
           title: 'Pessimistic Lock',
+        },
+      ],
+      [
+        {
+          href: '/backend/ko/database/redis-cli',
+          title: 'Redis CLI',
+        },
+        {
+          href: '/backend/ko/database/redis-troubleshooting-1',
+          title: 'Redis Trouble-Shooting 1',
         },
       ],
     ],

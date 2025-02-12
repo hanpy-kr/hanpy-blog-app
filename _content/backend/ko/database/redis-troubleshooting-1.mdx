@@ -1,0 +1,59 @@
+---
+deployment: true
+category: Backend
+title: 'Could not connect to Redis at 127.0.0.1:6379: Connection refused'
+summary: '"Could not connect to Redis at 127.0.0.1:6379: Connection refused"라는 메시지는 Redis CLI가 지정된 호스트(127.0.0.1)와 포트(6379)에서 Redis 서버에 연결하려 했지만, 해당 주소에서 Redis 서버가 실행되고 있지 않다는 의미입니다.'
+pageKey: backend_redis_troubleshooting_1_ko
+lng: KOR
+publishedAt: 2025-02-19
+---
+
+# Could not connect to Redis at 127.0.0.1:6379: Connection refused
+
+Redis CLI를 실행하려면 터미널에 다음 명령어를 입력합니다.
+
+```bash title="cmd" showLineNumbers
+➜ redis-cli
+Could not connect to Redis at 127.0.0.1:6379: Connection refused
+```
+
+"Could not connect to Redis at 127.0.0.1:6379: Connection refused"라는 메시지는 Redis CLI가 지정된 호스트(127.0.0.1)와 포트(6379)에서 Redis 서버에 연결하려 했지만, 해당 주소에서 Redis 서버가 실행되고 있지 않다는 의미입니다. 이는 여러 가지 원인으로 발생할 수 있으며, 해결 방법은 다음과 같습니다.
+
+## 1. Redis 서버 실행 여부 확인
+
+가장 먼저, Redis 서버(redis-server)가 실행 중인지 확인해야 합니다. 터미널에서 아래 명령어를 입력하여 Redis 서버를 실행해 봅시다.
+
+```bash title="cmd" showLineNumbers
+➜ redis-server
+```
+
+또는 Homebrew를 사용하여 설치했다면, 다음 명령어로 서비스를 시작할 수 있습니다.
+
+```bash title="cmd" showLineNumbers
+➜ brew services start redis
+```
+
+실행 후 다시 redis-cli를 실행해 연결이 되는지 확인합니다.
+
+## 2. 포트 확인
+
+기본적으로 Redis는 6379 포트를 사용하지만, 설정 파일(redis.conf)에서 다른 포트를 사용하도록 변경되었을 수도 있습니다. 설정 파일을 확인하거나, 서버 로그를 살펴보고 올바른 포트를 확인한 후, 해당 포트로 연결하여 확인할 수 있습니다.
+
+```bash title="cmd" showLineNumbers
+➜ redis-cli -p [올바른 포트번호]
+```
+
+## 3. 방화벽 및 네트워크 설정
+
+로컬에서 Redis를 실행 중이라도, 방화벽이나 네트워크 설정에 의해 연결이 차단될 가능성이 있습니다. macOS의 경우 특별한 방화벽 설정이 없다면 문제가 되지 않지만, 혹시 다른 보안 소프트웨어가 있다면 해당 소프트웨어에서 포트 6379가 열려 있는지 확인해야 합니다.
+
+## 4. 설치 상태 확인
+
+Redis가 제대로 설치되었는지, 혹은 최신 버전인지 확인해 볼 필요가 있습니다. Homebrew를 사용하고 있다면 다음 명령어로 업데이트 및 재설치를 고려해 볼 수도 있습니다.
+
+```bash title="cmd" showLineNumbers
+➜ brew update
+➜ brew reinstall redis
+```
+
+위 단계를 순차적으로 점검한 후 Redis 서버가 정상적으로 실행 중이라면, redis-cli 명령어로 연결할 때 더 이상 "Connection refused" 오류가 발생하지 않을 것입니다.
