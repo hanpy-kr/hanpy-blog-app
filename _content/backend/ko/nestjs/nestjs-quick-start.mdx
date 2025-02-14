@@ -93,7 +93,7 @@ NestJS에서 프로젝트를 생성하면 기본적으로 /src 디렉터리 내�
 
 NestJS의 컨트롤러(Controller)는 클라이언트의 요청을 처리하고, 응답을 반환하는 역할을 합니다. app.controller.ts 파일은 기본적으로 루트 경로(/)에 대한 요청을 처리하도록 설정됩니다. 컨트롤러는 @Controller() 데코레이터를 사용하여 정의되며, 내부에는 @Get(), @Post(), @Put() 등의 HTTP 메서드 핸들러가 포함될 수 있습니다.
 
-```TypeScript title="app.controller.ts" showLineNumbers
+```typescript title="app.controller.ts" showLineNumbers
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -111,7 +111,7 @@ export class AppController {
 
 NestJS는 모듈(Module) 기반 아키텍처를 따르며, app.module.ts는 애플리케이션의 루트 모듈(Root Module) 역할을 합니다. 모든 NestJS 애플리케이션은 최소한 하나의 모듈을 가져야 하며, 이 모듈 내에서 컨트롤러, 서비스, 다른 모듈들을 관리합니다.
 
-```TypeScript title="app.module.ts" showLineNumbers
+```typescript title="app.module.ts" showLineNumbers
 @Module({
   imports: [],
   controllers: [AppController],
@@ -139,7 +139,7 @@ export class AppModule {}
 
 NestJS의 서비스(Service)는 비즈니스 로직을 처리하는 핵심적인 역할을 담당합니다. app.service.ts 파일은 기본적으로 app.controller.ts에서 사용되는 메서드를 제공하며, @Injectable() 데코레이터를 통해 의존성 주입(DI, Dependency Injection)이 가능하도록 설정됩니다.
 
-```TypeScript title="app.service.ts" showLineNumbers
+```typescript title="app.service.ts" showLineNumbers
 @Injectable()
 export class AppService {
   getHello(): string {
@@ -158,7 +158,7 @@ main.ts는 NestJS 애플리케이션이 실행될 때 가장 먼저 실행되는
 
 기본적으로 main.ts는 다음과 같은 기능을 수행합니다.
 
-```TypeScript title="main.ts" showLineNumbers
+```typescript title="main.ts" showLineNumbers
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await app.listen(process.env.PORT ?? 3000);

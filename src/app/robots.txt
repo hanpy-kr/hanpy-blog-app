@@ -1,5 +1,7 @@
 User-Agent: *
 Allow: /
- 
+Disallow: /_next/
+Disallow: /404.html
+
 Host: https://hanpy-blog.com
 Sitemap: https://hanpy-blog.com/sitemap.xml
