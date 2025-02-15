@@ -5,6 +5,11 @@ const subCategory: {
     icon: string
   }
 } = {
+  base: {
+    name: 'base',
+    href: '/',
+    icon: '/icons/document.svg',
+  },
   database: {
     name: 'database',
     href: '/backend/ko/database/concurrency-optimistic-lock',
@@ -14,6 +19,11 @@ const subCategory: {
     name: 'NestJS',
     href: '/backend/ko/nestjs/nestjs-overview',
     icon: '/icons/nestjs.svg',
+  },
+  utils: {
+    name: 'Utils',
+    href: '/',
+    icon: '/icons/utils.svg',
   },
 }
 
@@ -27,11 +37,11 @@ const subCategoryDetail: {
   }
 } = {
   base: {
-    title: [''],
-    subTitle: [[]],
+    title: ['Beginner', 'Middle', 'Trouble-Shooting'],
+    subTitle: [[], [], []],
   },
   database: {
-    title: ['MongoDB', 'Database', 'Redis'],
+    title: ['MongoDB', 'Database', 'Redis', 'Trouble-Shooting'],
     subTitle: [
       [
         {
@@ -65,6 +75,10 @@ const subCategoryDetail: {
         {
           href: '/backend/ko/database/mongodb-concurrency-control-4-sharding',
           title: 'Sharding',
+        },
+        {
+          href: '/backend/ko/database/mongodb-aggregation-match',
+          title: 'Aggregation Match Query',
         },
         // {
         //   href: '/backend/ko/database/mongodb-concurrency-control-Lock-Granularity',
@@ -102,6 +116,8 @@ const subCategoryDetail: {
           href: '/backend/ko/database/redis-cli',
           title: 'Redis CLI',
         },
+      ],
+      [
         {
           href: '/backend/ko/database/redis-troubleshooting-1',
           title: 'Redis Trouble-Shooting 1',
@@ -134,9 +150,9 @@ const subCategoryDetail: {
       [],
     ],
   },
-  docker: {
-    title: [],
-    subTitle: [[]],
+  utils: {
+    title: ['Beginner', 'Middle', 'Trouble-Shooting'],
+    subTitle: [[], [], []],
   },
 }
 

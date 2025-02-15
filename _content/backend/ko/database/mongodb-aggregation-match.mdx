@@ -1,0 +1,441 @@
+---
+deployment: true
+category: Backend
+title: 'MongoDB Aggregation Match'
+summary: '동시성 제어는 다중 사용자 환경에서 데이터베이스나 공유 자원의 일관성과 무결성을 유지하기 위한 핵심 기술입니다.'
+pageKey: backend_mongodb_aggregation_match_ko
+lng: KOR
+publishedAt: 2025-02-21
+---
+
+# MongoDB Aggregation Match
+
+MongoDB의 $match는 Aggregation Pipeline 단계 중 하나로, SQL의 WHERE 절과 비슷하게 문서 필터링을 수행합니다. 컬렉션에서 조건에 맞는 문서만 다음 단계로 전달하도록 필터링하는 역할을 합니다. 기본적인 사용법은 아래와 같습니다.
+
+```typescript title="aggregate match" showLineNumbers
+db.collection.aggregate([{ $match: { 필드: 값 } }])
+```
+
+## 사용하기
+
+$match는 Aggregation Pipeline의 초기 단계에 위치시키는 것이 성능상 유리합니다. 불필요한 데이터를 미리 필터링하면 이후 단계의 처리 속도를 높일 수 있습니다. 또한, 인덱스를 활용하면 $match의 성능을 더 최적화할 수 있습니다. 우선 단일조건 / AND조건 / OR조건에 대해 알아봅시다.
+
+```typescript title="aggregate match" showLineNumbers
+// 단일 조건 필터링
+db.users.aggregate([{ $match: { age: { $gte: 18 } } }])
+```
+
+→ age가 18 이상인 사용자만 반환합니다.
+
+```typescript title="aggregate match" showLineNumbers
+// 다중 조건 필터링 (AND 조건)
+db.users.aggregate([{ $match: { age: { $gte: 18 }, isActive: true } }])
+```
+
+→ age가 18 이상이고 isActive가 true인 사용자만 반환합니다.
+
+```typescript title="aggregate match" showLineNumbers
+// OR 조건 사용
+db.users.aggregate([
+  { $match: { $or: [{ age: { $lt: 18 } }, { isActive: false }] } },
+])
+```
+
+→ age가 18 미만이거나 isActive가 false인 사용자 반환합니다.
+
+---
+
+## 응용하기
+
+위의 내용만만으로 간단한 쿼리는 작성 할 수 있으나, 실무에서는 사용하는 부분에 제약이 있습니다.
+
+```typescript title="aggregate match" showLineNumbers
+// 중첩된 문서 필터링 (Nested Documents)
+db.orders.aggregate([
+  {
+    $match: {
+      'customer.address.city': 'Seoul',
+      'items.price': { $gte: 1000 },
+    },
+  },
+])
+```
+
+→ customer.address.city가 Seoul인 주문 중에서 items.price가 1000 이상인 주문을 필터링할 수 있습니다.
+
+```typescript title="aggregate match" showLineNumbers
+// 날짜 필터링과 범위 조건
+db.logs.aggregate([
+  {
+    $match: {
+      timestamp: {
+        $gte: ISODate('2025-01-01T00:00:00Z'),
+        $lt: ISODate('2025-02-01T00:00:00Z'),
+      },
+      status: { $in: ['ERROR', 'FAIL'] },
+    },
+  },
+])
+```
+
+→ 2025년 1월 동안 발생한 로그 중 status가 ERROR 또는 FAIL인 항목만 필터링합니다.
+
+```typescript title="aggregate match" showLineNumbers
+// 배열 내 특정 요소 필터링 ($elemMatch)
+db.products.aggregate([
+  {
+    $match: {
+      reviews: {
+        $elemMatch: { rating: { $gte: 4 }, comment: { $exists: true } },
+      },
+    },
+  },
+])
+```
+
+→ reviews 배열 안에 rating이 4 이상이고 comment가 존재하는 리뷰가 있는 상품을 필터링합니다.
+
+```typescript title="aggregate match" showLineNumbers
+// 정규식(Regex)과 논리 연산자 결합
+db.users.aggregate([
+  {
+    $match: {
+      $and: [
+        { email: { $regex: /@gmail\.com$/, $options: 'i' } },
+        { username: { $not: /^admin/ } },
+        { lastLogin: { $gte: ISODate('2025-01-01T00:00:00Z') } },
+      ],
+    },
+  },
+])
+```
+
+→ Gmail 계정을 사용하는 사용자 중 username이 admin으로 시작하지 않고 2025년 1월 1일 이후 로그인한 사용자 필터링합니다.
+
+```typescript title="aggregate match" showLineNumbers
+// 다단계 조건 필터링 (복잡한 논리 연산자)
+db.transactions.aggregate([
+  {
+    $match: {
+      $or: [
+        {
+          $and: [{ amount: { $gte: 1000 } }, { status: 'completed' }],
+        },
+        {
+          $and: [
+            { amount: { $lt: 1000 } },
+            { status: 'pending' },
+            { attempts: { $gt: 3 } },
+          ],
+        },
+      ],
+    },
+  },
+])
+```
+
+→ 거래 금액이 1000 이상이고 status가 completed이거나, 거래 금액이 1000 미만이면서 status가 pending이고 attempts가 3회 초과인 거래를 필터링합니다.
+
+```typescript title="aggregate match" showLineNumbers
+// $expr을 사용한 필드 간 비교
+db.accounts.aggregate([
+  {
+    $match: {
+      $expr: { $gt: ["$balance", "$limit"] }
+    }
+  }
+])
+```
+
+→ balance(잔고)가 limit(한도)보다 큰 계좌만 필터링합니다.
+
+## match와 lookup 결합
+
+우리가 몽고 db를 사용하다보면, lookup을 함께 사용하는 경우가 많습니다. 다른 컬렉션과 함꼐 사용하는 방법에 대해 알아보도록 합시다.
+
+```typescript title="aggregate match" showLineNumbers
+// $기본 $lookup 사용법 (컬렉션 간 조인)
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",         // 조인할 컬렉션 이름
+      localField: "customerId",  // 현재 컬렉션의 필드
+      foreignField: "_id",       // 조인할 컬렉션의 필드
+      as: "customerInfo"         // 조인 결과가 저장될 필드
+    }
+  },
+  { 
+    $match: { "customerInfo.status": "active" } // 조인한 데이터 기반 필터링
+  }
+])
+```
+
+→ orders 컬렉션의 customerId와 customers 컬렉션의 _id를 매칭하고 customers 컬렉션의 status가 active인 주문만 필터링됩니다.
+
+```typescript title="aggregate match" showLineNumbers
+// $lookup + $match로 복잡한 조건 결합
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "products",
+      localField: "productId",
+      foreignField: "_id",
+      as: "productDetails"
+    }
+  },
+  { 
+    $unwind: "$productDetails"  // 배열을 개별 문서로 분리
+  },
+  {
+    $match: {
+      "productDetails.category": "Electronics",
+      "productDetails.price": { $gte: 500 }
+    }
+  }
+])
+```
+
+→ orders 컬렉션의 productId와 products 컬렉션의 _id를 조인합니다. 그리고 products의 category가 Electronics이고, price가 500 이상인 주문만 필터링합니다.
+
+```typescript title="aggregate match" showLineNumbers
+// $expr로 컬렉션 간 필드 비교
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",
+      localField: "customerId",
+      foreignField: "_id",
+      as: "customerInfo"
+    }
+  },
+  { $unwind: "$customerInfo" },
+  {
+    $match: {
+      $expr: { 
+        $gt: ["$totalAmount", "$customerInfo.creditLimit"] 
+      }
+    }
+  }
+])
+```
+
+→ orders.totalAmount가 customers.creditLimit보다 큰 주문만 필터링합니다.
+
+```typescript title="aggregate match" showLineNumbers
+// $다중 $lookup (여러 컬렉션 조인)
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",
+      localField: "customerId",
+      foreignField: "_id",
+      as: "customerInfo"
+    }
+  },
+  {
+    $lookup: {
+      from: "products",
+      localField: "productId",
+      foreignField: "_id",
+      as: "productDetails"
+    }
+  },
+  { $unwind: "$customerInfo" },
+  { $unwind: "$productDetails" },
+  {
+    $match: {
+      "customerInfo.status": "active",
+      "productDetails.stock": { $gt: 0 }
+    }
+  }
+])
+```
+
+→ orders 컬렉션에서 customers와 products 두 컬렉션을 동시에 조인합니다. 그리고 customers의 status가 active이고, products의 stock이 0보다 큰 주문만 필터링합니다.
+
+
+```typescript title="aggregate match" showLineNumbers
+// 서브쿼리 스타일 $lookup + pipeline 사용
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",
+      let: { customer_id: "$customerId" },
+      pipeline: [
+        { $match: { $expr: { $eq: ["$_id", "$$customer_id"] } } },
+        { $match: { status: "active" } }
+      ],
+      as: "customerInfo"
+    }
+  },
+  {
+    $match: { "customerInfo": { $ne: [] } }  // active 고객의 주문만 필터링
+  }
+])
+```
+
+→ orders.customerId와 customers._id를 매칭하면서, customers.status가 active인 경우만 필터링합니다. 파이프라인을 통해 $lookup 내에서 조건을 세분화할 수 있습니다.
+
+
+## $match 성능 최적화
+
+### 1. $match 배치 위치
+
+ $match를 가능한 초기 단계에 배치하면, 불필요한 데이터를 미리 필터링해 이후 단계의 처리 부담을 줄일 수 있습니다.
+
+
+```typescript title="aggregate match" showLineNumbers
+// BAD
+db.orders.aggregate([
+  { $sort: { date: -1 } },      // 먼저 정렬 (데이터 양이 많으면 느림)
+  { $match: { status: "active" } }
+])
+
+// GOOD
+db.orders.aggregate([
+  { $match: { status: "active" } },  // 먼저 필터링
+  { $sort: { date: -1 } }
+])
+
+```
+
+### 1. 인덱스를 활용한 $match 최적화
+
+인덱스가 설정된 필드를 $match로 사용할 경우, MongoDB는 컬렉션 스캔이 아닌 인덱스 스캔을 수행하여 조회 성능이 향상됩니다.
+
+```typescript title="aggregate match" showLineNumbers
+// 인덱스 생성 예시
+db.orders.createIndex({ status: 1, date: -1 })
+
+// 인덱스를 활용하는 쿼리
+db.orders.aggregate([
+  { $match: { status: "active", date: { $gte: ISODate("2024-01-01") } } }
+])
+```
+
+Aggregation Pipeline에서 $match가 인덱스를 완전히 활용하지 못할 경우가 있습니다. 이때는 쿼리 플래너(explain())로 확인이 필요합니다.
+
+### 3. $match와 $expr의 비활성화
+
+앞에서 expr를 활용한 비교를 알아보았습니다. mongodb는 $expr을 사용하면 필드 간의 동적 비교가 가능하지만, 인덱스를 비활성화합니다. 비교가 필요한 경우에는 $expr 대신 가능한 한 정적 조건을 사용하거나, 인덱스 필터링이 가능한 필드를 조합합니다.
+
+
+### 3. 성능 분석
+
+explain()을 사용해서 $match가 인덱스를 사용하고 있는지 확인할 수 있습니다.
+
+```typescript title="aggregate match" showLineNumbers
+db.orders.aggregate([
+  { $match: { status: "active" } }
+]).explain("executionStats")
+```
+
+결과로 표출된 여러 항복중에 stage부분이 IXSCAN로 인덱스 스캔이 맞는지를 확인합니다. COLLSCAN은 컬랙션 스캔으로 비효율적입니다. 성능 분석에서 $match의 Selectivity (선택도)를 확인하는 것이 좋습니다. 선택도란, 조건이 얼마나 좁은 범위의 데이터를 선택하는지를 나타냅니다. 높은 선택도(결과가 적을수록)는 성능에 긍정적 영향을 줍니다. 에를 들면 아래와 같습니다.
+
+```typescript title="aggregate match" showLineNumbers
+// 선택도 높은 조건 (성능 좋음)
+{ $match: { status: "active" } }  // 'active' 상태가 전체 데이터의 5%라면 선택도 높음
+
+// 선택도 낮은 조건 (성능 나쁨)
+{ $match: { country: { $exists: true } } }  // 거의 모든 문서가 매칭됨
+```
+
+
+### 4. 대용량 데이터 조회
+
+대규모 데이터셋에서는 아래와 같이 $match와 **$limit**을 조합하여 처리량을 줄일 수 있습니다.
+
+```typescript title="aggregate match" showLineNumbers
+db.orders.aggregate([
+  { $match: { status: "active" } },
+  { $limit: 1000 }
+])
+```
+
+
+Sharded 클러스터에서는 $match를 Shard Key에 맞게 작성하면 쿼리를 병렬 처리할 수 있습니다.
+
+```typescript title="aggregate match" showLineNumbers
+// Shard Key 예시
+db.orders.createIndex({ region: 1 })
+
+// Shard Key를 활용한 쿼리
+db.orders.aggregate([
+  { $match: { region: "APAC" } }
+])
+```
+
+## lookup과 match 잘 사용하기
+
+MongoDB에서는 $match를 Aggregation Pipeline의 초기 단계에서 활용할 수 있지만, $lookup 안에서 $match를 직접 사용할 수는 없습니다. 하지만 $lookup에서 파이프라인(pipeline)을 사용하면 $match를 포함할 수 있습니다.
+
+
+### 방법 1. $lookup 후 $match 사용
+
+먼저, 방법 1은 비효율적이기 때문에 사용을 지양해야합니다. 아래의 예를 봅시다.
+
+```typescript title="aggregate match" showLineNumbers
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",
+      localField: "customerId",
+      foreignField: "_id",
+      as: "customerInfo"
+    }
+  },
+  { $unwind: "$customerInfo" },
+  { $match: { "customerInfo.status": "active" } }
+])
+```
+
+orders의 모든 고객 데이터를 가져온 후 status: "active"를 필터링합니다. 따라서, 불필요한 데이터도 불러오기 때문에 성능 저하 발생.
+
+### 방법 1. $lookup 내에서 $match 사용
+
+```typescript title="aggregate match" showLineNumbers
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",
+      let: { customer_id: "$customerId" },
+      pipeline: [
+        { $match: { $expr: { $eq: ["$_id", "$$customer_id"] } } },
+        { $match: { status: "active" } }
+      ],
+      as: "customerInfo"
+    }
+  }
+])
+```
+
+orders.customerId와 customers._id가 매칭될 때만 조인 수행합니다. customers.status: "active"인 경우만 필터링하여 불필요한 데이터 로딩 방지할 수 있습니다.
+
+
+## 실습 샘플
+
+### SAMPLE. 1
+
+```typescript title="aggregate match" showLineNumbers
+db.orders.aggregate([
+  { $match: { status: "pending" } },  // Step 1: 먼저 필요한 주문만 필터링
+  {
+    $lookup: {
+      from: "customers",
+      let: { customer_id: "$customerId" },
+      pipeline: [
+        { $match: { $expr: { $eq: ["$_id", "$$customer_id"] } } },
+        { $match: { status: "active" } }
+      ],
+      as: "customerInfo"
+    }
+  },
+  { $match: { "customerInfo": { $ne: [] } } }  // Step 3: 조인 후 필터링
+])
+```
+
+위 코드의 최적화 flow는 아래왁 같습니다.
+
+<codeline>Step 1 :</codeline> $match로 먼저 주문 필터링 (status: "pending")
+<codeline>Step 2 :</codeline> $lookup으로 customers에서 active 상태만 가져옴
+<codeline>Step 3 :</codeline> $match로 조인된 데이터 중 customerInfo가 존재하는 데이터만 필터링
