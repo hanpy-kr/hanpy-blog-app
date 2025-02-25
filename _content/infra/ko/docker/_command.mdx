@@ -1,0 +1,154 @@
+---
+deployment: true
+category: Backend
+title: 'Docker CLI Command'
+summary: 'Docker의 기본 명령어를 소개하며, 각 명령어의 용도와 예시를 알아봅시다.'
+pageKey: backend_docker_cli_command_ko
+lng: KOR
+publishedAt: 2025-02-23
+---
+
+# Docker 명령어 가이드
+
+Docker는 애플리케이션을 컨테이너화하여 개발, 배포, 확장을 획기적으로 개선하는 도구입니다. 이를 통해 개발자는 환경 간의 일관성을 유지하면서 손쉽게 애플리케이션을 실행하고 관리할 수 있습니다. Docker의 기본 명령어를 소개하며, 각 명령어의 용도와 실제 예시를 통해 사용에 익숙해져 봅시다.
+
+## Docker 이미지 관련 명령어
+
+### docker pullDocker
+
+Docker Hub와 같은 레지스트리에서 원하는 이미지를 다운로드할 때 사용합니다. 예를 들어, Ubuntu 이미지를 로컬로 가져오려면 다음과 같이 입력합니다.
+
+```bash title="docker cmd" showLineNumbers
+docker pull ubuntu
+```
+
+이 명령어는 최신 Ubuntu 이미지를 로컬에 다운로드하며, 다른 이미지들도 동일한 방식으로 가져올 수 있습니다.
+
+### docker images
+
+현재 로컬에 저장된 Docker 이미지 목록을 확인하려면 docker images 명령어를 사용합니다. 이 명령어는 각 이미지의 REPOSITORY, TAG, IMAGE ID, CREATED, SIZE 정보를 출력하여, 사용 가능한 이미지들을 한눈에 확인할 수 있도록 합니다.
+
+```bash title="docker cmd" showLineNumbers
+docker images
+```
+
+### docker tag
+
+이미지에 새로운 태그를 붙여서 재지정할 때 사용합니다. 예를 들어, 로컬에 있는 <codeline>myapp:latest</codeline> 이미지를 Docker Hub에 업로드하기 위해 <codeline>username/myapp:latest</codeline>라는 태그를 붙이고 싶다면 다음과 같이 입력합니다.
+
+```bash title="docker cmd" showLineNumbers
+docker tag myapp:latest username/myapp:latest
+```
+
+### docker push
+
+로컬에서 태깅한 이미지를 Docker Hub나 다른 레지스트리로 업로드할 때 사용합니다. 위에서 태깅한 이미지를 푸시하려면 다음과 같이 입력합니다.
+
+```bash title="docker cmd" showLineNumbers
+docker push username/myapp:latest
+```
+
+---
+
+## Docker 컨테이너 관리 명령어
+
+### docker run
+
+컨테이너를 생성하고 실행하는 기본 명령어입니다. 예를 들어, Ubuntu 이미지를 기반으로 새로운 컨테이너를 실행하고 Bash 셸에 접속하려면 아래의 명령어를 사용합니다.
+
+```bash title="docker cmd" showLineNumbers
+docker run -it ubuntu bash
+```
+
+- <codeline>-it</codeline>: 인터랙티브 모드와 터미널 연결을 활성화합니다.
+- <codeline>bash</codeline>: 컨테이너 내에서 실행할 명령어입니다.
+
+### docker ps
+
+현재 실행 중인 컨테이너 목록을 확인하려면 사용합니다. 기본적으로 실행 중인 컨테이너만 표시되며, 모든 컨테이너(중지된 것 포함)를 보려면 -a 옵션을 추가합니다.
+
+```bash title="docker cmd" showLineNumbers
+docker ps -a
+```
+
+### docker stop
+
+실행 중인 컨테이너를 종료할 때 사용합니다. 컨테이너 ID 또는 이름을 지정하여 실행합니다:
+
+```bash title="docker cmd" showLineNumbers
+docker stop container_id_or_name
+```
+
+### docker rm
+
+중지된 컨테이너를 삭제할 때 사용하는 명령어입니다. 여러 컨테이너를 한 번에 삭제할 수도 있습니다:
+
+```bash title="docker cmd" showLineNumbers
+docker rm container_id_or_name
+```
+
+---
+
+## Docker 로그와 실행 명령어
+
+### docker logs
+
+컨테이너의 로그를 확인할 때 사용합니다. 특정 컨테이너의 로그를 출력하려면 다음과 같이 입력합니다.
+
+```bash title="docker cmd" showLineNumbers
+docker logs container_id_or_name
+
+```
+
+이 명령어는 컨테이너 내부에서 발생한 로그 메시지를 확인할 수 있도록 해, 문제 해결이나 모니터링에 유용합니다.
+
+### docker exec
+
+이미 실행 중인 컨테이너 내에서 추가 명령을 실행할 수 있는 명령어입니다. 예를 들어, 실행 중인 컨테이너에 Bash 셸을 실행하여 디버깅하려면 아래의 명령어를 사용합니다.
+
+```bash title="docker cmd" showLineNumbers
+docker exec -it container_id_or_name bash
+
+```
+
+이 명령어를 사용하면 컨테이너 내부에서 직접 명령을 실행하여 필요한 작업을 수행할 수 있습니다.
+
+---
+
+## Docker 이미지 저장 및 로드와
+
+### docker save
+
+로컬에 있는 Docker 이미지를 tar 파일로 저장할 때 사용합니다. 이는 이미지를 다른 시스템으로 옮기거나 백업할 때 유용합니다.
+
+```bash title="docker cmd" showLineNumbers
+docker save -o myapp.tar username/myapp:latest
+```
+
+### docker load
+
+tar 파일로 저장된 Docker 이미지를 로컬로 불러올 때 사용합니다.
+
+```bash title="docker cmd" showLineNumbers
+docker load -i myapp.tar
+```
+
+---
+
+## Docker 리소스 정리 및 유지관리
+
+### docker system prune
+
+사용하지 않는 이미지, 컨테이너, 네트워크 등 Docker 리소스를 한 번에 정리하여 디스크 공간을 확보할 때 사용합니다:
+
+```bash title="docker cmd" showLineNumbers
+docker system prune
+```
+
+## 정리
+
+Docker의 기본 명령어들은 컨테이너 기반 애플리케이션의 빌드, 실행, 관리에 있어 매우 중요한 역할을 합니다. 위에서 소개한 명령어들은 이미지 다운로드, 태깅, 푸시, 저장 및 로드와 같이 일상적인 작업부터 컨테이너 실행, 로그 확인, 리소스 정리에 이르기까지 폭넓은 기능을 제공합니다. 이러한 명령어들을 숙지하면, Docker 환경을 보다 효율적으로 활용하고, 애플리케이션의 개발 및 배포 프로세스를 최적화할 수 있습니다.
+
+<br />
+
+Docker는 단순히 컨테이너를 실행하는 도구를 넘어서, 환경 간의 일관성을 유지하며 개발과 배포의 복잡성을 줄여주는 강력한 인프라 도구입니다. 중급 개발자라면 이 기본 명령어들을 중심으로 Docker를 활용하는 법을 익혀, DevOps와 클라우드 환경에서 안정적이고 효율적인 시스템을 구축할 수 있기를 바랍니다.

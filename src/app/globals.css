@@ -31,7 +31,6 @@ s,
 samp,
 small,
 strike,
-strong,
 sub,
 sup,
 tt,
@@ -176,10 +175,7 @@ section {
 body {
   line-height: 1;
 }
-/* ol,
-ul {
-  list-style: none;
-} */
+
 blockquote,
 q {
   quotes: none;
@@ -196,11 +192,51 @@ table {
   border-spacing: 0;
 }
 
-/* end reset */
-
-li {
-  margin: 0.2rem 0;
+/* =========================== ol / li ========================== */
+ol,
+ul {
+  list-style: none;
+  margin: 10px 0px;
+  font-size: 16px;
 }
+
+ol li {
+  margin-bottom: 3px;
+  border-radius: 10px;
+  padding: 0px 10px;
+  transition: all 1s;
+}
+
+ul li {
+  margin-bottom: 3px;
+  border-radius: 10px;
+  padding: 0px 10px;
+  transition: all 1s;
+}
+
+/* 순서 있는 리스트 (ol) 항목에 숫자 색상 */
+ol li::before {
+  content: counter(list-item) '. ';
+  color: #007bff;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* 순서 없는 리스트 (ul) 항목에 불릿 색상 */
+ul li::before {
+  content: '•';
+  color: #007bff;
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+ol li:hover,
+ul li:hover {
+  background-color: #f8f8f8;
+  /* cursor: pointer; */
+}
+
+/* =========================================================== */
 
 html,
 body {
@@ -213,9 +249,9 @@ body {
 
 codeline {
   background-color: #f3f3f0;
-  padding: 4px 10px;
+  padding: 1px 3px;
   border-radius: 4px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* dark mode */

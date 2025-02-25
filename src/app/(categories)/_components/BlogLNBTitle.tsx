@@ -37,6 +37,7 @@ export type SUB_CATEGORY_TYPE =
   | 'database'
   | 'nestjs'
   | 'test'
+  | 'grpc'
 
 const BlogLNBTitle = ({
   type,
@@ -118,7 +119,7 @@ const BlogLNBTitle = ({
           (value, index) => {
             return (
               <>
-                <li>
+                <li className="LBN__subTitle">
                   <h2 className="LBN__title">{value}</h2>
                   <ul
                     className="LBN__subTitle__container"

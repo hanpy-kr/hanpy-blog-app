@@ -7,6 +7,9 @@
 }
 
 .LBN__subTitle__container {
+  list-style: none;
+  margin: 0px;
+
   color: gray;
   border-left: 1.5px solid black;
   /* padding: 0.2rem 0; */
@@ -16,7 +19,11 @@
 
 .LBN__subTitle {
   /* padding: 0.2rem; */
-  padding-left: 1rem;
-  margin-top: 1rem;
+  /* padding: 0 0 0 1rem; */
+  margin: 8px 0 0 0;
   cursor: pointer;
+  &:before {
+    content: '';
+    margin-right: 0px;
+  }
 }
