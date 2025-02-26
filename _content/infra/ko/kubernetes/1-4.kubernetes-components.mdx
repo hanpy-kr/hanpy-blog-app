@@ -87,7 +87,7 @@ Container는 독립적인 공간입니다. 따라서 네트워크 통신을 위�
 ## 구성요소에 따른 작동 순서
 
 1. 사용자 요청을 API Server가 받고, 요청을 확인합니다.
-2. API Server는 etch에 전달받은 스펙을 저장합니다.
+2. API Server는 etcd에 전달받은 스펙을 저장합니다.
 3. API Server는 Scheduler에 컨테이너를 생성하라는 정보를 남긴다. Scheduler는 스펙을 확인한다. Node 상태를 고려하여 Container를 생성할 Node를 확정하고 스펙에 기록합니다.
 4. API Server는 Kubelet에게 확정된 Node에 Container를 생성해야한다고 알립니다.
 5. Kubelet은 주어진 스펙에 따라 이미지를 받아 컨테이너를 실행시킵니다.
