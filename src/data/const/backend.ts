@@ -20,6 +20,11 @@ const subCategory: {
     href: '/backend/ko/nestjs/nestjs-overview',
     icon: '/icons/nestjs.svg',
   },
+  grpc: {
+    name: 'gRPC',
+    href: '/backend/ko/grpc/01-grpc-introduction',
+    icon: '/icons/grpc.svg',
+  },
   utils: {
     name: 'Utils',
     href: '/',
@@ -39,6 +44,52 @@ const subCategoryDetail: {
   base: {
     title: ['Beginner', 'Middle', 'Trouble-Shooting'],
     subTitle: [[], [], []],
+  },
+  grpc: {
+    title: ['Beginner', 'Middle', 'Trouble-Shooting'],
+    subTitle: [
+      [
+        {
+          href: '/backend/ko/grpc/01-grpc-introduction',
+          title: 'Overview',
+        },
+        {
+          href: '/backend/ko/grpc/02-grpc-architecture',
+          title: 'Architecture',
+        },
+        {
+          href: '/backend/ko/grpc/03-grpc-service-definition',
+          title: 'Definition',
+        },
+        {
+          href: '/backend/ko/grpc/04-grpc-communication-types',
+          title: 'Communication Type',
+        },
+      ],
+      [
+        {
+          href: '/backend/ko/grpc/05-grpc-performance-and-security',
+          title: 'Performance',
+        },
+        {
+          href: '/backend/ko/grpc/06-grpc-and-microservices',
+          title: 'Microservices',
+        },
+        {
+          href: '/backend/ko/grpc/07-grpc-scaling-and-architecture',
+          title: 'Kubernetes',
+        },
+        {
+          href: '/backend/ko/grpc/08-grpc-vs-other-protocols',
+          title: 'vs. Other Protocols',
+        },
+        {
+          href: '/backend/ko/grpc/09-grpc-real-world-use-cases',
+          title: 'usecase',
+        },
+      ],
+      [],
+    ],
   },
   database: {
     title: ['MongoDB', 'Database', 'Redis', 'Trouble-Shooting'],
