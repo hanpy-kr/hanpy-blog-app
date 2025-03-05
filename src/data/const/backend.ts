@@ -182,6 +182,10 @@ const subCategoryDetail: {
           href: '/backend/ko/database/redis-troubleshooting-1',
           title: 'Redis Trouble-Shooting 1',
         },
+        {
+          href: '/backend/ko/database/mongodb-troubleshooting-1-nfc-nfd',
+          title: 'MongoDB Trouble-Shooting 1',
+        },
       ],
     ],
   },
