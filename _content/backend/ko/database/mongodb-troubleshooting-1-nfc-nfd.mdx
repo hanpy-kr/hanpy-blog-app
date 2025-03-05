@@ -38,13 +38,13 @@ MongoDB에 한글 데이터를 저장하고, 동일한 문자열을 조회할 �
 
 ### 3-1. 데이터 삽입 (NFC 형태)
 
-```mongodb title="mongodb" showLineNumbers
+```javascript title="mongodb" showLineNumbers
 db.products.insertOne({ name: "컴퓨터" });
 ```
 
 ### 3-1. 3-2. 검색 (NFD 형태로 입력)
 
-```mongodb title="mongodb" showLineNumbers
+```javascript title="mongodb" showLineNumbers
 db.products.find({ name: "컴퓨터" });
 ```
 
@@ -57,7 +57,7 @@ db.products.find({ name: "컴퓨터" });
 
 데이터를 삽입하기 전에 NFC로 변환하여 저장하면 문제를 예방할 수 있습니다.
 
-```javascript
+```javascript title="mongodb" showLineNumbers
 db.products.insertOne({ name: "컴퓨터".normalize("NFC") });
 ```
 
@@ -65,7 +65,7 @@ db.products.insertOne({ name: "컴퓨터".normalize("NFC") });
 
 검색 시에도 입력 데이터를 NFC로 변환하여 조회하면 문제를 해결할 수 있습니다.
 
-```javascript
+```javascript title="mongodb" showLineNumbers
 db.products.find({ name: "컴퓨터".normalize("NFC") });
 ```
 
@@ -73,7 +73,7 @@ db.products.find({ name: "컴퓨터".normalize("NFC") });
 
 MongoDB의 collation 기능을 활용하면 유니코드 문자열 비교 방식을 개선할 수 있습니다. 이 방법을 사용하면 한글이나 특수 문자가 포함된 데이터의 정렬 및 검색이 더 일관성 있게 수행됩니다.
 
-```javascript
+```javascript title="mongodb" showLineNumbers
 db.products.find(
   { name: "컴퓨터" },
   { collation: { locale: "ko", strength: 1 } }
