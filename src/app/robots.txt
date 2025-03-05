@@ -1,7 +1,19 @@
 User-Agent: *
 Allow: /
 Disallow: /_next/
+Disallow: /exclude/
 Disallow: /404.html
+Disallow: /@gmail
+Disallow: /**/
+Disallow: /`
+Disallow: /credit`
+Disallow: /error/404
+Disallow: /api/subscripts
+Disallow: /api/credits
+Disallow: /admin
+Disallow: /api/plans
+Disallow: /infra/ko/kubernetes/
+Disallow: /frontend/ko/utils/token
 
 Host: https://hanpy-blog.com
 Sitemap: https://hanpy-blog.com/sitemap.xml
