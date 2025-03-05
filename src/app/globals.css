@@ -318,7 +318,7 @@ codeline {
 [data-rehype-pretty-code-title] {
   font-size: 0.9rem;
   font-weight: 500;
-  padding: 0.4rem 1rem;
+  padding: 0.1rem 1rem;
   border: 1px solid #8b8b8b;
   border-top-left-radius: 0.4rem;
   border-top-right-radius: 0.4rem;

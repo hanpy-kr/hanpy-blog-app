@@ -43,7 +43,12 @@ const subCategoryDetail: {
 } = {
   base: {
     title: ['Beginner', 'Middle', 'Trouble-Shooting'],
-    subTitle: [[], [], []],
+    subTitle: [[], [
+      {
+        href: '/backend/ko/base/performance_k6',
+        title: 'K6',
+      },
+    ], []],
   },
   grpc: {
     title: ['Beginner', 'Middle', 'Trouble-Shooting'],
