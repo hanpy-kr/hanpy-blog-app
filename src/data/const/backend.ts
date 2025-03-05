@@ -134,7 +134,11 @@ const subCategoryDetail: {
         },
         {
           href: '/backend/ko/database/mongodb-aggregation-match',
-          title: 'Aggregation Match Query',
+          title: 'Aggregation Match',
+        },
+        {
+          href: '/backend/ko/database/mongodb-aggregation-count',
+          title: 'Aggregation Count',
         },
         // {
         //   href: '/backend/ko/database/mongodb-concurrency-control-Lock-Granularity',
