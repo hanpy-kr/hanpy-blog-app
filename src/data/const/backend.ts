@@ -7,7 +7,7 @@ const subCategory: {
 } = {
   base: {
     name: 'base',
-    href: '/',
+    href: '/backend/ko/base/performance_k6',
     icon: '/icons/document.svg',
   },
   database: {
