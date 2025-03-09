@@ -3,14 +3,9 @@ Allow: /
 Disallow: /_next/
 Disallow: /exclude/
 Disallow: /404.html
-Disallow: /@gmail
-Disallow: /`
-Disallow: /credit`
-Disallow: /error/404
-Disallow: /api/subscripts
-Disallow: /api/credits
 Disallow: /admin
-Disallow: /api/plans
+Disallow: /error/404
+Disallow: /api/
 Disallow: /frontend/ko/utils/token
 
 Host: https://hanpy-blog.com
