@@ -1,0 +1,25 @@
+.card {
+  width: 100%;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+.question {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  /* white-space: nowrap; */
+  /* text-align: left; */
+}
+.answer {
+  margin-top: 15px;
+  font-size: 1rem;
+  color: #0077ff;
+  font-weight: 600;
+}
