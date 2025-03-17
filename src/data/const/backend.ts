@@ -43,12 +43,21 @@ const subCategoryDetail: {
 } = {
   base: {
     title: ['Beginner', 'Middle', 'Trouble-Shooting'],
-    subTitle: [[], [
-      {
-        href: '/backend/ko/base/performance_k6',
-        title: 'K6',
-      },
-    ], []],
+    subTitle: [
+      [
+        {
+          href: '/backend/ko/base/message-queue',
+          title: 'Message Queue',
+        },
+      ],
+      [
+        {
+          href: '/backend/ko/base/performance_k6',
+          title: 'K6',
+        },
+      ],
+      [],
+    ],
   },
   grpc: {
     title: ['Beginner', 'Middle', 'Trouble-Shooting'],
@@ -176,6 +185,10 @@ const subCategoryDetail: {
           href: '/backend/ko/database/redis-cli',
           title: 'Redis CLI',
         },
+        {
+          href: '/backend/ko/database/redis-BullMQ-01-overview',
+          title: 'BullMQ Overview',
+        },
       ],
       [
         {
@@ -210,7 +223,12 @@ const subCategoryDetail: {
           title: 'ConfigService',
         },
       ],
-      [],
+      [
+        {
+          href: '/backend/ko/nestjs/nestjs-config-service',
+          title: 'VSCode Debugging',
+        },
+      ],
       [],
     ],
   },
