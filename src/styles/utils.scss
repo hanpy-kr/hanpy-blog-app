@@ -1,0 +1,18 @@
+@mixin flex-center {
+  display: -webkit-box; /* Old Safari, iOS */
+  display: -moz-box; /* Old Firefox */
+  display: -ms-flexbox; /* IE 10 */
+  display: -webkit-flex; /* Chrome, Safari */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+@mixin displayFlex {
+  display: -webkit-box; /* Old Safari, iOS */
+  display: -moz-box; /* Old Firefox */
+  display: -ms-flexbox; /* IE 10 */
+  display: -webkit-flex; /* Chrome, Safari */
+  display: flex; /* 표준 */
+}

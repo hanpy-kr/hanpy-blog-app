@@ -5,6 +5,11 @@ const subCategory: {
     icon: string
   }
 } = {
+  base: {
+    name: 'base',
+    href: '/infra/ko/base/tls',
+    icon: '/icons/document.svg',
+  },
   docker: {
     name: 'docker',
     href: '/infra/ko/docker/1-1.Introduction',
@@ -26,6 +31,23 @@ const subCategoryDetail: {
     }[][]
   }
 } = {
+  base: {
+    title: ['Beginner', 'Middle', 'Trouble-Shooting'],
+    subTitle: [
+      [
+        {
+          href: '/infra/ko/base/tls',
+          title: 'TLS',
+        },
+        {
+          href: '/infra/ko/base/tls-handshake',
+          title: 'TLS Handshake',
+        },
+      ],
+      [],
+      [],
+    ],
+  },
   docker: {
     title: [],
     subTitle: [],

@@ -7,6 +7,7 @@ import { Roboto_Flex } from 'next/font/google'
 import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
 import Link from 'next/link'
+import NotFoundContainer from '@/components/common/NotFoundContainer'
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
@@ -19,14 +20,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     return p._raw.flattenedPath === `${PREFIX_PATH}/${params.slug}`
   })
 
-  if (!post)
-    return (
-      <div>
-        <h2>Not Found</h2>
-        <p>Could not find requested resource</p>
-        <Link href="/">Return Home</Link>
-      </div>
-    )
+  if (!post) return <NotFoundContainer />
 
   const MDXComponent = useMDXComponent(post.body.code)
   return (
