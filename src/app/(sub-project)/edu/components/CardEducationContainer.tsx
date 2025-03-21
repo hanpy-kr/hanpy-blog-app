@@ -6,9 +6,9 @@ import { EnglishPhrases } from '../service/EnglishPhrases'
 import { englishEnum, ItemType } from '../service/types'
 import { Box, Button, HStack, Progress, VStack } from '@chakra-ui/react'
 
-export const CardEducationContainer = () => {
-  const englishPhrases = new EnglishPhrases()
+const englishPhrases = new EnglishPhrases()
 
+export const CardEducationContainer = () => {
   const [sample, setSample] = useState<ItemType>()
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null)
   const [isRandom, setIsRandom] = useState<Boolean>(false)
