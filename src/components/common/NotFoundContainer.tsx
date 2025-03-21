@@ -20,8 +20,8 @@ const NotFoundContainer = () => {
                 Page Not Found
               </Heading>
               <Text size="md" width={'40%'} textAlign={'left'}>
-                Oops! The page you are looking for doesn't exist or may have
-                been moved. Please check the URL or navigate back to the
+                Oops! The page you are looking for doesn&apos;t exist or may
+                have been moved. Please check the URL or navigate back to the
                 homepage.
               </Text>
               {/* <Text size="md" textAlign={'left'}>
