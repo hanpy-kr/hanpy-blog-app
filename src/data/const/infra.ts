@@ -43,6 +43,10 @@ const subCategoryDetail: {
           href: '/infra/ko/base/tls-handshake',
           title: 'TLS Handshake',
         },
+        {
+          href: '/infra/ko/base/csrf',
+          title: 'CSRF',
+        },
       ],
       [],
       [],

@@ -225,6 +225,10 @@ const subCategoryDetail: {
       ],
       [
         {
+          href: '/backend/ko/nestjs/nestjs-security-01-authentication',
+          title: 'Authentication',
+        },
+        {
           href: '/backend/ko/nestjs/nestjs-config-service',
           title: 'VSCode Debugging',
         },

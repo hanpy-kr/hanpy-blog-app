@@ -1,0 +1,431 @@
+---
+deployment: true
+category: Backend
+title: 'NestJS에서 JWT를 이용한 인증(Authentication) 구현하기'
+summary: 'NestJS에서 JWT(JSON Web Token)를 이용한 인증 방식을 구현하는 방법을 알아봅시다.'
+pageKey: nestjs-authentication-guide
+lng: KOR
+publishedAt: 2025-04-10
+# tags: [NestJS, RBAC, Authorization, Backend, 인증, 권한 관리, AuthGuard]
+---
+
+# NestJS에서 JWT를 이용한 인증(Authentication) 구현하기
+
+인증(Authentication)은 대부분의 애플리케이션에서 필수적인 기능입니다. 다양한 인증 방식이 있으며, 프로젝트의 요구사항에 따라 적절한 방식을 선택해야 합니다. 이 글에서는 NestJS에서 **JWT**(JSON Web Token)를 이용한 인증 방식을 구현하는 방법을 소개합니다.
+
+<br />
+
+사용자는 username과 password를 이용해 로그인합니다. 서버는 인증 후 JWT를 발급하며, 이후 클라이언트는 요청마다 JWT를 Bearer Token으로 전송하여 인증을 증명합니다. 서버에서는 해당 JWT가 유효한지 검증하여 보호된 API 접근을 허용하게 됩니다.
+
+## 인증 모듈 생성
+
+먼저 인증을 위한 AuthModule, AuthService, AuthController를 생성합니다.
+
+```bash title="nest cli" showLineNumbers
+$ nest g module auth
+$ nest g controller auth
+$ nest g service auth
+```
+
+또한, 사용자 정보를 관리할 UsersModule과 UsersService도 생성합니다.
+
+```bash title="nest cli" showLineNumbers
+$ nest g module user
+$ nest g service user
+```
+
+초기 셋팅된 파일을 아래왁 같이 변경하도록 합니다. 이 서비스는 간단한 메모리 기반 사용자 목록을 유지하며, username을 기준으로 사용자를 검색하는 기능을 제공합니다. 실무에서는 데이터베이스를 활용하여 사용자 정보를 관리해야 합니다. (e.g., TypeORM, Sequelize, Mongoose, etc.)
+
+```typescript tilte="users/users.service.ts" showLineNumbers
+import { Injectable } from '@nestjs/common'
+
+// This should be a real class/interface representing a user entity
+export type User = any
+
+@Injectable()
+export class UsersService {
+  private readonly users = [
+    {
+      userId: 1,
+      username: 'john',
+      password: 'changeme',
+    },
+    {
+      userId: 2,
+      username: 'maria',
+      password: 'guess',
+    },
+  ]
+
+  async findOne(username: string): Promise<User | undefined> {
+    return this.users.find((user) => user.username === username)
+  }
+}
+```
+
+UsersModule에서 필요한 유일한 변경 사항은 @Module 데코레이터의 exports 배열에 UsersService를 추가하는 것입니다. 이를 통해 UsersService가 이 모듈 외부에서도 사용 가능하게 되며, 이후 AuthService에서 이를 활용할 예정입니다.
+
+```typescript title="users/users.module.ts"
+import { Module } from '@nestjs/common'
+import { UsersService } from './users.service'
+
+@Module({
+  providers: [UsersService],
+  exports: [UsersService],
+})
+export class UsersModule {}
+```
+
+## Sign in 엔드포인트 만들기
+
+AuthService는 사용자를 조회하고 비밀번호를 검증하는 역할을 합니다. 이를 위해 signIn() 메서드를 생성합니다. 아래 코드에서는 ES6 스프레드 연산자를 사용하여 사용자 객체에서 password 속성을 제거한 후 반환합니다. 이러한 방식은 보안상 중요한 필드(예: 비밀번호, 보안 키 등)를 노출하지 않기 위해 사용자 객체를 반환할 때 일반적으로 사용됩니다.
+
+```typescript title="auth/auth.service.ts"
+import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { UsersService } from '../users/users.service'
+
+@Injectable()
+export class AuthService {
+  constructor(private usersService: UsersService) {}
+
+  async signIn(username: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOne(username)
+    if (user?.password !== pass) {
+      throw new UnauthorizedException()
+    }
+    const { password, ...result } = user
+    // TODO: JWT를 생성하여 반환하도록 변경
+    // 현재는 사용자 객체를 반환하는 상태
+    return result
+  }
+}
+```
+
+물론, 실제 애플리케이션에서는 비밀번호를 평문(plain text)으로 저장하면 안 됩니다. 대신 bcrypt와 같은 라이브러리를 사용하여 솔트(salt)된 단방향 해시 알고리즘을 적용해야 합니다. 이 방식에서는 데이터베이스에 해시된 비밀번호만 저장하고, 사용자가 입력한 비밀번호를 해시화한 후 데이터베이스의 해시 값과 비교합니다. 즉, 사용자의 비밀번호를 절대로 평문으로 저장하거나 노출해서는 안 됩니다. 그러나, 이번 샘플 애플리케이션에서는 개념 이해를 돕기 위해 간단하게 평문 비밀번호를 사용합니다.
+
+<br />
+
+이제 AuthModule을 업데이트하여 UsersModule을 import합니다.
+
+```typescript title="auth/auth.module.ts" showLineNumbers
+import { Module } from '@nestjs/common'
+import { AuthService } from './auth.service'
+import { AuthController } from './auth.controller'
+import { UsersModule } from '../users/users.module'
+
+@Module({
+  imports: [UsersModule],
+  providers: [AuthService],
+  controllers: [AuthController],
+})
+export class AuthModule {}
+```
+
+이제 AuthController를 열고 signIn() 메서드를 추가하겠습니다. 이 메서드는 클라이언트가 사용자를 인증할 때 호출되며, 요청 본문(body)에서 **username**(사용자명)과 **password**(비밀번호)를 받아 처리합니다. 사용자가 인증되면 JWT 토큰을 반환하게 됩니다.
+
+```typescript title="auth/auth.controller.ts" showLineNumbers
+import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common'
+import { AuthService } from './auth.service'
+
+@Controller('auth')
+export class AuthController {
+  constructor(private authService: AuthService) {}
+
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  signIn(@Body() signInDto: Record<string, any>) {
+    return this.authService.signIn(signInDto.username, signInDto.password)
+  }
+}
+```
+
+## JWT Token
+
+JWT를 활용한 인증 시스템 구현을 준비해 봅시다. 사용자가 사용자명(username)과 비밀번호(password)로 인증할 수 있도록 하며, 인증이 성공하면 JWT를 반환해야 합니다. 또한, 유효한 JWT가 Bearer Token으로 포함된 경우에만 보호된 API에 접근할 수 있도록 해야 합니다.
+
+<br />
+
+위 요구 사항을 충족하기 위해 추가 패키지를 설치해야 합니다. 아래 명령어를 실행하여 @nestjs/jwt 패키지를 설치하세요.
+
+```bash title="npm cli" showLineNumbers
+$ npm install --save @nestjs/jwt
+```
+
+@nestjs/jwt 패키지는 JWT 생성 및 검증을 도와주는 유틸리티 패키지입니다. 이 패키지를 활용하면 JWT 토큰을 생성하고 검증하는 작업을 간편하게 처리할 수 있습니다.
+
+<br />
+
+NestJS의 모듈화 원칙을 유지하기 위해, JWT 생성은 AuthService에서 처리하도록 하겠습니다. auth/auth.service.ts 파일을 열고, JwtService를 주입한 뒤, signIn 메서드를 업데이트하여 JWT를 발급하도록 수정합니다.
+
+```typescript title="auth/auth.service.ts" showLineNumbers
+import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { UsersService } from '../users/users.service'
+import { JwtService } from '@nestjs/jwt'
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
+
+  async signIn(
+    username: string,
+    pass: string,
+  ): Promise<{ access_token: string }> {
+    const user = await this.usersService.findOne(username)
+    if (user?.password !== pass) {
+      throw new UnauthorizedException()
+    }
+    const payload = { sub: user.userId, username: user.username }
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    }
+  }
+}
+```
+
+AuthModule을 업데이트하여 새로운 의존성을 추가하고, JwtModule을 구성해야 합니다. 먼저, auth/constants.ts 파일을 생성하고, 다음 코드를 추가하세요.
+
+```typescript title="auth/constants.ts" showLineNumbers
+export const jwtConstants = {
+  secret:
+    'DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE.',
+}
+```
+
+이 설정을 사용하면 JWT 서명(signing)과 검증(verifying) 과정에서 동일한 키를 공유할 수 있습니다. 키(secret)는 절대 공개적으로 노출되어서는 안 됩니다. 여기서는 코드의 동작을 명확하게 설명하기 위해 직접 노출했지만, 실제 운영 환경(production)에서는 반드시 다음과 같은 방법으로 보호해야 합니다.
+
+- 비밀 저장소(Secrets Vault) 사용
+- 환경 변수(Environment Variables) 사용
+- 설정 서비스(Configuration Service) 활용
+
+이제, auth.module.ts 파일을 열어 새로운 의존성을 추가하고 JwtModule을 구성하겠습니다.
+
+```typescript title="auth/auth.module.ts" showLineNumbers
+import { Module } from '@nestjs/common'
+import { AuthService } from './auth.service'
+import { UsersModule } from '../users/users.module'
+import { JwtModule } from '@nestjs/jwt'
+import { AuthController } from './auth.controller'
+import { jwtConstants } from './constants'
+
+@Module({
+  imports: [
+    UsersModule,
+    JwtModule.register({
+      global: true,
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '60s' },
+    }),
+  ],
+  providers: [AuthService],
+  controllers: [AuthController],
+  exports: [AuthService],
+})
+export class AuthModule {}
+```
+
+JwtModule을 전역 모듈(global module)로 등록하여 사용을 간편하게 만들었습니다. 이를 통해 애플리케이션의 다른 부분에서 JwtModule을 별도로 import할 필요가 없습니다.
+
+<br />
+
+이제 cURL을 사용하여 라우트를 다시 테스트해 보겠습니다. 테스트를 위해 UsersService에 하드코딩된 사용자 객체 중 하나를 활용할 수 있습니다.
+
+```bash title="bash" showLineNumbers
+$ # POST to /auth/login
+$ curl -X POST http://localhost:3000/auth/login -d '{"username": "john", "password": "changeme"}' -H "Content-Type: application/json"
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}
+```
+
+## 인증 가드(Guard) 구현하기
+
+요청에 유효한 JWT가 포함되어 있어야만 특정 엔드포인트에 접근할 수 있도록 보호해야 합니다. 이를 위해 AuthGuard를 생성하여 라우트를 보호하는 데 사용할 것입니다.
+
+```typescript title="auth/auth.guard.ts" showLineNumbers
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import { jwtConstants } from './constants'
+import { Request } from 'express'
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest()
+    const token = this.extractTokenFromHeader(request)
+    if (!token) {
+      throw new UnauthorizedException()
+    }
+    try {
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: jwtConstants.secret,
+      })
+      // 💡 We're assigning the payload to the request object here
+      // so that we can access it in our route handlers
+      request['user'] = payload
+    } catch {
+      throw new UnauthorizedException()
+    }
+    return true
+  }
+
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? []
+    return type === 'Bearer' ? token : undefined
+  }
+}
+```
+
+이제 보호된(route) 엔드포인트를 구현하고, AuthGuard를 등록하여 해당 경로를 보호할 수 있습니다. auth.controller.ts 파일을 열고, 아래와 같이 업데이트하세요.
+
+```typescript title="auth/auth.controller.ts" showLineNumbers
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common'
+import { AuthGuard } from './auth.guard'
+import { AuthService } from './auth.service'
+
+@Controller('auth')
+export class AuthController {
+  constructor(private authService: AuthService) {}
+
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  signIn(@Body() signInDto: Record<string, any>) {
+    return this.authService.signIn(signInDto.username, signInDto.password)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user
+  }
+}
+```
+
+우리는 방금 생성한 AuthGuard를 GET /profile 라우트에 적용하여 해당 경로를 보호하고 있습니다. 애플리케이션이 정상적으로 실행되고 있는지 확인한 후, cURL을 사용하여 라우트를 테스트해 봅시다.
+
+```bash title="curl" showLineNumbers
+$ # GET /profile
+$ curl http://localhost:3000/auth/profile
+{"statusCode":401,"message":"Unauthorized"}
+
+$ # POST /auth/login
+$ curl -X POST http://localhost:3000/auth/login -d '{"username": "john", "password": "changeme"}' -H "Content-Type: application/json"
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."}
+
+$ # GET /profile using access_token returned from previous step as bearer code
+$ curl http://localhost:3000/auth/profile -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
+{"sub":1,"username":"john","iat":...,"exp":...}
+```
+
+AuthModule에서 JWT의 만료 시간을 60초로 설정했습니다. 사용자가 인증을 받은 후 60초가 지나고 GET /auth/profile 요청을 보내면 401 Unauthorized 응답을 받게 됩니다.
+이것은 @nestjs/jwt가 자동으로 JWT의 만료 시간을 검사하기 때문이며, 이를 통해 개발자가 직접 만료 시간을 확인하는 번거로움을 줄일 수 있습니다. 사실 60s는 값은 너무 짧은 편이며, 토큰 만료 및 갱신(refresh token)과 관련된 세부 사항은 다른 글에서 조금 더 설명하도록 하겠습니다.
+
+<br />
+
+이제 JavaScript 클라이언트(예: Angular, React, Vue) 및 기타 JavaScript 기반 애플리케이션이 API 서버와 안전하게 인증 및 통신할 수 있도록 JWT 인증이 완성되었습니다.
+
+## 인증을 전역적으로 활성화하기
+
+만약 대부분의 엔드포인트를 기본적으로 보호해야 한다면, 각 컨트롤러에 @UseGuards() 데코레이터를 적용하는 대신 AuthGuard를 전역 가드(global guard)로 등록할 수 있습니다. 이렇게 하면 보호되지 않아야 할 엔드포인트만 따로 지정하면 되므로 코드가 더욱 간결해집니다.
+
+<br />
+
+먼저, AuthModule 또는 다른 적절한 모듈에서 전역 가드(Global Guard)를 등록합니다.
+다음과 같은 방식으로 구현할 수 있습니다.
+
+```typescript title="src/app.module" showLineNumbers
+import {  APP_GUARD } from '@nestjs/core';
+
+...
+
+providers: [
+  {
+    provide: APP_GUARD,
+    useClass: AuthGuard,
+  },
+],
+```
+
+이렇게 설정하면 Nest가 자동으로 모든 엔드포인트에 AuthGuard를 적용하게 됩니다. 이제 특정 라우트를 공개(public) 라우트로 선언할 수 있는 메커니즘을 제공해야 합니다. 이를 위해, SetMetadata 데코레이터 팩토리 함수를 사용하여 사용자 정의 데코레이터(Custom Decorator)를 생성할 수 있습니다.
+
+```typescript title="auth/public.decorator.ts" showLineNumbers
+import { SetMetadata } from '@nestjs/common'
+
+export const IS_PUBLIC_KEY = 'isPublic'
+export const Public = () => SetMetadata(IS_PUBLIC_KEY, true)
+```
+
+위 파일에서 두 개의 상수를 내보냈습니다(exported). 하나는 **메타데이터 키(IS_PUBLIC_KEY)**로 사용될 상수입니다. 다른 하나는 우리가 새롭게 만들 **데코레이터(@Public())**로, 이를 사용하여 특정 라우트를 공개(public)로 설정할 수 있습니다. 이 데코레이터의 이름은 **Public**이지만, 프로젝트에 맞게 SkipAuth, AllowAnon 등 다른 이름으로 변경할 수도 있습니다. 이제, 커스텀 @Public() 데코레이터를 생성했으므로, 다음과 같이 메서드에 적용할 수 있습니다.
+
+```typescript title="Global Guard" showLineNumbers
+@Public()
+@Get()
+findAll() {
+  return [];
+}
+```
+
+마지막으로, AuthGuard가 "isPublic" 메타데이터가 있는 경우 true를 반환하도록 수정해야 합니다. 이를 위해 Reflector 클래스를 사용합니다.
+
+```typescript title="Global Guard" showLineNumbers
+@Injectable()
+export class AuthGuard implements CanActivate {
+  constructor(private jwtService: JwtService, private reflector: Reflector) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ])
+    if (isPublic) {
+      // 💡 See this condition
+      return true
+    }
+
+    const request = context.switchToHttp().getRequest()
+    const token = this.extractTokenFromHeader(request)
+    if (!token) {
+      throw new UnauthorizedException()
+    }
+    try {
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: jwtConstants.secret,
+      })
+      // 💡 We're assigning the payload to the request object here
+      // so that we can access it in our route handlers
+      request['user'] = payload
+    } catch {
+      throw new UnauthorizedException()
+    }
+    return true
+  }
+
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? []
+    return type === 'Bearer' ? token : undefined
+  }
+}
+```
+
+# 참고
+
+- https://github.com/nestjs/jwt
+- https://github.com/auth0/node-jsonwebtoken#usage
+- https://docs.nestjs.com/guards#putting-it-all-together
+- https://github.com/nestjs/nest/tree/master/sample/19-auth-jwt
