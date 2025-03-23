@@ -3,12 +3,14 @@ const subCategory: {
     name: string
     href: string
     icon: string
+    description: string
   }
 } = {
   nodejs: {
     name: 'Nodejs',
     href: '/language/ko/nodejs/introduction',
     icon: 'https://resource.han-py.com/blog/logs/nodejs_logo.svg',
+    description: '',
   },
 }
 

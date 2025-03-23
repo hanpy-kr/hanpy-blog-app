@@ -4,7 +4,7 @@ import { CONTENT_FRONTEND } from './frontend'
 import { CONTENT_INFRA } from './infra'
 import { CONTENT_LANGUAGE } from './language'
 
-export const CONTENT_CATEGORY = {
+export const CONTENT_CATEGORY: any = {
   backend: CONTENT_BACKEND,
   frontend: CONTENT_FRONTEND,
   infra: CONTENT_INFRA,

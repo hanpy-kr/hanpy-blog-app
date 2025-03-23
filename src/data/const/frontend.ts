@@ -3,27 +3,32 @@ const subCategory: {
     name: string
     href: string
     icon: string
+    description: string
   }
 } = {
   web: {
     name: 'Web',
     href: '/frontend/ko/web/worker',
     icon: '/icons/web.svg',
+    description: '',
   },
   react: {
     name: 'React',
     href: '/frontend/ko/react/react-data-crud',
     icon: '/icons/react.svg',
+    description: '',
   },
   nextjs: {
     name: 'Nextjs',
     href: '/frontend/ko/nextjs/seo/next-sitemap',
     icon: '/icons/nextjs.svg',
+    description: '',
   },
   utils: {
     name: 'Utils',
     href: '/frontend/ko/utils/Monorepo',
     icon: '/icons/utils.svg',
+    description: '',
   },
 }
 

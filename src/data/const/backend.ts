@@ -1,32 +1,48 @@
-const subCategory: {
-  [key: string]: {
-    name: string
-    href: string
-    icon: string
-  }
-} = {
-  base: {
-    name: 'base',
+export enum BackendCategory {
+  BASE = 'base',
+  DATABASE = 'database',
+  NESTJS = 'nestjs',
+  GRPC = 'grpc',
+  UTILS = 'utils',
+}
+
+// Record<BackendCategory, { name: string; href: string; icon: string }>
+const subCategory: Record<
+  BackendCategory,
+  { name: string; href: string; icon: string; description: string }
+> = {
+  [BackendCategory.BASE]: {
+    name: 'Core Concepts',
+    description:
+      'This category covers foundational concepts, theories, and practices essential for backend development, such as architecture patterns, server concepts, authentication & authorization, API design, and general best practices.',
     href: '/backend/ko/base/performance_k6',
     icon: '/icons/document.svg',
   },
   database: {
-    name: 'database',
+    name: 'Database',
+    description:
+      'Explore database technologies, data modeling, indexing strategies, query optimization, schema design, and both relational (SQL) and NoSQL databases. It includes practical insights into effective database management and best practices.',
     href: '/backend/ko/database/concurrency-optimistic-lock',
     icon: '/icons/database.svg',
   },
   nestjs: {
     name: 'NestJS',
+    description:
+      'Focused on the NestJS framework, this category provides tutorials, guides, best practices, and advanced concepts for building scalable, maintainable, and testable Node.js backend applications with NestJS.',
     href: '/backend/ko/nestjs/nestjs-overview',
     icon: '/icons/nestjs.svg',
   },
   grpc: {
     name: 'gRPC',
+    description:
+      'A dedicated category covering gRPC concepts, implementation, best practices, performance optimization, real-world use cases, and integration within microservice architectures.',
     href: '/backend/ko/grpc/01-grpc-introduction',
     icon: '/icons/grpc.svg',
   },
   utils: {
     name: 'Utils',
+    description:
+      'Useful utilities, helper functions, libraries, tools, and patterns that help backend developers write cleaner, more efficient, maintainable, and reusable code.',
     href: '/',
     icon: '/icons/utils.svg',
   },

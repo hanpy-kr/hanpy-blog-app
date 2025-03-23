@@ -39,6 +39,7 @@ export type SUB_CATEGORY_TYPE =
   | 'test'
   | 'grpc'
 
+// TODO :  Refactor Type
 const BlogLNBTitle = ({
   type,
   subType,
@@ -53,6 +54,7 @@ const BlogLNBTitle = ({
         name: '',
         href: '',
         icon: '',
+        description: '',
       },
     )
 
@@ -91,32 +93,34 @@ const BlogLNBTitle = ({
           </Flex>
         </MenuButton>
         <MenuList>
-          {Object.values(CONTENT_CATEGORY[type].subCategory).map((data) => (
-            <MenuItem
-              minH="20px"
-              key={data.name}
-              onClick={() => handleDropdown(data.name)}
-            >
-              {data.icon.length !== 0 && (
-                <Image
-                  boxSize="1.5rem"
-                  borderRadius="full"
-                  src={`${data.icon}`}
-                  // src={`/icons/docker.svg`}
-                  alt="Fluffybuns the destroyer"
-                  mr="12px"
-                  ml="1px"
-                />
-              )}
-              <span>{data.name}</span>
-            </MenuItem>
-          ))}
+          {Object.values(CONTENT_CATEGORY[type].subCategory).map(
+            (data: any) => (
+              <MenuItem
+                minH="20px"
+                key={data.name}
+                onClick={() => handleDropdown(data.name)}
+              >
+                {data.icon.length !== 0 && (
+                  <Image
+                    boxSize="1.5rem"
+                    borderRadius="full"
+                    src={`${data.icon}`}
+                    // src={`/icons/docker.svg`}
+                    alt="Fluffybuns the destroyer"
+                    mr="12px"
+                    ml="1px"
+                  />
+                )}
+                <span>{data.name}</span>
+              </MenuItem>
+            ),
+          )}
         </MenuList>
       </Menu>
       {/* CONTENT_CATEGORY[type].subCategoryDetail[subType].title */}
       <ul>
         {CONTENT_CATEGORY[type].subCategoryDetail[subType].title.map(
-          (value, index) => {
+          (value: any, index: any) => {
             return (
               <>
                 <li className="LBN__subTitle">
@@ -127,7 +131,7 @@ const BlogLNBTitle = ({
                   >
                     {CONTENT_CATEGORY[type].subCategoryDetail[subType].subTitle[
                       index
-                    ].map((subValue, subIndex) => {
+                    ].map((subValue: any, subIndex: any) => {
                       return (
                         <Link
                           href={subValue.href}

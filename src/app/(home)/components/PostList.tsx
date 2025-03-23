@@ -20,6 +20,8 @@ import contentlayer from '@/services-client/contentlayer'
 import { useRecoilValue } from 'recoil'
 import { withChanged } from '@/recoil/i18n'
 import useI18N from '@/hooks/useI18N'
+import CategoryList from './CategoryList'
+import { Tag } from '@chakra-ui/react'
 
 export default function PostList({
   hasNavigation = true,
@@ -115,6 +117,9 @@ export default function PostList({
     <>
       {hasNavigation && (
         <section className="post__Navigation__container">
+          <Tag size={'lg'} key={'lg'} variant="outline" colorScheme="gray">
+            Recently Published Blogs
+          </Tag>
           <div className="post__navigation">
             {CATEGORIES?.map((category) => (
               <div
@@ -129,7 +134,8 @@ export default function PostList({
               </div>
             ))}
           </div>
-          <div className="post__lng">
+          {/* ENG 서비스 오픈은 아직 시기상조 */}
+          {/* <div className="post__lng">
             <div
               className={activeLng === 'en' ? 'post__lng--active' : ''}
               onClick={() => changeI18N('en')}
@@ -142,9 +148,10 @@ export default function PostList({
             >
               ko
             </div>
-          </div>
+          </div> */}
         </section>
       )}
+
       <div className="post__list">
         {posts?.length > 0 ? (
           posts?.map((post) => {

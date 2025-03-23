@@ -8,6 +8,8 @@ import Header from './components/Header'
 import PostList from './components/PostList'
 import ThemeContext from '@/context/ThemeContext'
 import MainInfo from './components/_MainInfo'
+import Carousel from './components/Carousel'
+import CategoryList from './components/CategoryList'
 
 export default function Home() {
   const context = useContext(ThemeContext)
@@ -18,6 +20,7 @@ export default function Home() {
         <Header />
         <MainInfo />
         {/* <Carousel /> */}
+        <CategoryList />
 
         <PostList />
         <Footer />
