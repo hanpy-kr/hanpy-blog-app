@@ -32,6 +32,10 @@ export default function CategoryList({ defaultTab = 'All' }) {
           />
           <CategoryListItem target={BlogTargetCategory.DESIGN} bg={'#faf3f5'} />
           <CategoryListItem target={BlogTargetCategory.INFRA} bg={'#fafaf5'} />
+          <CategoryListItem
+            target={BlogTargetCategory.LANGUAGE}
+            bg={'#fafaf5'}
+          />
         </Stack>
       </HStack>
     </>

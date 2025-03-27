@@ -1,6 +1,7 @@
 import { BackendCategory, CONTENT_BACKEND } from '@/data/const/backend'
 import { CONTENT_DESIGN, DesignCategory } from '@/data/const/design'
 import { CONTENT_INFRA, InfraCategory } from '@/data/const/infra'
+import { CONTENT_LANGUAGE, LanguageCategory } from '@/data/const/language'
 import {
   Card,
   CardBody,
@@ -15,6 +16,7 @@ export enum BlogTargetCategory {
   BACKEND = 'Backend',
   DESIGN = 'Design',
   INFRA = 'Infra',
+  LANGUAGE = 'Language',
 }
 
 // Todo : any refac
@@ -50,6 +52,11 @@ export default function CategoryListItem({
       return {
         category: InfraCategory,
         content: CONTENT_INFRA,
+      }
+    } else if (target === BlogTargetCategory.LANGUAGE) {
+      return {
+        category: LanguageCategory,
+        content: CONTENT_LANGUAGE,
       }
     } else {
       throw Error('invalid BlogTargetCategory')

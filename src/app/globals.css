@@ -200,13 +200,14 @@ ul {
   font-size: 16px;
 }
 
-ol li {
+/* ol li {
   margin-bottom: 3px;
   border-radius: 10px;
   padding: 0px 10px;
   transition: all 1s;
-}
+} */
 
+ol li,
 ul li {
   margin-bottom: 3px;
   border-radius: 10px;

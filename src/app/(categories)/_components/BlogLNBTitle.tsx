@@ -29,7 +29,6 @@ export type SUB_CATEGORY_TYPE =
   | 'react'
   | 'utils'
   | 'pattern'
-  | 'nodejs'
   | 'nextjs'
   | 'web'
   // backend
@@ -38,6 +37,10 @@ export type SUB_CATEGORY_TYPE =
   | 'nestjs'
   | 'test'
   | 'grpc'
+
+  // language
+  | 'nodejs'
+  | 'typescript'
 
 // TODO :  Refactor Type
 const BlogLNBTitle = ({
