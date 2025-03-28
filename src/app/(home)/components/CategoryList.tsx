@@ -34,7 +34,7 @@ export default function CategoryList({ defaultTab = 'All' }) {
           <CategoryListItem target={BlogTargetCategory.INFRA} bg={'#fafaf5'} />
           <CategoryListItem
             target={BlogTargetCategory.LANGUAGE}
-            bg={'#fafaf5'}
+            bg={'#faf6f5'}
           />
         </Stack>
       </HStack>

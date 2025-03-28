@@ -57,7 +57,16 @@ const subCategoryDetail: {
           title: 'CSRF',
         },
       ],
-      [],
+      [
+        {
+          href: '/infra/ko/base/internal-network-to-saas-communication',
+          title: 'Internal Network to SaaS',
+        },
+        {
+          href: '/infra/ko/base/firewall-network-policy-management',
+          title: 'firewall & Network Policy',
+        },
+      ],
       [],
     ],
   },
