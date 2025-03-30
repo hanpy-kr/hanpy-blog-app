@@ -4,9 +4,16 @@ export enum DesignCategory {
 
 const subCategory: Record<
   DesignCategory,
-  { name: string; href: string; icon: string; description: string }
+  {
+    id: DesignCategory
+    name: string
+    href: string
+    icon: string
+    description: string
+  }
 > = {
   [DesignCategory.PATTERN]: {
+    id: DesignCategory.PATTERN,
     name: 'Design Pattern',
     description:
       'This category explores common software design patterns, including creational, structural, and behavioral patterns. Learn about patterns such as Singleton, Factory, Observer, and more, along with practical examples, implementation strategies, and best practices to write robust, maintainable, and reusable code.',

@@ -16,6 +16,8 @@ import { useState } from 'react'
 import { CONTENT_CATEGORY } from '@/data/const'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { BackendCategory } from '@/data/const/backend'
+import { InfraCategory } from '@/data/const/infra'
 
 type CurrentCategoryInfoType = {
   name: string
@@ -24,19 +26,15 @@ type CurrentCategoryInfoType = {
 }
 
 export type SUB_CATEGORY_TYPE =
-  | 'docker'
-  | 'kubernetes'
+  // Infra
+  | InfraCategory
   | 'react'
   | 'utils'
   | 'pattern'
   | 'nextjs'
   | 'web'
   // backend
-  | 'base'
-  | 'database'
-  | 'nestjs'
-  | 'test'
-  | 'grpc'
+  | BackendCategory
 
   // language
   | 'nodejs'
@@ -65,6 +63,7 @@ const BlogLNBTitle = ({
     const clickData = Object.keys(CONTENT_CATEGORY[type].subCategory).find(
       (v) => v === value.toLowerCase(),
     )
+
     if (!clickData) return
     setCurrentCategoryInfo(CONTENT_CATEGORY[type].subCategory[clickData])
     router.push(CONTENT_CATEGORY[type].subCategory[clickData].href)
@@ -101,7 +100,7 @@ const BlogLNBTitle = ({
               <MenuItem
                 minH="20px"
                 key={data.name}
-                onClick={() => handleDropdown(data.name)}
+                onClick={() => handleDropdown(data.id)}
               >
                 {data.icon.length !== 0 && (
                   <Image

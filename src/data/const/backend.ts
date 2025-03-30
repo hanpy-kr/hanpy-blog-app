@@ -9,9 +9,16 @@ export enum BackendCategory {
 // Record<BackendCategory, { name: string; href: string; icon: string }>
 const subCategory: Record<
   BackendCategory,
-  { name: string; href: string; icon: string; description: string }
+  {
+    id: BackendCategory
+    name: string
+    href: string
+    icon: string
+    description: string
+  }
 > = {
   [BackendCategory.BASE]: {
+    id: BackendCategory.BASE,
     name: 'Core Concepts',
     description:
       'This category covers foundational concepts, theories, and practices essential for backend development, such as architecture patterns, server concepts, authentication & authorization, API design, and general best practices.',
@@ -19,6 +26,7 @@ const subCategory: Record<
     icon: 'https://resource.han-py.com/blog/logs/hash.svg',
   },
   database: {
+    id: BackendCategory.DATABASE,
     name: 'Database',
     description:
       'Explore database technologies, data modeling, indexing strategies, query optimization, schema design, and both relational (SQL) and NoSQL databases. It includes practical insights into effective database management and best practices.',
@@ -26,6 +34,7 @@ const subCategory: Record<
     icon: '/icons/database.svg',
   },
   nestjs: {
+    id: BackendCategory.NESTJS,
     name: 'NestJS',
     description:
       'Focused on the NestJS framework, this category provides tutorials, guides, best practices, and advanced concepts for building scalable, maintainable, and testable Node.js backend applications with NestJS.',
@@ -33,6 +42,7 @@ const subCategory: Record<
     icon: '/icons/nestjs.svg',
   },
   grpc: {
+    id: BackendCategory.GRPC,
     name: 'gRPC',
     description:
       'A dedicated category covering gRPC concepts, implementation, best practices, performance optimization, real-world use cases, and integration within microservice architectures.',
@@ -40,6 +50,7 @@ const subCategory: Record<
     icon: '/icons/grpc.svg',
   },
   utils: {
+    id: BackendCategory.UTILS,
     name: 'Utils',
     description:
       'Useful utilities, helper functions, libraries, tools, and patterns that help backend developers write cleaner, more efficient, maintainable, and reusable code.',

@@ -8,12 +8,13 @@ import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
 import Link from 'next/link'
 import NotFoundContainer from '@/components/common/NotFoundContainer'
+import { BackendCategory } from '@/data/const/backend'
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
 })
 
-const SUB_TITLE = 'grpc'
+const SUB_TITLE = BackendCategory.GRPC
 const PREFIX_PATH = `backend/ko/${SUB_TITLE}`
 
 export default function Page({ params }: { params: { slug: string } }) {

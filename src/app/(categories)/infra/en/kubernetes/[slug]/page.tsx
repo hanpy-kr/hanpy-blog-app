@@ -8,11 +8,13 @@ import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
 import Link from 'next/link'
 import NotFoundContainer from '@/components/common/NotFoundContainer'
+import { InfraCategory } from '@/data/const/infra'
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
 })
 
+const SUB_TITLE = InfraCategory.KUBERNETES
 const PREFIX_PATH = 'infra/en/kubernetes'
 
 export default function Page({ params }: { params: { slug: string } }) {
@@ -25,7 +27,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const MDXComponent = useMDXComponent(post.body.code)
   return (
     <div className={robotoFlex.className}>
-      <BlogLayout type="infra" subType="docker">
+      <BlogLayout type="infra" subType={SUB_TITLE}>
         <div className="infra__content">
           <p className="infra__header">Kubernetes</p>
           {/* My Post: {params.slug} */}

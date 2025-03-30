@@ -9,8 +9,9 @@ import BlogLayout from '@/app/(categories)/_components/BlogLayout'
 import useI18N from '@/hooks/useI18N'
 import Link from 'next/link'
 import NotFoundContainer from '@/components/common/NotFoundContainer'
+import { InfraCategory } from '@/data/const/infra'
 
-const SUB_TITLE = 'base'
+const SUB_TITLE = InfraCategory.BASE
 const PREFIX_PATH = `infra/ko/${SUB_TITLE}`
 
 const robotoFlex = Roboto_Flex({

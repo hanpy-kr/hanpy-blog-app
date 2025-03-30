@@ -6,16 +6,24 @@ export enum InfraCategory {
 
 const subCategory: Record<
   InfraCategory,
-  { name: string; href: string; icon: string; description: string }
+  {
+    id: InfraCategory
+    name: string
+    href: string
+    icon: string
+    description: string
+  }
 > = {
-  base: {
+  [InfraCategory.BASE]: {
+    id: InfraCategory.BASE,
     name: 'Core Concepts',
     description:
       'Covers foundational infrastructure concepts every developer or engineer should understand, including networking basics, servers, operating systems, virtualization, cloud computing fundamentals, and essential best practices to build and maintain robust, scalable, and reliable infrastructure.',
     href: '/infra/ko/base/tls',
-    icon: '/icons/document.svg',
+    icon: 'https://resource.han-py.com/blog/logs/hash.svg',
   },
   docker: {
+    id: InfraCategory.DOCKER,
     name: 'docker',
     description:
       'Explores Docker fundamentals and advanced topics, including containerization concepts, Dockerfile creation, Docker Compose for multi-container apps, optimization strategies, best practices for container security, and practical examples for building and deploying applications using Docker.',
@@ -23,6 +31,7 @@ const subCategory: Record<
     icon: '/icons/docker.svg',
   },
   kubernetes: {
+    id: InfraCategory.KUBERNETES,
     name: 'kubernetes',
     description:
       'Focuses on Kubernetes, the industry-leading container orchestration platform. Learn about deployment strategies, pods, services, scalability, monitoring, best practices, troubleshooting, and advanced concepts to efficiently manage containerized applications in production environments.',

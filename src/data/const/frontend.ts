@@ -1,30 +1,43 @@
-const subCategory: {
-  [key: string]: {
+export enum FrontendCategory {
+  WEB = 'web',
+  REACT = 'react',
+  NEXTJS = 'nextjs',
+  UTILS = 'utils',
+}
+
+const subCategory: Record<
+  FrontendCategory,
+  {
+    id: FrontendCategory
     name: string
     href: string
     icon: string
     description: string
   }
-} = {
-  web: {
+> = {
+  [FrontendCategory.WEB]: {
+    id: FrontendCategory.WEB,
     name: 'Web',
     href: '/frontend/ko/web/worker',
     icon: '/icons/web.svg',
     description: '',
   },
-  react: {
+  [FrontendCategory.REACT]: {
+    id: FrontendCategory.REACT,
     name: 'React',
     href: '/frontend/ko/react/react-data-crud',
     icon: '/icons/react.svg',
     description: '',
   },
-  nextjs: {
+  [FrontendCategory.NEXTJS]: {
+    id: FrontendCategory.NEXTJS,
     name: 'Nextjs',
     href: '/frontend/ko/nextjs/seo/next-sitemap',
     icon: '/icons/nextjs.svg',
     description: '',
   },
-  utils: {
+  [FrontendCategory.UTILS]: {
+    id: FrontendCategory.UTILS,
     name: 'Utils',
     href: '/frontend/ko/utils/Monorepo',
     icon: '/icons/utils.svg',

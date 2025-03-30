@@ -6,6 +6,7 @@ export enum LanguageCategory {
 const subCategory: Record<
   LanguageCategory,
   {
+    id: LanguageCategory
     name: string
     href: string
     icon: string
@@ -13,6 +14,7 @@ const subCategory: Record<
   }
 > = {
   typescript: {
+    id: LanguageCategory.TYPESCRIPT,
     name: 'TypeScript',
     href: '/language/ko/typescript/contents',
     icon: 'https://resource.han-py.com/blog/logs/typescript_logo.svg',
@@ -20,6 +22,7 @@ const subCategory: Record<
       'TypeScript is a strongly typed programming language built on JavaScript, providing static typing, modern language features, and enhanced tooling. This category covers in-depth concepts, best practices, practical examples, and guides to help developers leverage TypeScript for more robust, maintainable, and scalable applications.',
   },
   nodejs: {
+    id: LanguageCategory.NODEJS,
     name: 'Nodejs',
     href: '/language/ko/nodejs/introduction',
     icon: 'https://resource.han-py.com/blog/logs/nodejs_logo.svg',
