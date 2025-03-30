@@ -15,7 +15,7 @@ const subCategory: Record<
   typescript: {
     name: 'TypeScript',
     href: '/language/ko/typescript/contents',
-    icon: 'https://resource.han-py.com/blog/logs/nodejs_logo.svg',
+    icon: 'https://resource.han-py.com/blog/logs/typescript_logo.svg',
     description:
       'TypeScript is a strongly typed programming language built on JavaScript, providing static typing, modern language features, and enhanced tooling. This category covers in-depth concepts, best practices, practical examples, and guides to help developers leverage TypeScript for more robust, maintainable, and scalable applications.',
   },
@@ -57,20 +57,48 @@ const subCategoryDetail: {
     ],
   },
   typescript: {
-    title: ['TypeScript Essentials', 'Classes & Types', 'Advanced Patterns'],
+    title: [
+      'TypeScript Essentials',
+      'Classes & Types',
+      'Advanced Patterns',
+      'Trouble-Shooting',
+    ],
     subTitle: [
       [
         {
-          href: '/language/ko/typescript/typescript-01-introduction',
-          title: 'Introduction',
+          href: '/language/ko/typescript/typescript-essential-01-introduction',
+          title: 'Basic Types',
         },
-        // {
-        //   href: '/language/ko/typescript/',
-        //   title: 'Symbol in TypeScript',
-        // },
+        {
+          href: '/language/ko/typescript/typescript-essential-02-union-intersection',
+          title: 'Union & Intersection types',
+        },
+        {
+          href: '/language/ko/typescript/typescript-essential-03-symbol',
+          title: 'Symbol',
+        },
+      ],
+      [
+        {
+          href: '/language/ko/typescript/typescript-intermediate-01-type-assertions',
+          title: 'Type Assertions',
+        },
+        {
+          href: '/language/ko/typescript/typescript-intermediate-02-generics',
+          title: 'Generics',
+        },
+        {
+          href: '/language/ko/typescript/typescript-intermediate-03-structural-typing',
+          title: 'Structural Typing',
+        },
       ],
       [],
-      [],
+      [
+        {
+          href: '/language/ko/typescript/typescript-ts-01-prototype-chain',
+          title: 'Prototype Chain (setPrototypeOf)',
+        },
+      ],
     ],
   },
 }

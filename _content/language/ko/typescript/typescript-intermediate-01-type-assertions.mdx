@@ -1,0 +1,135 @@
+---
+deployment: true
+category: TypeScript
+title: 'TypeScript Type Assertions'
+summary: 'TypeScript에서 타입 단언(Type Assertions)을 사용하는 이유와 <type>, as type의 차이점을 알아봅시다.'
+pageKey: typescript-type-assertions-guide
+lng: KOR
+publishedAt: 2025-04-25
+# tags: [TypeScript, Type Assertions, 타입 단언, as type, 타입스크립트 기초]
+---
+
+# TypeScript 타입 단언(Type Assertions): <codeline>\<type></codeline> vs <codeline>as type</codeline>
+
+TypeScript를 사용하다 보면 컴파일러에게 "이 타입은 이거야!"라고 확실하게 알려줘야 할 때가 있습니다. 바로 이때 등장하는 개념이 **타입 단언**(Type Assertions)입니다. 처음 접하면 조금 생소할 수도 있지만, 제대로 이해하고 나면 TypeScript를 더욱 유연하고 효율적으로 사용할 수 있는 멋진 기능이랍니다.
+
+<br />
+
+이번 포스팅에서는 타입 단언을 사용하는 이유와 두 가지 표현 방식(<codeline>\<type></codeline>, <codeline>as type</codeline>)의 차이점과 사용 예시를 알아보도록 합니사.
+
+---
+
+## 타입 단언(Type Assertions)이란 무엇인가요?
+
+타입 단언은 개발자가 특정 타입임을 확신하고 컴파일러에게 명시적으로 알려주는 방법입니다. 컴파일러는 타입 단언을 믿고 더 이상 타입 검사를 수행하지 않게 됩니다. 간단히 말해서 타입 단언은 개발자가 타입스크립트에게 다음과 같이 말하는 것과 같습니다. <codeline>"이 변수는 내가 확실히 알아! 이 타입이 맞으니까 걱정하지 말고 통과시켜줘!"</codeline> 예를 들어, 웹 개발에서 DOM 요소를 선택할 때 타입 단언을 흔히 사용합니다.
+
+```typescript title="Type Assertions" showLineNumbers
+// HTML에서 input 요소를 선택할 때 타입 단언 사용
+const inputElement = document.getElementById('username') as HTMLInputElement
+inputElement.value = 'TypeScript!' // 타입스크립트가 inputElement를 HTMLInputElement로 이해
+```
+
+위 코드처럼, 명확한 타입을 지정해주면 타입스크립트의 타입 체커가 더 이상 오류를 제기하지 않습니다.
+
+---
+
+## 타입 단언의 두 가지 방법: <codeline>\<type></codeline> vs <codeline>as type</codeline>
+
+타입 단언에는 두 가지 표현 방식(Angle-bracket syntax, as syntax)이 존재합니다.
+
+### 1. 앵글 브래킷 방식(<codeline>\<type></codeline>)
+
+초기 타입스크립트에서 많이 사용되었던 방식으로, JSX를 사용하는 React 환경에서는 문법 충돌이 생길 수 있어 최근에는 잘 사용되지 않습니다.
+
+```typescript title="Type Assertions" showLineNumbers
+let someValue: any = 'this is a string'
+let strLength: number = (<string>someValue).length // 타입 단언
+```
+
+### 2. as 키워드 방식(<codeline>as type</codeline>)
+
+최근에는 더 명확하고 JSX에서도 호환성이 좋은 <codeline>as type</codeline> 방식을 권장합니다.
+
+```typescript title="Type Assertions" showLineNumbers
+let someValue: any = 'this is a string'
+let strLength: number = (someValue as string).length // 타입 단언
+```
+
+두 표현의 기능적인 차이는 없습니다. 다만 최근에는 JSX와의 충돌 방지와 가독성 향상 때문에 <codeline>as type</codeline> 표현을 사용하는 것이 일반적입니다.
+
+---
+
+## 타입 단언 실무 활용법과 팁
+
+타입 단언은 다음과 같은 상황에서 유용하게 사용할 수 있습니다.
+
+### 예시: API 응답 타입 정의하기
+
+서버 API로부터 받은 응답의 타입을 명확히 정의하여 컴파일러에게 전달할 수 있습니다.
+
+```typescript title="Type Assertions" showLineNumbers
+interface User {
+  id: number
+  name: string
+}
+
+// API 응답을 받았을 때
+const apiResponse: unknown = { id: 123, name: 'hanpy' }
+
+// 명확한 타입 지정 (단언)
+const user = apiResponse as User
+console.log(user.name) // ✅ "hanpy"
+```
+
+이렇게 하면 API 응답 데이터를 더 명확하게 타입화하여, 코드를 안전하게 만들 수 있습니다.
+
+---
+
+## 타입 단언 사용 시 주의사항
+
+타입 단언을 사용할 때 반드시 주의해야 하는 점도 있습니다.
+
+- 타입 단언은 타입 검사를 "강제로 통과"시키는 것이지 실제 타입 변환을 수행하지는 않습니다.
+- 잘못된 타입 단언은 런타임 에러를 초래할 수 있습니다.
+
+다음과 같은 잘못된 예를 보겠습니다.
+
+```typescript title="Type Assertions" showLineNumbers
+const wrongValue: any = 12345
+// 잘못된 타입 단언: 숫자를 문자열로 단언
+const strValue = wrongValue as string
+
+console.log(strValue.toUpperCase()) // 런타임 오류 발생! ❌
+```
+
+따라서, 타입 단언을 사용할 때는 해당 타입이 확실할 때만 사용하는 것이 중요합니다. 모호하거나 명확하지 않은 상황에서는 타입 가드(Type Guard)를 통해 보다 안전한 접근을 추천합니다.
+
+---
+
+## 타입 단언 vs 타입 가드(Type Guard)
+
+타입 가드는 런타임에서 안전하게 타입을 체크하여 사용할 수 있도록 도와줍니다. 타입 단언이 위험하거나 모호한 상황에서 더 안전하게 활용할 수 있습니다.
+
+```typescript
+function isString(value: unknown): value is string {
+  return typeof value === 'string'
+}
+
+const someData: unknown = 'hello world'
+
+if (isString(someData)) {
+  console.log(someData.toUpperCase()) // 안전하게 접근 가능!
+}
+```
+
+---
+
+## 정리
+
+오늘은 TypeScript에서 타입 단언(Type Assertions)의 개념과 두 가지 방법, 실무에서의 활용 팁과 주의사항까지 살펴보았습니다. 타입 단언은 올바르게 사용하면 코드의 유연성과 가독성을 크게 향상할 수 있지만, 잘못 사용할 경우 런타임 에러의 원인이 될 수도 있으니 주의가 필요합니다.
+
+---
+
+## 참고
+
+- [TypeScript Handbook: Type Assertions](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions)

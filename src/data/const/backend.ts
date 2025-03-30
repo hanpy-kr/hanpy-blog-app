@@ -16,7 +16,7 @@ const subCategory: Record<
     description:
       'This category covers foundational concepts, theories, and practices essential for backend development, such as architecture patterns, server concepts, authentication & authorization, API design, and general best practices.',
     href: '/backend/ko/base/performance_k6',
-    icon: '/icons/document.svg',
+    icon: 'https://resource.han-py.com/blog/logs/hash.svg',
   },
   database: {
     name: 'Database',

@@ -85,7 +85,7 @@ const BlogLNBTitle = ({
             {currentCategoryInfo.icon.length !== 0 && (
               <Image
                 boxSize="1.5rem"
-                borderRadius="full"
+                // borderRadius="full"
                 src={`${currentCategoryInfo.icon}`}
                 alt="Fluffybuns the destroyer"
                 mr="12px"
@@ -106,7 +106,7 @@ const BlogLNBTitle = ({
                 {data.icon.length !== 0 && (
                   <Image
                     boxSize="1.5rem"
-                    borderRadius="full"
+                    // borderRadius="full"
                     src={`${data.icon}`}
                     // src={`/icons/docker.svg`}
                     alt="Fluffybuns the destroyer"

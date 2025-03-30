@@ -1,0 +1,125 @@
+---
+deployment: true
+category: TypeScript
+title: 'TypeScript Structural Typing'
+summary: 'TypeScript의 구조적 타이핑(Structural Typing)과 Duck Typing 개념을 이해하고, 타입스크립트가 어떻게 타입 호환성을 판단하는지 알아봅시다.'
+pageKey: typescript-structural-typing-guide
+lng: KOR
+publishedAt: 2025-04-27
+---
+
+# TypeScript 구조적 타이핑(Structural Typing) 이해하기
+
+개발하다 보면 가끔 "이 객체의 타입은 뭐라고 해야 하지?" 하고 고민할 때가 있습니다. 클래스 이름이나 인터페이스 이름은 다르지만, 갖고 있는 속성이나 메서드가 비슷하거나 같을 때 더욱 헷갈립니다. 이럴 때 등장하는 개념이 바로 **구조적 타이핑**(Structural Typing) 입니다. 흔히 말하는 "**Duck Typing**(덕 타이핑)"과 유사한 개념인데요. 이 두 개념이 정말 같은 건지, 그리고 TypeScript에서는 어떻게 타입의 호환성을 판단하는지 이번 글을 통해 명확히 짚어보겠습니다.
+
+---
+
+## 구조적 타이핑(Structural Typing)이란 무엇인가요?
+
+**구조적 타이핑**이란, TypeScript가 타입을 판단할 때 타입의 이름이 아니라 객체가 가진 **구조(속성이나 메서드)**를 기준으로 타입의 호환성을 결정하는 방식을 의미합니다. 쉽게 말하면 TypeScript는 "객체가 어떤 타입 이름을 가지고 있느냐?" 보다는, "객체가 어떤 속성이나 메서드를 가지고 있느냐?"에 초점을 맞춰 타입의 호환성을 체크합니다.
+
+아래의 간단한 예시를 통해 구조적 타이핑을 쉽게 이해할 수 있습니다.
+
+```typescript title="Structural Typing" showLineNumbers
+interface Cat {
+  name: string
+  meow(): void
+}
+
+class Dog {
+  name: string
+
+  constructor(name: string) {
+    this.name = name
+  }
+
+  meow(): void {
+    console.log('야옹')
+  }
+}
+
+const puppy: Dog = new Dog('바둑이')
+
+// 구조적으로 같은 속성과 메서드를 가지고 있어, 호환이 가능
+const cat: Cat = puppy // 가능
+cat.meow() // 출력: 야옹
+```
+
+위 코드에서는 인터페이스의 이름(Cat)과 클래스 이름(Dog)이 다르지만, 실제로 둘이 가진 구조(**name** 속성과 **meow** 메서드)가 같기 때문에 타입 호환이 가능합니다. 이것이 바로 TypeScript가 타입을 구조적으로 판단하는 방식, 즉 **구조적 타이핑**(Structural Typing) 입니다.
+
+---
+
+## Duck Typing(덕 타이핑)은 무엇인가요?
+
+덕 타이핑(Duck Typing)은 구조적 타이핑을 쉽게 이해시키기 위해 만들어진 비유적인 개념입니다. 유명한 표현이죠. <codeline>"오리처럼 걷고, 오리처럼 꽥꽥 소리를 낸다면 그 객체는 오리다."</codeline> 다음 자바스크립트(JavaScript) 예시를 살펴보면 이해가 쉽습니다.
+
+```javascript title="Structural Typing" showLineNumbers
+function fly(animal) {
+  animal.fly()
+}
+
+const duck = {
+  fly: () => console.log('오리가 날아요!'),
+}
+
+const airplane = {
+  fly: () => console.log('비행기가 날아요!'),
+}
+
+fly(duck) // 출력: 오리가 날아요!
+fly(airplane) // 출력: 비행기가 날아요!
+```
+
+여기서 객체의 타입이 무엇인지는 중요하지 않고, 단지 그 객체가 **fly()**라는 메서드를 가지고 있다는 사실만 중요합니다. 하지만 TypeScript에서의 구조적 타이핑과 Duck Typing의 결정적인 차이는 다음과 같습니다:
+
+- Duck Typing은 런타임에서 동적으로 판단됩니다.
+- TypeScript의 Structural Typing은 컴파일 시점에서 정적으로 판단됩니다.
+
+즉, TypeScript는 덕 타이핑의 개념을 가져와서 컴파일 단계에서 타입 체크를 수행하는 방식으로 적용했다고 이해하시면 됩니다.
+
+---
+
+## TypeScript는 타입 호환성을 어떻게 판단할까요?
+
+TypeScript가 구조적으로 타입을 판단할 때 가장 핵심이 되는 규칙은 다음과 같습니다. **객체 A가 객체 B와 호환되려면, 객체 B의 모든 필수 속성과 메서드를 객체 A가 가지고 있어야 합니다.** 예를 들어 다음과 같은 경우에는 호환되지 않습니다.
+
+```typescript title="Structural Typing" showLineNumbers
+interface Bird {
+  fly(): void
+  layEggs(): void
+}
+
+interface Fish {
+  swim(): void
+  layEggs(): void
+}
+
+const goldfish: Fish = {
+  swim() {
+    console.log('물고기가 헤엄쳐요!')
+  },
+  layEggs() {
+    console.log('물고기가 알을 낳아요!')
+  },
+}
+
+// goldfish는 fly()가 없기 때문에 Bird와 호환되지 않음
+// const bird: Bird = goldfish; // 오류 발생
+```
+
+이처럼 TypeScript는 필수 속성이나 메서드가 하나라도 부족하면 타입 호환성을 인정하지 않습니다. 따라서 호환성을 확인할 때는 객체의 구조를 명확히 정의하는 것이 중요합니다.
+
+---
+
+## 정리
+
+- **구조적 타이핑(Structural Typing)**: TypeScript에서 타입을 객체의 **속성과 메서드** 같은 **구조적 요소**로 판단하는 방식입니다.
+- **덕 타이핑(Duck Typing)**: "오리처럼 행동하면 오리"라는 비유로, 같은 구조적 개념을 설명하는 비공식적 표현입니다. 일반적으로 동적 언어(JavaScript, Python 등)에서 주로 언급됩니다.
+- TypeScript의 구조적 타이핑은 컴파일 시점에서 정적으로 판단하고, 타입 호환성 여부는 객체가 가지는 속성과 메서드의 유무로 결정됩니다. (속성과 메서드가 모두 일치해야 호환됨) 결국 TypeScript는 "**어떤 이름의 타입인가?**"보다는 "**어떤 속성, 메서드를 가졌는가?**"를 기준으로 타입을 판단합니다.
+
+---
+
+## 참고
+
+- [TypeScript Handbook - Type Compatibility](https://www.typescriptlang.org/docs/handbook/type-compatibility.html)
+- [TypeScript Handbook - Structural Type System](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html#structural-type-system)

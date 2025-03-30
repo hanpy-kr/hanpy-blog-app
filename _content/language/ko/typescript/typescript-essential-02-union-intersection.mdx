@@ -1,0 +1,137 @@
+---
+deployment: true
+category: TypeScript
+title: 'TypeScript Union과 Intersection 타입'
+summary: 'TypeScript의 Union(|)과 Intersection(&) 타입을 이해하고 실무에서 효율적으로 활용하는 방법을 예제와 함께 친절하게 정리합니다.'
+pageKey: typescript-union-intersection-types
+lng: KOR
+publishedAt: 2025-04-23
+---
+
+# TypeScript Union(|)과 Intersection(&) 타입
+
+TypeScript를 쓰다 보면 처음에는 어렵게 느껴졌던 타입 시스템이 어느 순간 큰 힘이 되어주는 것을 느끼게 됩니다. 특히 코드가 커지고 복잡해질수록 "타입 안전성"은 개발자에게 큰 도움을 줍니다.
+
+<br />
+
+오늘은 TypeScript에서 타입 안전성을 확보하는 데 크게 도움이 되는 두 가지 강력한 도구인 **Union 타입**과 **Intersection 타입**에 대해 알아보려고 합니다.
+
+<br />
+
+아마 처음에 이름만 듣고서는 어려울 수도 있지만, 이 두 타입 개념을 잘 이해하고 나면 여러분의 TypeScript 코딩 실력과 코드 퀄리티가 확실히 올라갈 것입니다.
+
+---
+
+## Union Type이란 무엇인가요?
+
+Union 타입(<codeline>|</codeline>)은 말 그대로 **"여러 개의 타입 중 하나를 가질 수 있다"** 는 의미입니다. 다양한 타입을 하나의 변수나 매개변수에서 유연하게 처리할 수 있도록 도와줍니다.
+
+예를 들어보겠습니다:
+
+```typescript title="union" showLineNumbers
+let id: number | string
+
+id = 100 // 숫자도 가능
+id = 'hanpy' // 문자열도 가능
+// id = true; // 타입 에러 발생!
+```
+
+이렇게 하면 하나의 변수가 여러 가지 상황에서 사용될 수 있고, 함수의 매개변수도 다양한 타입의 인자를 받아 유연하게 처리할 수 있습니다.
+
+### 예시: Union Type을 활용한 함수 매개변수
+
+아래는 Union 타입을 이용한 간단한 함수 예시입니다.
+
+```typescript title="union" showLineNumbers
+function printId(id: number | string) {
+  console.log(`ID는 ${id} 입니다.`)
+}
+
+printId(101) // "ID는 101 입니다."
+printId('hanpy') // "ID는 hanpy 입니다."
+```
+
+이처럼 Union 타입은 다양한 입력값을 처리해야 하는 상황에서 매우 유용하게 쓰입니다.
+
+---
+
+## Intersection Type이란 무엇인가요?
+
+Intersection 타입(<codeline>&</codeline>)은 두 가지 이상의 타입을 합쳐 하나의 새로운 타입을 만드는 방법입니다. 쉽게 말해, Intersection 타입은 **"여러 타입의 모든 속성을 전부 가지고 있는 타입"** 을 의미합니다.
+
+예를 들어 아래와 같은 예시를 살펴보겠습니다.
+
+```typescript title="intersection" showLineNumbers
+type Person = { name: string; age: number }
+type Employee = { employeeId: number }
+
+type PersonEmployee = Person & Employee
+
+const user: PersonEmployee = {
+  name: '김개발',
+  age: 28,
+  employeeId: 12345,
+}
+```
+
+이 코드에서는 <codeline>Person</codeline>과 <codeline>Employee</codeline> 타입을 Intersection으로 결합하여 두 타입의 모든 속성을 가진 새로운 타입을 정의했습니다.
+
+### 예시: Intersection Type을 활용한 다중 인터페이스 구현
+
+실제로 타입을 합성하는 Intersection 타입은 복잡한 데이터 구조를 정의하거나 다양한 인터페이스를 동시에 구현할 때 많이 사용합니다.
+
+```typescript title="intersection" showLineNumbers
+interface Serializable {
+  serialize(): string
+}
+
+interface Loggable {
+  log(): void
+}
+
+class User implements Serializable, Loggable {
+  constructor(public name: string) {}
+
+  serialize() {
+    return JSON.stringify({ name: this.name })
+  }
+
+  log() {
+    console.log(`User name is ${this.name}`)
+  }
+}
+
+const user = new User('Hanpy')
+user.log() // ✅ "User name is Hanpy"
+console.log(user.serialize()) // ✅ '{"name":"Hanpy"}'
+```
+
+이 예제처럼, Intersection 개념을 통해 다양한 기능을 한 번에 결합할 수 있습니다.
+
+---
+
+## Union과 Intersection 사용시기
+
+두 타입 모두 강력하지만, 용도에 따라 활용하는 방식은 명확히 다릅니다.
+
+- **Union Type**: 다양한 타입을 허용하고 유연한 상황에서 사용합니다.
+
+  - 예시: 다양한 입력을 받을 때, 매개변수가 유동적일 때
+
+- **Intersection Type**: 여러 타입을 결합해 새로운 타입을 정의하고자 할 때 사용합니다.
+  - 예시: 여러 개의 인터페이스를 동시에 구현해야 할 때, 복잡한 타입을 구성할 때
+
+상황과 목적에 맞게 두 타입을 적절히 사용하면 여러분의 코드가 더욱 명확해지고, 유지보수성도 크게 향상됩니다.
+
+---
+
+## 정리
+
+처음엔 다소 낯설어 보일 수 있지만, 이 개념을 명확히 이해하고 실무에서 잘 활용한다면 개발 과정에서 생산성이 크게 향상될 것입니다. 또한 아래의 공식문서를 참고하여 조금 더 디테일하게 알아보도록 합시다.
+
+---
+
+## 참고
+
+- [TypeScript Handbook: Union Types 공식 문서](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types)
+- [TypeScript Handbook: Intersection Types 공식 문서](https://www.typescriptlang.org/docs/handbook/2/objects.html#intersection-types)
