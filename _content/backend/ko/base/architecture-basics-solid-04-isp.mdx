@@ -1,0 +1,144 @@
+---
+deployment: true
+category: Backend
+title: '인터페이스 분리 원칙 (Interface Segregation Principle, ISP)'
+summary: '하나의 인터페이스가 너무 많은 책임을 갖지 않도록 기능을 분리하는 인터페이스 분리 원칙(ISP)에 대해 자세히 알아봅니다.'
+pageKey: interface_segregation_principle_guide
+lng: KOR
+publishedAt: 2025-05-06
+# tags: [Layered Architecture, 아키텍처, 소프트웨어 설계, Backend]
+---
+
+# 인터페이스 분리 원칙 (Interface Segregation Principle, ISP)이란?
+
+인터페이스에 수십 개의 메서드가 들어있고, 사용하는 건 겨우 두세 개에 불과한 경우에 "이 기능은 쓰지도 않는데 왜 꼭 구현해야 하지?"라는 생각이 드는 경우가 잇습니다. 이렇게 하나의 인터페이스가 지나치게 크고 복잡할 때, 코드를 읽고 관리하는 것 자체가 부담스러워집니다. 이런 불편을 해결하기 위해 제안된 원칙이 바로 **인터페이스 분리 원칙**(Interface Segregation Principle, ISP)입니다.
+
+<br />
+
+실무에서는 “사용하지 않는 메서드를 억지로 구현해야 하는 상황”이 생각보다 자주 발생합니다. ISP는 바로 이러한 문제를 해결하기 위해 로버트 C. 마틴(Robert C. Martin, Uncle Bob)이 제안한 **SOLID 원칙 중 네 번째 원칙**입니다.
+
+---
+
+## 인터페이스 분리 원칙(ISP)의 의미와 필요성
+
+**인터페이스 분리 원칙**(ISP)은 다음과 같은 명확한 정의를 갖고 있습니다.
+
+```javascript showLineNumbers
+클라이언트는 자신이 사용하지 않는 메서드에 의존하지 않아야 한다.
+```
+
+쉽게 말해서 인터페이스를 너무 크고 복잡하게 만들지 말고, 필요한 기능만큼 작게 나누어야 한다는 것입니다. 커다란 인터페이스는 클라이언트가 실제로는 필요 없는 메서드까지 구현하도록 강제함으로써 코드의 복잡성과 유지보수 비용을 증가시킵니다. ISP를 준수하면 인터페이스가 클라이언트의 요구사항에 맞춰 작은 단위로 설계되어 코드의 재사용성과 가독성을 높일 수 있습니다.
+
+---
+
+## ISP 적용 전후 비교 예시
+
+구체적인 예시를 통해 ISP를 적용한 전과 후를 명확히 비교해 봅시다.
+
+### ISP를 위반한 코드 예시
+
+아래는 ISP를 위반한 대표적인 예시입니다.
+
+```typescript title="ISP" showLineNumbers
+interface Animal {
+  walk(): void
+  swim(): void
+  fly(): void
+}
+
+class Dog implements Animal {
+  walk() {
+    console.log('Dog is walking.')
+  }
+
+  swim() {
+    console.log('Dog is swimming.')
+  }
+
+  fly() {
+    throw new Error('Dog cannot fly.')
+  }
+}
+```
+
+여기서 <codeline>Dog</codeline> 클래스는 날 수 없는 동물임에도 불구하고 <codeline>fly()</codeline> 메서드를 억지로 구현해야 합니다. 이는 명백히 ISP 위반 사례이며, 코드가 비효율적이고 불필요한 예외 처리를 강제하게 됩니다.
+
+### ISP를 적용한 개선된 코드 예시
+
+ISP를 준수하면 아래와 같이 인터페이스를 적절히 분리할 수 있습니다.
+
+```typescript title="ISP" showLineNumbers
+interface Walkable {
+  walk(): void
+}
+
+interface Swimmable {
+  swim(): void
+}
+
+interface Flyable {
+  fly(): void
+}
+
+class Dog implements Walkable, Swimmable {
+  walk() {
+    console.log('Dog is walking.')
+  }
+
+  swim() {
+    console.log('Dog is swimming.')
+  }
+}
+
+class Bird implements Walkable, Flyable {
+  walk() {
+    console.log('Bird is walking.')
+  }
+
+  fly() {
+    console.log('Bird is flying.')
+  }
+}
+```
+
+이제 Dog는 자신에게 필요한 기능만 구현하게 됩니다. 인터페이스의 책임이 명확해졌고, 각 클래스의 유지보수성과 가독성이 크게 개선되었습니다.
+
+---
+
+## ISP가 중요한 이유
+
+ISP를 따를 경우 얻는 이점은 명확합니다.
+
+- **불필요한 코드 감소**: 사용하지 않는 메서드를 구현할 필요가 없어져 코드의 품질이 향상됩니다.
+- **높은 유지보수성**: 인터페이스 변경 시 영향을 받는 클래스가 적어져 유지보수가 쉬워집니다.
+- **테스트 용이성**: 작고 명확한 인터페이스로 인해 단위 테스트가 간편해집니다.
+- **SRP**(Single Responsibility Principle)와의 연관성: ISP는 단일 책임 원칙과 함께 설계를 더 명확하고 효율적으로 만듭니다.
+
+---
+
+## ISP를 적용할 때의 주의사항
+
+인터페이스를 무조건 작게 나눈다고 해서 항상 좋은 설계가 되는 것은 아닙니다. 적절한 수준의 추상화와 균형이 중요합니다.
+
+- 지나치게 작은 인터페이스는 오히려 코드의 복잡성을 증가시킬 수 있으므로, 인터페이스의 크기와 수를 적절히 관리해야 합니다.
+- 인터페이스 분리 시 사용자의 관점에서 접근하여 실제 사용되는 메서드들을 기준으로 그룹화해야 합니다.
+- 단지 작은 단위로 나누는 것보다는, 변경 가능성이 높은 부분을 중심으로 인터페이스를 분리하는 것이 효율적입니다.
+
+---
+
+## 정리
+
+인터페이스 분리 원칙(ISP)은 단순히 인터페이스를 쪼개는 것을 넘어 클라이언트의 실제 요구사항과 코드 변경 가능성을 고려한 설계 원칙입니다. ISP를 효과적으로 적용하려면 다음 두 가지 핵심 사항을 기억하는 것이 중요합니다.
+
+1. 클라이언트는 반드시 자신이 사용하는 메서드만 의존해야 합니다.
+2. 인터페이스의 변경이 미치는 영향을 최소화하도록 메서드를 신중히 그룹화해야 합니다.
+
+이러한 접근을 통해 유연하고, 확장성 높은 시스템 구조를 만들어 장기적으로 유지보수와 개발 생산성을 높일 수 있습니다.
+
+---
+
+## 공식 문서 및 참고자료
+
+- [The Interface Segregation Principle - Uncle Bob](https://blog.cleancoder.com/uncle-bob/2020/10/21/TheInterfaceSegregationPrinciple.html)
+- [SOLID Principles by Robert C. Martin](https://en.wikipedia.org/wiki/SOLID)
+- [TypeScript Interfaces Handbook](https://www.typescriptlang.org/docs/handbook/2/objects.html)

@@ -22,7 +22,7 @@ const subCategory: Record<
     name: 'Core Concepts',
     description:
       'This category covers foundational concepts, theories, and practices essential for backend development, such as architecture patterns, server concepts, authentication & authorization, API design, and general best practices.',
-    href: '/backend/ko/base/performance_k6',
+    href: '/backend/ko/base/architecture-basics-solid-01-srp',
     icon: 'https://resource.han-py.com/blog/logs/hash.svg',
   },
   database: {
@@ -73,13 +73,37 @@ const subCategoryDetail: {
     subTitle: [
       [
         {
+          href: '/backend/ko/base/architecture-basics-solid-01-srp',
+          title: '[solid] 1. Single Responsibility',
+        },
+        {
+          href: '/backend/ko/base/architecture-basics-solid-02-ocp',
+          title: '[solid] 2. Open Closed',
+        },
+        {
+          href: '/backend/ko/base/architecture-basics-solid-03-lsp',
+          title: '[solid] 3. Liskov Substitution',
+        },
+        {
+          href: '/backend/ko/base/architecture-basics-solid-04-isp',
+          title: '[solid] 4. Interface Segregation',
+        },
+        {
+          href: '/backend/ko/base/architecture-basics-solid-05-dip',
+          title: '[solid] 5. Dependency Inversion',
+        },
+        {
+          href: '/backend/ko/base/architecture-basics-01-layered-architecture',
+          title: 'Layered Architecture',
+        },
+        {
           href: '/backend/ko/base/message-queue',
           title: 'Message Queue',
         },
       ],
       [
         {
-          href: '/backend/ko/base/performance_k6',
+          href: '/backend/ko/base/performance-measurement-performance_k6',
           title: 'K6',
         },
       ],
