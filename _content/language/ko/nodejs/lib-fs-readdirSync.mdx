@@ -1,0 +1,154 @@
+---
+deployment: true  
+category: Backend  
+title: 'fs.readdirSync'  
+summary: 'Node.js에서 디렉토리 내 파일 목록을 동기적으로 가져오는 함수인 fs.readdirSync의 사용법과 주의사항을 알아봅니다.'  
+pageKey: fs_readdirsync_guide  
+lng: KOR  
+publishedAt: 2025-05-17  
+# tags: [Node.js, 파일 시스템, Backend, fs 모듈, 동기 함수]
+---
+
+# fs.readdirSync
+
+개발을 하다 보면 **특정 폴더 안에 어떤 파일들이 있는지 확인해야 할 때**가 생깁니다. 예를 들어, 업로드 폴더 안에 있는 모든 이미지 파일을 읽는다거나, 설정 파일들을 스크립트로 자동 처리하고 싶을 때 말이죠. 이럴 때 **Node.js의 <codeline>fs</codeline> 모듈**은 아주 유용한 도구가 됩니다.
+
+<br />
+
+그중에서도 오늘은 <codeline>fs.readdirSync</codeline>에 대해 이야기해볼게요. 이름이 살짝 딱딱해 보일 수 있지만, 사실 매우 직관적이고 간단한 함수입니다.
+
+---
+
+## readdirSync란?
+
+ <codeline>fs.readdirSync</codeline>는 Node.js의 기본 내장 모듈인 <codeline>fs</codeline> (File System) 안에 들어있는 함수입니다. 이 함수는 **디렉토리(폴더) 안에 있는 파일과 폴더 목록을 동기적으로 읽어옵니다.** 즉, 결과가 리턴되기 전까지 코드 실행이 멈춥니다. **Sync**라는 이름이 붙은 이유가 바로 이 동기적 처리 방식 때문이에요.
+
+---
+
+## 기본 사용법
+
+가장 기본적인 사용은 아주 간단합니다:
+
+```javascript title="fs-readdirSync" showLineNumbers
+const fs = require('fs');
+
+const files = fs.readdirSync('./uploads');
+console.log(files);
+```
+
+이 코드는 현재 폴더 내의 <codeline>uploads</codeline> 디렉토리 안에 있는 모든 파일과 폴더의 이름을 배열 형태로 출력합니다.
+
+---
+
+## 반환 값은 어떻게 생겼을까?
+
+ <codeline>fs.readdirSync</codeline>는 배열을 반환합니다. 예를 들어, <codeline>uploads</codeline> 폴더에 <codeline>image1.png</codeline>, <codeline>image2.jpg</codeline>, <codeline>thumbs</codeline>라는 하위 폴더가 있다면, 반환 결과는 다음과 비슷합니다.
+
+<br />
+
+<codeline>['image1.png', 'image2.jpg', 'thumbs']</codeline>
+
+<br />
+
+이 배열에는 디렉토리 이름이 포함될 수도 있고, 파일 이름이 포함될 수도 있어요. 단순히 이름만 가져오기 때문에, 이 항목이 파일인지 폴더인지 구분하려면 추가 작업이 필요합니다. 이건 아래에서 다룰게요.
+
+---
+
+## 특정 조건으로 필터링 하고 싶다면?
+
+예를 들어, 이미지 파일만 가져오고 싶다면 이렇게 쓸 수 있습니다:
+
+```javascript title="fs-readdirSync" showLineNumbers
+const fs = require('fs');
+const path = require('path');
+
+const files = fs.readdirSync('./uploads')
+  .filter(file => file.endsWith('.png') || file.endsWith('.jpg'));
+```
+
+또는 전체 경로로 만들고 싶을 때는:
+
+```javascript title="fs-readdirSync" showLineNumbers
+const fullPaths = fs.readdirSync('./uploads')
+  .map(file => path.join('./uploads', file));
+```
+
+---
+
+## 파일과 디렉토리 구분하려면?
+
+ <codeline>fs.readdirSync</codeline>는 이름만 반환하므로 이 항목이 폴더인지 파일인지는 <codeline>fs.statSync</codeline> 또는 <codeline>fs.lstatSync</codeline>를 사용해서 확인해야 합니다.
+
+```javascript title="fs-readdirSync" showLineNumbers
+const dir = './uploads';
+
+const result = fs.readdirSync(dir).filter((item) => {
+  const fullPath = path.join(dir, item);
+  return fs.statSync(fullPath).isFile(); // 파일만
+});
+```
+
+이와 반대로 <codeline>.isDirectory()</codeline>를 쓰면 폴더만 걸러낼 수 있어요.
+
+---
+
+## 에러 처리도 신경 써야 해요
+
+ <codeline>fs.readdirSync</codeline>는 동기 함수라서, 만약 해당 디렉토리가 존재하지 않거나 권한이 없다면 **에러를 바로 던집니다.** 따라서 try-catch를 꼭 감싸주는 습관을 들이면 좋습니다.
+
+```javascript title="fs-readdirSync" showLineNumbers
+try {
+  const files = fs.readdirSync('./non-existent-folder');
+  console.log(files);
+} catch (err) {
+  console.error('디렉토리를 읽을 수 없습니다:', err.message);
+}
+```
+
+---
+
+## 비동기 버전은 없을까?
+
+물론 있습니다. <codeline>fs.readdirSync</codeline>는 동기 버전이고, <codeline>fs.readdir</codeline>은 **비동기 버전**입니다. 웹 서버나 대규모 작업에서는 동기 방식이 전체 성능을 떨어뜨릴 수 있으니, **가능하면 비동기 방식**을 사용하는 게 더 좋습니다.
+
+```javascript title="fs-readdirSync" showLineNumbers
+fs.readdir('./uploads', (err, files) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log(files);
+});
+```
+
+---
+
+## 언제 Sync를 써도 괜찮을까?
+
+- 간단한 CLI 스크립트
+- 초기 설정 파일 읽기
+- 테스트 코드
+- 코드가 전체적으로 동기 흐름을 따를 때
+
+이럴 땐 <codeline>fs.readdirSync</codeline>를 써도 무방하지만, **웹 서버나 이벤트 루프를 막으면 안 되는 환경**에서는 꼭 <codeline>fs.readdir</codeline> 또는 <codeline>fs.promises.readdir</codeline>를 사용해주세요.
+
+---
+
+## 마무리
+
+요약하자면, <codeline>fs.readdirSync</codeline>는 다음과 같은 특징을 가집니다:
+
+- 디렉토리 내 항목 목록을 **동기적으로** 읽어옴
+- 반환 값은 **문자열 배열**
+- **파일/폴더 구분**은 추가 작업 필요
+- 에러 발생 시 **try-catch 필수**
+- 대규모 시스템보단 **간단한 스크립트나 툴에서 적합**
+
+파일 시스템을 다룰 때 동기 방식과 비동기 방식을 적절히 선택하는 것은 시스템 안정성과 성능 모두에 큰 영향을 미칩니다. 간단한 작업이라도 습관처럼 쓰는 코드는 늘 신중하게 선택하는 게 중요하겠죠.
+
+---
+
+## 참고 문서
+
+- [Node.js 공식 문서 - fs.readdirSync](https://nodejs.org/api/fs.html#fs_fs_readdirsync_path_options)
+- [Node.js 비동기 파일 시스템 가이드](https://nodejs.org/api/fs.html#fs_file_system)

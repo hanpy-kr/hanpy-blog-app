@@ -1,0 +1,124 @@
+---
+deployment: true  
+category: Language
+title: 'fs.statSync'  
+summary: 'Node.js에서 파일의 크기, 타입, 수정 시간 등 메타 정보를 확인할 수 있는 fs.statSync 함수의 사용법과 활용법을 알아봅니다.'  
+pageKey: fs_statsync_guide  
+lng: KOR  
+publishedAt: 2025-05-13  
+# tags: [Node.js, 파일 시스템, Backend, fs 모듈, 파일 메타데이터]
+---
+
+# fs.statSync
+
+Node.js에서는 파일 시스템을 다룰 때, 단순히 존재 여부를 확인하는 것보다 더 세밀한 정보를 얻고 싶은 경우가 많습니다. 예를 들어 **파일인지 폴더인지**, **파일의 크기**, **마지막 수정일**, **퍼미션 정보** 등을 알고 싶다면 <codeline>fs.statSync</codeline> 함수가 가장 기본적이고 강력한 도구입니다.
+
+<br />
+
+이번 글에서는 <codeline>fs.statSync</codeline> 함수의 역할, 사용법, <codeline>fs.lstatSync</codeline>과의 차이점 등을 실제 예제를 중심으로 정리해 보겠습니다.
+
+---
+
+## fs.statSync란?
+
+Node.js의 <codeline>fs</codeline> 모듈에서 제공하는 동기식 함수로, 주어진 경로에 있는 **파일 또는 디렉토리의 상태 정보(stat)** 를 반환합니다. 반환되는 객체는 <codeline>fs.Stats</codeline> 클래스의 인스턴스로, 다양한 메서드와 속성을 통해 파일 정보를 확인할 수 있습니다.
+
+---
+
+## 기본 사용법
+
+```javascript title="fs-statSync" showLineNumbers
+const fs = require('fs');
+
+const stats = fs.statSync('./uploads/image.png');
+
+console.log('isFile:', stats.isFile());
+console.log('isDirectory:', stats.isDirectory());
+console.log('파일 크기:', stats.size, 'bytes');
+console.log('마지막 수정 시간:', stats.mtime);
+```
+
+위 코드에서는 <codeline>./uploads/image.png</codeline>의 상태를 확인하고 있습니다. 일반 파일인지 디렉토리인지 판별할 수 있고, 파일의 크기나 마지막 수정일도 함께 알 수 있습니다.
+
+---
+
+## 주요 속성과 메서드 정리
+
+fs.statSync로 반환되는 <codeline>fs.Stats</codeline> 객체에는 다음과 같은 유용한 속성과 메서드가 포함되어 있습니다:
+
+- <codeline>.isFile()</codeline> — 일반 파일 여부
+- <codeline>.isDirectory()</codeline> — 디렉토리 여부
+- <codeline>.isSymbolicLink()</codeline> — 심볼릭 링크 여부
+- <codeline>.size</codeline> — 바이트 단위의 파일 크기
+- <codeline>.mtime</codeline> — 마지막 수정된 시간
+- <codeline>.mode</codeline> — 파일 접근 권한 (8진수)
+
+---
+
+## fs.lstatSync와의 차이점은?
+
+ <codeline>fs.statSync</codeline>는 경로가 **심볼릭 링크일 경우, 해당 링크가 가리키는 원본 파일의 상태**를 반환합니다. 반면, <codeline>fs.lstatSync</codeline>는 **링크 그 자체의 정보**를 반환합니다.
+
+```javascript title="fs-statSync" showLineNumbers
+const fs = require('fs');
+
+const stat = fs.statSync('./link-to-folder');
+console.log(stat.isDirectory()); // 원본 폴더 기준
+
+const lstat = fs.lstatSync('./link-to-folder');
+console.log(lstat.isSymbolicLink()); // 링크 파일 여부
+```
+
+---
+
+## 예외 처리도 잊지 마세요
+
+지정한 경로가 없거나 권한이 없을 경우 에러가 발생하므로 반드시 try-catch로 감싸는 것이 좋습니다.
+
+```javascript title="fs-statSync" showLineNumbers
+try {
+  const stats = fs.statSync('./not-found.txt');
+  console.log(stats.size);
+} catch (error) {
+  console.error('파일을 찾을 수 없습니다:', error.message);
+}
+```
+
+---
+
+## 실전 예: 파일 목록 중 파일만 걸러내기
+
+```javascript title="fs-statSync" showLineNumbers
+const fs = require('fs');
+const path = require('path');
+
+const dirPath = './uploads';
+const files = fs.readdirSync(dirPath);
+
+const onlyFiles = files.filter((name) => {
+  const fullPath = path.join(dirPath, name);
+  return fs.statSync(fullPath).isFile();
+});
+
+console.log('파일만 추출:', onlyFiles);
+```
+
+---
+
+## 마무리
+
+<codeline>fs.statSync</codeline>는 파일이나 디렉토리의 상태를 빠르게 파악할 수 있는 매우 유용한 동기 함수입니다. 사용 시 유의사항은 다음과 같습니다:
+
+- 동기 방식이므로 서버에서는 남용 주의
+- 권한이나 존재하지 않는 파일에 대한 예외 처리 필요
+- 심볼릭 링크를 다룰 땐 <codeline>lstatSync</codeline>와 구분 필수
+
+간단한 CLI 도구, 배치 처리, 초기 파일 체크 등에는 최적의 선택이 될 수 있습니다.
+
+---
+
+## 참고 문서
+
+- [Node.js 공식 문서 - fs.statSync](https://nodejs.org/api/fs.html#fs_fs_statsync_path_options)
+- [Node.js fs.Stats 객체 설명](https://nodejs.org/api/fs.html#class-fsstats)
+

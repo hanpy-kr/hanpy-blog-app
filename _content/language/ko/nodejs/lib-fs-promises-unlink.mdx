@@ -1,0 +1,110 @@
+---
+deployment: true
+category: Language
+title: 'fs.promises.unlink'
+summary: 'Node.js에서 파일을 비동기적으로 삭제하는 fs.promises.unlink 함수의 사용법과 에러 처리, 활용 예시를 자세히 알아봅니다.'
+pageKey: fs_promises_unlink_guide
+lng: KOR
+publishedAt: 2025-05-15
+# tags: [Node.js, fs.promises, 파일 삭제, 비동기 파일 처리, Backend]
+---
+
+# fs.promises.unlink
+
+Node.js로 파일을 다루는 애플리케이션을 개발하다 보면, 특정 조건에서 파일을 삭제해야 하는 경우가 많습니다. 예를 들어 업로드된 임시 파일을 삭제하거나, 캐시 파일을 주기적으로 정리하거나, 유저가 직접 삭제 요청을 할 수 있는 기능이 필요할 때입니다.
+
+<br />
+
+이럴 때 사용할 수 있는 함수가 바로 <codeline>fs.promises.unlink</codeline>입니다. 이 함수는 비동기적으로 파일을 삭제하며, <codeline>async/await</codeline> 문법과 함께 깔끔하게 사용할 수 있습니다.
+
+---
+
+## 기본 사용법
+
+```javascript title="promises-unlink" showLineNumbers
+const fs = require('fs').promises;
+
+async function deleteFile() {
+  try {
+    await fs.unlink('./temp/example.txt');
+    console.log('파일 삭제 성공');
+  } catch (err) {
+    console.error('파일 삭제 중 에러 발생:', err.message);
+  }
+}
+
+deleteFile();
+```
+
+위 예제는 <codeline>./temp/example.txt</codeline> 파일을 삭제하려고 시도하며, 파일이 존재하지 않거나 권한 문제가 있을 경우에는 <codeline>catch</codeline> 블록에서 예외를 처리하게 됩니다.
+
+---
+
+## 파일 존재 여부 먼저 확인해야 할까?
+
+ <codeline>unlink</codeline>는 삭제 대상 파일이 없으면 예외를 던지기 때문에, 안전하게 처리하고 싶다면 사전에 존재 여부를 확인할 수도 있습니다. 단, 이 경우 두 번의 파일 시스템 접근이 발생하므로 성능에 민감하다면 생략하고 바로 삭제 시도 후 에러 핸들링을 하는 것이 더 효율적입니다.
+
+```javascript title="promises-unlink" showLineNumbers
+const fs = require('fs').promises;
+
+async function safeDelete(path) {
+  try {
+    await fs.unlink(path);
+    console.log(`${path} 파일 삭제 완료`);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      console.warn('삭제할 파일이 존재하지 않습니다.');
+    } else {
+      console.error('예상치 못한 삭제 에러:', err.message);
+    }
+  }
+}
+```
+
+---
+
+## 실전 활용 예시
+
+### 1. 업로드 후 일정 시간 지난 임시 파일 삭제
+```javascript title="promises-unlink" showLineNumbers
+setTimeout(() => {
+  fs.unlink('./uploads/temp.png')
+    .then(() => console.log('임시 파일 삭제'))
+    .catch(err => console.error('삭제 실패:', err));
+}, 60000); // 60초 후 삭제
+```
+
+### 2. 파일 삭제 요청을 처리하는 API 내부에서 사용
+```javascript title="promises-unlink" showLineNumbers
+async function handleDeleteRequest(filename) {
+  const targetPath = `./user-files/${filename}`;
+  try {
+    await fs.unlink(targetPath);
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+```
+
+---
+
+## 주의사항
+
+- 디렉토리를 삭제하려면 <codeline>fs.promises.rmdir</codeline> 또는 <codeline>fs.promises.rm</codeline>을 사용해야 합니다.
+- 삭제할 파일에 대해 **읽기 권한뿐 아니라 쓰기 권한도 필요**합니다.
+- 파일 경로가 잘못되었거나, 상대 경로 기준이 애매한 경우에도 오류가 발생할 수 있으므로 <codeline>path.resolve</codeline> 등을 사용하는 것도 좋은 습관입니다.
+
+---
+
+## 마무리
+
+ <codeline>fs.promises.unlink</codeline>은 간결하면서도 강력한 파일 삭제 도구입니다. 특히 Node.js의 <codeline>Promise</codeline> 기반 구조와 잘 어울려 <codeline>async/await</codeline> 패턴으로 깔끔하게 오류를 제어할 수 있습니다. 불필요한 파일을 효율적으로 제거하고, 예외 상황을 유연하게 처리하는 습관을 들이면 시스템의 안정성과 유지보수성도 향상될 수 있습니다.
+
+---
+
+## 참고 문서
+
+- [Node.js 공식 문서 - fs.promises.unlink](https://nodejs.org/api/fs.html#fspromisesunlinkpath)
+- [fs 모듈 전체 API 가이드](https://nodejs.org/api/fs.html)
+

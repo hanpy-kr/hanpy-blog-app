@@ -1,0 +1,136 @@
+---
+deployment: true
+category: Backend
+title: 'child_process.spawn'
+summary: 'Node.js에서 외부 명령어나 실행 파일을 실행할 수 있는 spawn 함수의 사용법과 예제를 통해 실전 활용법을 익혀봅니다.'
+pageKey: child_process_spawn_guide
+lng: KOR
+publishedAt: 2025-05-19
+# tags: [Node.js, child_process, Backend, spawn, 외부 프로세스 실행]
+---
+
+# child_process.spawn
+
+Node.js는 백엔드 언어이지만 시스템 수준의 작업을 제어할 수 있는 기능도 갖추고 있습니다. 그 대표적인 예가 바로 <codeline>child_process.spawn</codeline> 함수입니다. 이 함수는 외부 명령어나 실행 파일을 Node.js 코드에서 직접 실행할 수 있게 해주며, 고성능 스트리밍 처리나 배치 작업, 쉘 명령 호출 등에 많이 활용됩니다.
+
+---
+
+## spawn이란?
+
+<codeline>child_process.spawn</codeline>는 새로운 시스템 프로세스를 시작하고, 표준 입력/출력 스트림을 통해 부모 프로세스와 통신할 수 있도록 합니다. 비동기적으로 작동하며, 데이터 스트림을 실시간으로 처리하는 데 적합합니다.
+
+```javascript title="child_process-spawn" showLineNumbers
+const { spawn } = require('child_process');
+```
+
+---
+
+## 기본 예제: ls 명령 실행
+
+```javascript title="child_process-spawn" showLineNumbers
+const { spawn } = require('child_process');
+
+const ls = spawn('ls', ['-lh', '/usr']);
+
+ls.stdout.on('data', (data) => {
+  console.log(`출력: ${data}`);
+});
+
+ls.stderr.on('data', (data) => {
+  console.error(`에러: ${data}`);
+});
+
+ls.on('close', (code) => {
+  console.log(`프로세스 종료 코드: ${code}`);
+});
+```
+
+이 예제는 리눅스/macOS 기준으로 <codeline>ls -lh /usr</codeline> 명령어를 실행하고 결과를 실시간으로 출력합니다. Windows라면 <codeline>dir</codeline>로 대체할 수 있습니다.
+
+---
+
+## spawn vs exec 차이점
+
+- <codeline>spawn</codeline>: 결과를 스트리밍 형태로 읽을 수 있어 **대용량 출력**에 적합
+- <codeline>exec</codeline>: 전체 출력을 버퍼에 저장한 뒤 콜백으로 넘김 → **작은 작업에 적합**
+
+---
+
+## 예제 1: Node.js로 Python 스크립트 실행
+
+```javascript title="child_process-spawn" showLineNumbers
+const { spawn } = require('child_process');
+
+const py = spawn('python3', ['script.py']);
+
+py.stdout.on('data', (data) => {
+  console.log(`Python 결과: ${data}`);
+});
+
+py.stderr.on('data', (data) => {
+  console.error(`Python 에러: ${data}`);
+});
+
+py.on('close', (code) => {
+  console.log(`Python 종료 코드: ${code}`);
+});
+```
+
+---
+
+## 예제 2: 인자 전달 및 동적 실행
+
+```javascript title="child_process-spawn" showLineNumbers
+const command = spawn('grep', ['hello']);
+
+command.stdin.write('hello world\nbye world\n');
+command.stdin.end();
+
+command.stdout.on('data', (data) => {
+  console.log(`grep 결과: ${data}`);
+});
+```
+
+---
+
+## 예제 3: 실시간 로그 모니터링 (tail)
+
+```javascript title="child_process-spawn" showLineNumbers
+const tail = spawn('tail', ['-f', '/var/log/system.log']);
+
+tail.stdout.on('data', (data) => {
+  console.log(`로그 스트림: ${data}`);
+});
+```
+
+---
+
+## 에러 처리 및 종료 감지
+
+```javascript title="child_process-spawn" showLineNumbers
+child.on('error', (err) => {
+  console.error('실행 중 에러 발생:', err);
+});
+
+child.on('close', (code) => {
+  console.log(`프로세스 종료 코드: ${code}`);
+});
+```
+
+---
+
+## 마무리
+
+<codeline>child_process.spawn</codeline>는 Node.js에서 외부 명령어를 비동기적으로 실행하고, 대용량 데이터를 스트리밍 방식으로 처리하는 데 최적화된 함수입니다. <codeline>fork</codeline>와는 다르게 Node.js 파일이 아닌 **기존 시스템 명령**이나 **타 언어 실행 파일**에 적합하며, 성능 및 유연성 측면에서도 매우 유용합니다.
+
+<br />
+
+이를 통해 Node.js는 웹 서버뿐 아니라, 데이터 처리 자동화, 로그 수집기, 커맨드라인 유틸리티 등 다양한 분야에서 강력한 도구로 확장될 수 있습니다.
+
+---
+
+## 참고 문서
+
+- [Node.js 공식 문서 - child_process.spawn](https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options)
+- [Node.js child_process 개요](https://nodejs.org/api/child_process.html)
+

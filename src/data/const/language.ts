@@ -24,7 +24,7 @@ const subCategory: Record<
   nodejs: {
     id: LanguageCategory.NODEJS,
     name: 'Nodejs',
-    href: '/language/ko/nodejs/introduction',
+    href: '/language/ko/nodejs/contents',
     icon: 'https://resource.han-py.com/blog/logs/nodejs_logo.svg',
     description:
       "Node.js is a JavaScript runtime environment that enables developers to run JavaScript on servers and build scalable, event-driven applications. In this category, you'll find tutorials, guides, practical examples, and advanced techniques focused on Node.js development, performance optimization, and backend solutions.",
@@ -41,7 +41,7 @@ const subCategoryDetail: {
   }
 } = {
   nodejs: {
-    title: ['Beginner'],
+    title: ['Introduction & Fundamentals', 'Built-in Modules', 'External Libraries', 'Error & Performance'],
     subTitle: [
       [
         {
@@ -49,14 +49,71 @@ const subCategoryDetail: {
           title: 'Introduction',
         },
         {
-          href: '/language/ko/nodejs/install-env-path',
-          title: 'Nodejs Install',
+          href: '/language/ko/nodejs/introduction-install_env_path',
+          title: 'Environment Variables',
         },
         {
-          href: '/language/ko/nodejs/encoder-decoder',
-          title: 'Encoding and Decoding',
+          href: '/language/ko/nodejs/introduction-nvm',
+          title: 'Node Version Manager',
         },
       ],
+      [
+        // Managing Files and Directories
+        {
+          href: '/language/ko/nodejs/lib-fs-existsSync',
+          title: 'fs.existsSync',
+        },
+        {
+          href: '/language/ko/nodejs/lib-fs-lstatSync',
+          title: 'fs.lstatSync',
+        },
+        {
+          href: '/language/ko/nodejs/lib-fs-statSync',
+          title: 'fs.statSync',
+        },
+        // Asynchronous File Operations
+        {
+          href: '/language/ko/nodejs/lib-fs-promises',
+          title: 'fs.promises',
+        },
+        {
+          href: '/language/ko/nodejs/lib-fs-promises-unlink',
+          title: 'fs.promises.unlink',
+        },
+        {
+          href: '/language/ko/nodejs/lib-fs-readdir',
+          title: 'fs.readdir',
+        },
+        {
+          href: '/language/ko/nodejs/lib-fs-readdirSync',
+          title: 'fs.readdirSync',
+        },
+        // URL Processing and Encoding
+        {
+          href: '/language/ko/nodejs/encoder-decoder',
+          title: 'Encoder / Decoder',
+        },
+        // Child Process Management
+        {
+          href: '/language/ko/nodejs/utils-child_process-exec',
+          title: 'child_process.exec',
+        },
+        {
+          href: '/language/ko/nodejs/utils-child_process-spawn',
+          title: 'child_process.spawn',
+        },
+        {
+          href: '/language/ko/nodejs/utils-child_process-fork',
+          title: 'child_process.fork',
+        },
+      ],
+      [],
+      [
+        {
+          href: '/language/ko/nodejs/beginner-nodejs-cpu-memory-monitoring',
+          title: 'CPU and Memory Usage',
+        },
+      ]
     ],
   },
   typescript: {

@@ -1,0 +1,155 @@
+---
+deployment: true
+category: Backend
+title: 'child_process.exec'
+summary: 'Node.js에서 외부 명령어를 실행하고 전체 결과를 콜백으로 받는 exec 함수의 사용법과 실전 예제를 알아봅니다.'
+pageKey: child_process_exec_guide
+lng: KOR
+publishedAt: 2025-05-18
+# tags: [Node.js, child_process, exec, 백엔드, 외부 명령 실행]
+---
+
+# child_process.exec
+
+Node.js에서 외부 명령어를 실행하고 그 결과를 한 번에 받아오고 싶을 때 사용하는 대표적인 함수가 바로 <codeline>child_process.exec</codeline>입니다. 복잡한 스트리밍 처리가 필요 없고, 단순히 한 줄의 명령 실행과 그 결과만 필요할 때 매우 유용하죠.
+
+<br />
+
+이 글에서는 <codeline>exec</codeline> 함수의 구조, 활용 예시, <codeline>spawn</codeline>과의 차이점까지 실전 중심으로 정리해보겠습니다.
+
+---
+
+## exec 기본 구조
+
+```javascript title="child_process-exec" showLineNumbers
+const { exec } = require('child_process');
+
+exec('ls -l', (error, stdout, stderr) => {
+  if (error) {
+    console.error(`에러 발생: ${error.message}`);
+    return;
+  }
+  if (stderr) {
+    console.error(`stderr: ${stderr}`);
+    return;
+  }
+  console.log(`stdout: ${stdout}`);
+});
+```
+
+첫 번째 인자는 실행할 전체 쉘 명령어 문자열입니다. 예를 들어 'ls -l' 또는 'cat file.txt | grep hello' 같은 형태로 사용할 수 있습니다.
+
+두 번째 인자인 콜백 함수는 총 세 개의 인자를 받습니다. 첫 번째 인자인 error는 명령 실행 도중 오류가 발생했을 때의 에러 객체를 나타냅니다. 두 번째 인자인 stdout는 명령어 실행 결과로 표준 출력된 내용을 문자열로 담고 있으며, 세 번째 인자인 stderr는 에러 출력 스트림에 출력된 내용을 담고 있습니다. 따라서 실행 결과를 처리할 때는 이 세 가지를 모두 분기하여 활용하는 것이 좋습니다.
+
+---
+
+## exec 특징
+
+exec는 외부 명령어의 실행 결과를 한 번에 문자열 형태로 받아올 수 있는 간단한 실행 방식입니다. 실행된 명령의 표준 출력(stdout)과 표준 에러(stderr)를 버퍼에 저장한 뒤, 실행이 완료된 후 콜백으로 전달합니다. 따라서 전체 결과가 적은 작업에 적합하며, 간단한 CLI 명령 실행에 자주 사용됩니다.
+
+<br />
+
+반면 spawn은 스트리밍 방식으로 출력을 처리할 수 있기 때문에 출력이 많거나 실행 시간이 긴 작업에 더 적합합니다. exec는 내부적으로 쉘을 사용하기 때문에 명령어 문자열 내에서 파이프(|)나 리디렉션(>) 같은 쉘 문법도 그대로 사용할 수 있습니다.
+
+
+
+---
+
+## 예제 1: 현재 디렉토리 목록 출력
+
+가장 기본적인 활용 예입니다. <codeline>ls</codeline> 명령어는 현재 디렉토리에 있는 파일과 폴더 목록을 출력합니다. 이 명령을 Node.js에서 실행하고 그 결과를 받아 출력하는 방식입니다.
+
+```javascript title="child_process-exec" showLineNumbers
+const { exec } = require('child_process');
+
+exec('ls', (error, stdout, stderr) => {
+  if (error) {
+    console.error(`명령 실행 중 에러 발생: ${error.message}`);
+    return;
+  }
+  if (stderr) {
+    console.error(`에러 스트림: ${stderr}`);
+    return;
+  }
+  console.log(`디렉토리 목록 출력 결과:
+${stdout}`);
+});
+```
+
+---
+
+## 예제 2: 파이프 명령어를 통한 내용 필터링
+
+이번에는 <codeline>cat</codeline>으로 파일 내용을 출력하고, <codeline>grep</codeline>으로 특정 단어가 포함된 줄만 필터링하는 예제입니다. 쉘에서 자주 쓰는 파이프 명령어(<codeline>|</codeline>)를 Node.js 코드 안에서 그대로 실행할 수 있다는 것이 <codeline>exec</codeline>의 장점 중 하나입니다.
+
+```javascript title="child_process-exec" showLineNumbers
+exec('cat file.txt | grep hello', (error, stdout, stderr) => {
+  if (error) {
+    console.error(`실행 오류: ${error.message}`);
+    return;
+  }
+  if (stderr) {
+    console.error(`에러 내용: ${stderr}`);
+    return;
+  }
+  console.log(`'hello'가 포함된 줄:
+${stdout}`);
+});
+```
+
+---
+
+## 예제 3: 환경 변수 전달 및 실행 옵션 설정
+
+<codeline>exec</codeline> 함수는 환경 변수나 실행 환경을 지정할 수도 있습니다. 아래 예제는 HAN_PY라는 환경 변수를 정의하고, echo 명령어를 통해 그 값을 출력하는 방식입니다.
+
+```javascript title="child_process-exec" showLineNumbers
+exec('echo $HAN_PY', {
+  env: { ...process.env, HAN_PY: '테스트' },
+  cwd: process.cwd(), // 현재 작업 디렉토리
+  timeout: 5000        // 실행 시간 제한 (ms)
+}, (error, stdout, stderr) => {
+  if (error) {
+    console.error(`명령 실패: ${error.message}`);
+    return;
+  }
+  if (stderr) {
+    console.error(`에러 출력: ${stderr}`);
+    return;
+  }
+  console.log(`HAN_PY 값: ${stdout.trim()}`);
+});
+```
+
+이처럼 <codeline>exec</codeline>의 두 번째 인자로 전달하는 옵션 객체를 통해 환경 변수 추가, 실행 디렉토리 지정, 타임아웃 설정 등 세밀한 제어가 가능합니다.
+
+
+---
+
+## 에러 처리 시 주의사항
+
+- 명령 실행 실패 시 <codeline>error</codeline>와 <codeline>stderr</codeline>을 별도로 체크해야 합니다.
+- 결과가 너무 크면 기본 버퍼 제한(200KB)을 초과하여 <codeline>maxBuffer</codeline> 옵션을 설정해야 합니다:
+
+```javascript title="child_process-exec" showLineNumbers
+exec('some-heavy-cmd', { maxBuffer: 1024 * 1024 }, (err, stdout) => {
+  console.log(stdout);
+});
+```
+
+---
+
+## 마무리
+
+<codeline>child_process.exec</codeline>는 외부 명령어를 간단히 실행하고 결과를 바로 받아야 하는 상황에서 가장 편리한 도구입니다. 복잡한 처리 없이 한 번에 결과를 받고 싶은 CLI 호출이나 로그 수집, 자동화 작업 등에 적합합니다.
+
+<br />
+
+복잡한 명령어를 파이프라인으로 연결하거나, 쉘 명령어를 그대로 실행할 수 있다는 점도 큰 장점입니다. 단, 출력 결과가 많을 수 있다면 <codeline>spawn</codeline> 사용도 고려해야 합니다.
+
+---
+
+## 참고 문서
+
+- [Node.js 공식 문서 - child_process.exec](https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback)
+- [Node.js child_process 비교 가이드](https://nodejs.org/api/child_process.html)

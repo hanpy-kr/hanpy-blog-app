@@ -1,0 +1,207 @@
+---
+deployment: true
+category: Language
+title: 'fs.promises'
+summary: 'Node.js에서 파일 시스템을 Promise 기반으로 다루기 위한 fs.promises API의 활용법과 다양한 예제를 살펴봅니다.'
+pageKey: fs_promises_guide
+lng: KOR
+publishedAt: 2025-05-14
+# tags: [Node.js, 파일 시스템, Backend, 비동기 처리, fs 모듈, Promise]
+---
+
+# fs.promises
+
+Node.js로 서버나 CLI 도구를 개발할 때, 파일 시스템을 비동기적으로 제어하는 것은 흔한 일입니다. 하지만 콜백 지옥(callback hell)은 여전히 개발자의 숙제였었습니다. 이 문제를 해결하기 위해 Node.js에서는 <codeline>fs.promises</codeline>라는 모듈을 제공합니다.
+
+<br />
+
+이 글에서는 <codeline>fs.promises</codeline>의 핵심 함수들을 소개하고, 다양한 실전 예제를 통해 어떻게 활용할 수 있는지 살펴보겠습니다.
+
+---
+
+## fs.promises란?
+
+Node.js v10 이상부터 사용할 수 있으며, 기존 <codeline>fs</codeline> 모듈의 모든 주요 API를 **Promise 기반**으로 사용할 수 있도록 제공합니다. 이를 통해 <codeline>async/await</codeline>와 함께 가독성 높은 비동기 코드를 작성할 수 있습니다.
+
+```javascript title="promises" showLineNumbers
+const fs = require('fs').promises;
+```
+
+---
+
+## 1. 파일 읽기: readFile
+
+```javascript title="promises" showLineNumbers
+const fs = require('fs').promises;
+
+async function readFileExample() {
+  const data = await fs.readFile('./example.txt', 'utf-8');
+  console.log(data);
+}
+
+readFileExample();
+```
+
+- 기본적으로 <codeline>Buffer</codeline>를 반환하지만, 두 번째 인자에 <codeline>'utf-8'</codeline>을 지정하면 문자열로 반환됩니다.
+
+---
+
+## 2. 파일 쓰기: writeFile
+
+```javascript title="promises" showLineNumbers
+async function writeFileExample() {
+  await fs.writeFile('./output.txt', 'Hello, World!', 'utf-8');
+  console.log('파일 쓰기 완료');
+}
+
+writeFileExample();
+```
+
+- 기존 파일이 있으면 덮어쓰며, 없으면 자동 생성됩니다.
+
+---
+
+## 3. 파일 존재 여부 확인: access
+
+```javascript title="promises" showLineNumbers
+async function checkFileExists(path) {
+  try {
+    await fs.access(path);
+    console.log('파일이 존재합니다.');
+  } catch {
+    console.log('파일이 존재하지 않습니다.');
+  }
+}
+
+checkFileExists('./some.txt');
+```
+
+- <codeline>fs.exists</codeline>는 deprecated 되었기 때문에 <codeline>access</codeline>를 사용하는 것이 좋습니다.
+
+---
+
+## 4. 파일 삭제: unlink
+
+```javascript title="promises" showLineNumbers
+async function deleteFile() {
+  try {
+    await fs.unlink('./output.txt');
+    console.log('파일 삭제됨');
+  } catch (err) {
+    console.error('삭제 실패:', err);
+  }
+}
+
+deleteFile();
+```
+
+---
+
+## 5. 디렉토리 생성/삭제: mkdir, rmdir
+
+```javascript title="promises" showLineNumbers
+async function manageFolder() {
+  await fs.mkdir('./logs', { recursive: true });
+  console.log('디렉토리 생성 완료');
+
+  await fs.rmdir('./logs');
+  console.log('디렉토리 삭제 완료');
+}
+
+manageFolder();
+```
+
+- <codeline>recursive: true</codeline>를 설정하면 중간 경로가 없어도 자동으로 생성됩니다.
+
+```string 
+
+  * 참고: Node.js v16 이후부터는 fs.rm(path, { recursive: true })를 권장합니다.
+
+```
+
+---
+
+## 6. 디렉토리 목록 읽기: readdir
+
+```javascript title="promises" showLineNumbers
+async function listDirectory() {
+  const files = await fs.readdir('./');
+  console.log('현재 디렉토리 목록:', files);
+}
+
+listDirectory();
+```
+
+---
+
+## 7. 파일 정보 확인: stat
+
+```javascript title="promises" showLineNumbers
+async function showStats() {
+  const stat = await fs.stat('./example.txt');
+  console.log('파일 크기:', stat.size);
+  console.log('마지막 수정:', stat.mtime);
+}
+
+showStats();
+```
+
+---
+
+## 8. 파일 이름 변경: rename
+
+```javascript title="promises" showLineNumbers
+async function renameFile() {
+  await fs.rename('./example.txt', './renamed.txt');
+  console.log('파일 이름 변경 완료');
+}
+
+renameFile();
+```
+
+---
+
+## 9. 전체 파일 흐름 예시: 파일을 복사한 뒤 삭제하기
+
+```javascript title="promises" showLineNumbers
+async function copyAndDelete() {
+  try {
+    const data = await fs.readFile('./original.txt', 'utf-8');
+    await fs.writeFile('./copy.txt', data);
+    await fs.unlink('./original.txt');
+    console.log('복사 후 원본 삭제 완료');
+  } catch (err) {
+    console.error('오류 발생:', err);
+  }
+}
+
+copyAndDelete();
+```
+
+---
+
+## 사용 시 주의사항
+
+- 항상 <codeline>try-catch</codeline>를 통해 에러 처리를 해주는 것이 좋습니다.
+- Node.js의 <codeline>fs.promises</codeline>는 <codeline>require('fs').promises</codeline>로 별도로 불러와야 합니다.
+- Promise 기반 API를 사용할 땐 <codeline>await</codeline>와 함께 사용하는 것이 가독성과 안정성 면에서 유리합니다.
+
+---
+
+## 마무리 요약
+
+<codeline>fs.promises</codeline>는 Node.js에서 파일 시스템을 비동기적으로 다루기 위한 표준 방식입니다. 콜백을 사용하지 않고, <codeline>async/await</codeline>를 통해 구조적이고 읽기 쉬운 코드를 만들 수 있다는 점에서 매우 강력한 도구입니다.
+
+요약하자면:
+
+- <codeline>readFile</codeline>, <codeline>writeFile</codeline>, <codeline>unlink</codeline>, <codeline>rename</codeline> 등 대부분의 파일 작업이 Promise 기반으로 가능
+- 복잡한 파일 흐름 제어에도 적합
+- Node.js 비동기 프로그래밍의 핵심 도구 중 하나
+
+---
+
+## 참고 문서
+
+- [Node.js 공식 문서 - fs.promises](https://nodejs.org/api/fs.html#fspromisesapi)
+- [MDN - Using Promises](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+

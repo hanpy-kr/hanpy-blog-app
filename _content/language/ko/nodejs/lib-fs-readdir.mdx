@@ -1,0 +1,127 @@
+---
+deployment: true  
+category: Backend  
+title: 'fs.readdir'  
+summary: 'Node.js에서 디렉토리 내 파일 목록을 비동기적으로 가져오는 함수인 fs.readdir의 사용법과 실전 활용법을 알아봅니다.'  
+pageKey: fs_readdir_guide  
+lng: KOR  
+publishedAt: 2025-05-16
+# tags: [Node.js, 파일 시스템, Backend, fs 모듈, 비동기 함수]
+---
+
+# fs.readdir
+
+Node.js로 서버나 유틸성 스크립트를 만들다 보면 디렉토리 내부의 파일 목록을 가져와야 하는 경우가 종종 있습니다. 이미지 처리 파이프라인을 만든다거나, 정적 파일을 자동으로 읽어서 클라이언트에 전달하는 식의 작업이 그렇죠.
+
+<br />
+
+이럴 때 많이 사용하는 함수가 바로 <codeline>fs.readdir</codeline>입니다. 이 함수는 Node.js의 파일 시스템(<codeline>fs</codeline>) 모듈에서 제공하는 **비동기 방식의 디렉토리 읽기 함수**입니다.
+
+<br />
+
+<codeline>fs.readdirSync</codeline>와는 달리, <codeline>fs.readdir</codeline>은 비동기 방식이라 이벤트 루프를 차단하지 않고 효율적으로 파일 목록을 가져올 수 있습니다.
+
+---
+
+## fs.readdir 기본 사용법
+
+사용법은 매우 단순하지만, 콜백 기반이기 때문에 기본 구조는 이렇게 생겼습니다:
+
+```javascript title="fs-readdir" showLineNumbers
+const fs = require('fs');
+
+fs.readdir('./uploads', (err, files) => {
+  if (err) {
+    console.error('에러 발생:', err);
+    return;
+  }
+
+  console.log('파일 목록:', files);
+});
+```
+
+위 예제는 <codeline>./uploads</codeline> 폴더 안에 있는 파일/디렉토리 이름들을 배열로 반환합니다. 만약 폴더가 존재하지 않거나 권한이 없을 경우, 첫 번째 인자인 <codeline>err</codeline>에 오류 정보가 들어오게 됩니다.
+
+---
+
+## 파일인지 폴더인지 구분하려면?
+
+ <codeline>fs.readdir</codeline>은 단순히 이름 목록만 반환합니다. 이게 파일인지 폴더인지 판단하려면, <codeline>fs.stat</codeline> 또는 <codeline>fs.lstat</codeline> 같은 추가 함수가 필요합니다. 아래 예제를 참고하세요:
+
+```javascript title="fs-readdir" showLineNumbers
+const path = require('path');
+
+fs.readdir('./uploads', (err, files) => {
+  if (err) return;
+
+  files.forEach((file) => {
+    const fullPath = path.join('./uploads', file);
+    fs.stat(fullPath, (err, stats) => {
+      if (err) return;
+      if (stats.isFile()) console.log('파일:', file);
+      if (stats.isDirectory()) console.log('폴더:', file);
+    });
+  });
+});
+```
+
+---
+
+## Promise 기반으로도 사용 가능할까?
+
+Node.js v10 이후부터는 <codeline>fs.promises</codeline> API를 통해 <codeline>readdir</codeline>을 **Promise 기반**으로 사용할 수 있습니다. <codeline>async/await</codeline> 구문과 함께 사용하면 훨씬 깔끔한 코드가 됩니다.
+
+```javascript title="fs-readdir" showLineNumbers
+const fs = require('fs').promises;
+const path = require('path');
+
+async function listFiles() {
+  try {
+    const files = await fs.readdir('./uploads');
+
+    for (const file of files) {
+      const fullPath = path.join('./uploads', file);
+      const stat = await fs.stat(fullPath);
+
+      if (stat.isFile()) console.log('파일:', file);
+      if (stat.isDirectory()) console.log('폴더:', file);
+    }
+  } catch (err) {
+    console.error('에러 발생:', err);
+  }
+}
+
+listFiles();
+```
+
+---
+
+## 사용 시 주의할 점
+
+- <codeline>readdir</codeline>은 기본적으로 파일명만 반환하므로, 파일 타입을 구분하려면 별도의 I/O 호출이 필요합니다.
+- 대량의 파일이 존재하는 경우, <codeline>fs.stat</codeline> 등을 반복 호출하면 I/O 병목이 발생할 수 있습니다.
+- 에러가 발생하면 반드시 예외 처리를 해줘야 합니다. 콜백이나 <codeline>try-catch</codeline>를 반드시 포함하세요.
+- <codeline>fs.readdir</codeline>은 UTF-8 인코딩을 기본으로 처리하므로, 경로 인코딩 문제가 있다면 옵션 설정이 필요합니다.
+
+---
+
+## 마무리 요약
+
+<codeline>fs.readdir</codeline>은 Node.js에서 디렉토리 내용을 **비동기적으로 처리**할 수 있는 핵심 함수입니다. 특히 대규모 트래픽을 처리하거나, 논블로킹이 중요한 웹 서버 환경에서는 <codeline>readdirSync</codeline> 대신 이 함수를 사용하는 것이 좋습니다.
+
+요약하자면:
+
+- 콜백 기반 비동기 디렉토리 읽기 함수
+- <codeline>fs.stat</codeline>을 조합해 파일/폴더 구분 가능
+- <codeline>fs.promises.readdir</codeline>을 통해 <codeline>async/await</codeline>도 지원
+- 고성능 서버 코드에서는 Sync 함수보다 훨씬 유리함
+
+파일 목록을 다뤄야 하는 모든 Node.js 개발자에게는 꼭 알아야 할 필수 함수 중 하나입니다.
+
+---
+
+## 참고 문서
+
+- [Node.js 공식 문서 - fs.readdir](https://nodejs.org/api/fs.html#fs_fs_readdir_path_options_callback)
+- [Node.js 비동기 파일 시스템 가이드](https://nodejs.org/api/fs.html)
+

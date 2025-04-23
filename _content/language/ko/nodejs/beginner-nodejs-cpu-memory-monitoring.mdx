@@ -1,0 +1,114 @@
+---
+deployment: true
+category: Language
+title: 'Node.js 성능 최적화를 위한 CPU 및 메모리 사용량 모니터링 방법'
+summary: 'Node.js 애플리케이션의 성능을 높이기 위한 CPU 및 메모리 사용량을 코드 레벨에서 확인하고 분석하는 방법을 알아봅시다.'
+pageKey: nodejs_cpu_memory_monitoring
+lng: KOR
+publishedAt: 2025-5-20
+# tags: [Node.js, 성능 모니터링, CPU 사용량, 메모리 사용량, 최적화]
+---
+
+# Node.js 성능 최적화를 위한 CPU 및 메모리 사용량 모니터링 방법
+
+개발을 하다 보면 "서비스가 갑자기 느려졌어요!"라는 연락을 받고 깜짝 놀라는 경우가 있습니다. 원인은 다양하지만, 대표적인 이유 중 하나가 CPU나 메모리와 같은 시스템 자원의 과부하입니다. Node.js 애플리케이션을 운영하다 보면 성능 병목 현상을 발견하고 이를 빠르게 해결하기 위해서는 정기적인 모니터링이 필수적입니다.
+
+<br />
+
+보통은 Grafana와 같은 인프라 레벨의 모니터링 도구를 사용하지만, 코드 레벨에서 간편하게 시스템 자원 현황을 확인하는 방법도 유용합니다. 이번 블로그에서는 Node.js 애플리케이션의 CPU와 메모리 사용량을 코드 레벨에서 정확히 측정하고 분석하는 방법을 소개하겠습니다.
+
+---
+
+## 1. CPU 정보 모니터링하기
+
+먼저 CPU의 정보를 확인하는 방법을 살펴봅시다. Node.js의 내장 모듈인 <codeline>os</codeline>를 사용하면 서버에 탑재된 CPU 코어의 수, 모델, 속도 등의 정보를 얻을 수 있습니다.
+
+```typescript title="cpu&memory" showLineNumbers
+import * as os from 'os'
+
+// 시스템 CPU 정보 출력
+const cpus = os.cpus()
+console.log('CPU 정보:')
+cpus.forEach((cpu, index) => {
+  console.log(`코어 ${index + 1}: ${cpu.model}, 속도: ${cpu.speed} MHz`)
+})
+```
+
+여기서 얻은 CPU 코어 정보를 통해 여러분의 애플리케이션이 멀티스레딩 방식(<codeline>cluster</codeline> 또는 <codeline>worker_threads</codeline>)으로 얼마나 효율적인 병렬 처리를 할 수 있을지 판단할 수 있습니다.
+
+---
+
+## 2. 프로세스 CPU 사용량 측정하기
+
+현재 실행 중인 Node.js 프로세스가 CPU를 얼마나 사용하고 있는지 측정하는 방법도 알아봅시다. <codeline>process.cpuUsage()</codeline> 메서드는 프로세스의 CPU 사용 시간을 사용자 모드(User)와 시스템 모드(System)로 나누어 제공합니다.
+
+```typescript title="cpu&memory" showLineNumbers
+const startCpuUsage = process.cpuUsage()
+const startTime = Date.now()
+
+setTimeout(() => {
+  const endCpuUsage = process.cpuUsage(startCpuUsage)
+  const endTime = Date.now()
+
+  const elapsedTime = (endTime - startTime) * 1000
+  const totalCpuTime = endCpuUsage.user + endCpuUsage.system
+
+  const numCores = os.cpus().length
+  const totalAvailableCpu = elapsedTime * numCores
+
+  const cpuUsagePercentage = (totalCpuTime / totalAvailableCpu) * 100
+
+  console.log(`CPU 사용률: ${cpuUsagePercentage.toFixed(2)}%`)
+}, 1000)
+```
+
+- **User Mode**: 애플리케이션 코드 실행에 소요된 CPU 시간
+- **System Mode**: 시스템 호출 및 커널 작업에 소요된 CPU 시간
+
+이렇게 나누어 측정하면 CPU 병목 지점을 찾기 쉬워지고, 코드의 최적화가 필요한 부분을 명확히 파악할 수 있습니다.
+
+---
+
+## 3. 메모리 사용량 측정하기
+
+Node.js에서 메모리 사용량을 확인하는 것은 애플리케이션의 안정성을 유지하기 위한 필수 작업입니다. <codeline>process.memoryUsage()</codeline> 메서드를 사용하면 메모리 사용량의 세부 정보를 확인할 수 있습니다.
+
+```typescript title="cpu&memory" showLineNumbers
+const memoryUsage = process.memoryUsage()
+console.log('메모리 사용량 정보:')
+console.log(`RSS: ${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB`)
+console.log(
+  `Heap Total: ${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
+)
+console.log(`Heap Used: ${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`)
+```
+
+- **RSS (Resident Set Size)**: 운영체제가 Node.js 프로세스에 실제로 할당한 총 메모리
+- **Heap Total**: V8 엔진에서 할당한 전체 힙 메모리 양
+- **Heap Used**: 실제로 사용 중인 힙 메모리 양
+
+이 정보를 통해 메모리 누수(memory leak)가 있는지 여부를 확인할 수 있습니다. 예를 들어, <codeline>Heap Used</codeline>가 지속적으로 증가하거나 <codeline>Heap Total</codeline>에 근접하면 코드상에서 메모리를 제대로 해제하지 못하는 부분이 존재할 수 있습니다.
+
+---
+
+## 4. 전체 내용 정리 및 마무리
+
+이번 글을 통해 Node.js 애플리케이션의 CPU와 메모리 사용량을 코드 수준에서 쉽게 모니터링하는 방법을 살펴보았습니다. 정리하면 다음과 같습니다.
+
+- <codeline>os.cpus()</codeline>로 CPU 코어 정보를 확인하고 멀티스레딩 최적화를
+  준비합니다.
+- <codeline>process.cpuUsage()</codeline>로 CPU 사용률을 측정하여 CPU 병목
+  지점을 찾고 최적화합니다.
+- <codeline>process.memoryUsage()</codeline>를 통해 메모리 사용량을 주기적으로
+  모니터링하여 메모리 누수를 예방합니다.
+
+성능 최적화를 위해 위 정보를 활용할 때는, 단일 코드 실행이 아닌 주기적이고 장기적인 관점에서 모니터링을 수행하는 것이 중요합니다. 또한 프로덕션 환경에서는 Grafana와 같은 전용 도구를 활용하여 장기간 추적 가능한 시계열 데이터로 성능 분석을 강화하는 것이 좋습니다.
+
+---
+
+## 참고
+
+- [Node.js 공식 문서 - process.cpuUsage](https://nodejs.org/api/process.html#processcpuusagepreviousvalue)
+- [Node.js 공식 문서 - process.memoryUsage](https://nodejs.org/api/process.html#processmemoryusage)
+- [Node.js 공식 문서 - os.cpus](https://nodejs.org/api/os.html#oscpus)
+- [Grafana - Node.js Monitoring](https://grafana.com/docs/grafana-cloud/quickstart/nodejs/)

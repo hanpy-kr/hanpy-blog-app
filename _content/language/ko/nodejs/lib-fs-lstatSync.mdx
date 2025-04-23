@@ -1,0 +1,106 @@
+---
+deployment: true  
+category: Language  
+title: 'fs.lstatSync'  
+summary: 'Node.js의 fs.lstatSync 함수로 파일과 심볼릭 링크 구분 및 속성 확인하는 방법을 알아봅니다.'  
+pageKey: fs_lstatsync_guide  
+lng: KOR  
+publishedAt: 2025-05-12
+# tags: [Node.js, 파일 시스템, Backend, fs 모듈, 파일 속성]
+---
+
+# fs.lstatSync
+
+Node.js에서 파일이나 디렉토리의 정보를 확인할 때 자주 쓰는 함수 중 하나가 바로 <codeline>fs.lstatSync</codeline>입니다. 특히, 파일인지 디렉토리인지 확인하거나, 심볼릭 링크인지 실제 파일인지 판단하고 싶을 때 유용하게 사용가능 합니다.
+
+<br />
+
+처음에는 <codeline>fs.statSync</codeline>과 비슷해 보여서 헷갈릴 수 있는데, <codeline>lstat</codeline>은 링크 자체의 정보를 가져오는 데 중점을 둡니다.
+
+---
+
+## 기본 사용법
+
+```javascript title="fs-lstatSync" showLineNumbers
+const fs = require('fs');
+
+const stats = fs.lstatSync('./uploads');
+
+console.log('isFile:', stats.isFile());
+console.log('isDirectory:', stats.isDirectory());
+console.log('isSymbolicLink:', stats.isSymbolicLink());
+```
+
+위 예제처럼 <codeline>fs.lstatSync</codeline>는 <codeline>fs.Stats</codeline> 객체를 반환합니다. 이 객체는 다양한 메서드를 제공하는데, 대표적인 것은 다음과 같습니다:
+
+- <codeline>.isFile()</codeline>: 일반 파일인지 여부
+- <codeline>.isDirectory()</codeline>: 디렉토리인지 여부
+- <codeline>.isSymbolicLink()</codeline>: 심볼릭 링크인지 여부
+
+---
+
+## statSync와의 차이점
+
+- <strong>statSync</strong>: 링크를 따라가서 원본 파일의 정보를 반환합니다.  
+- <strong>lstatSync</strong>: 링크 자체의 정보를 반환합니다.
+
+즉, 심볼릭 링크가 있을 때 <codeline>statSync</codeline>는 링크가 가리키는 원본 파일의 속성을, <codeline>lstatSync</codeline>는 링크 파일 자체의 속성을 가져옵니다.
+
+예를 들어 설명하면:
+
+```javascript title="fs-lstatSync" showLineNumbers
+// ./uploads -> ./real_uploads 를 가리키는 심볼릭 링크
+
+const stat = fs.statSync('./uploads');
+console.log(stat.isDirectory()); // true (real_uploads가 디렉토리니까)
+
+const lstat = fs.lstatSync('./uploads');
+console.log(lstat.isSymbolicLink()); // true (링크 자체니까)
+```
+
+---
+
+## 파일 속성 정보 확인
+
+**fs.lstatSync**는 다음과 같은 속성들도 함께 확인할 수 있습니다:
+
+```javascript title="fs-lstatSync" showLineNumbers
+console.log(stats.size); // 파일 크기 (bytes)
+console.log(stats.mtime); // 마지막 수정 시간
+console.log(stats.mode); // 퍼미션 정보
+```
+
+이 정보들은 로그 시스템이나 사용자 접근 제어, 캐싱 전략 수립에도 활용할 수 있습니다.
+
+---
+
+## 예외 처리도 중요해요
+
+존재하지 않는 경로를 넣거나 권한 문제가 발생하면 예외가 발생하므로 try-catch로 감싸는 습관을 들이면 좋습니다:
+
+```javascript title="fs-lstatSync" showLineNumbers
+try {
+  const stats = fs.lstatSync('./not-found');
+} catch (err) {
+  console.error('에러 발생:', err.message);
+}
+```
+
+---
+
+## 정리
+
+<codeline>fs.lstatSync</codeline>는 다음과 같은 경우에 아주 유용합니다:
+
+- 파일인지 폴더인지 판단할 때
+- 심볼릭 링크를 구분하고 싶을 때
+- 파일의 크기, 수정 시간, 권한 등 메타 정보를 확인할 때
+
+**동기 방식**이기 때문에 간단한 CLI 툴이나 초기 설정 파일 검사에 적합하며, 고성능 서버 코드에서는 <codeline>fs.promises.lstat</codeline> 같은 비동기 버전을 쓰는 게 좋습니다.
+
+---
+
+## 참고 문서
+
+- [Node.js 공식 문서 - fs.lstatSync](https://nodejs.org/api/fs.html#fs_fslstatsync_path_options)
+- [Node.js fs.Stats API](https://nodejs.org/api/fs.html#class-fsstats)

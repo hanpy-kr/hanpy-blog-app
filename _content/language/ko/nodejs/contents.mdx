@@ -1,0 +1,128 @@
+---
+deployment: true  
+category: Language  
+title: 'Node.js Blog Series'  
+summary: 'Node.js Blog Series Contents'  
+pageKey: Nodejs_Blog_Series_Contents  
+lng: KOR  
+publishedAt: 2025-05-01  
+---
+
+# **Node.js Blog Series (4 Parts)**
+
+## **Part 1: Node.js Introduction & Fundamentals**
+
+> Essential concepts, operational principles, and initial setup of Node.js.
+
+### 1. **Introduction to Node.js**
+- Key Features of Node.js <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/introduction)</span>
+- Event Loop  
+  - How the Node.js event loop works  
+  - Callbacks vs. microtasks vs. macrotasks  
+- Asynchronous I/O  
+  - Non-blocking I/O model  
+  - Using callbacks, Promises, and async/await  
+
+### 2. **Installation and Environment Setup**
+
+- OS-specific Installation Methods (Windows, macOS, Linux)
+- Configuring Environment Variables (PATH) <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/introduction-install_env_path)</span>
+- Version Management Using nvm <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/introduction-nvm)</span>
+
+### 3. **Module System and Basic Syntax**
+
+- CommonJS vs. ES Modules  
+  - <codeline>require</codeline> / <codeline>module.exports</codeline> (CommonJS) vs. <codeline>import</codeline> / <codeline>export</codeline> (ES Modules)  
+  - Key differences and interoperability  
+- Built-in Objects and Global Variables (<codeline>process</codeline>, <codeline>global</codeline>)
+
+---
+
+## **Part 2: Built-in Modules in Node.js**
+
+> Learn file management, encoding, networking and process management using built-in Node.js modules.
+
+### 1. **Working with the File System**
+- Managing Files and Directories (<codeline>fs.existsSync <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/lib-fs-existsSync)</span></codeline>, <codeline>fs.lstatSync <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/lib-fs-lstatSync)</span></codeline>, <codeline>fs.statSync  <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/lib-fs-statSync)</span></codeline>, <codeline>path.join</codeline>, <codeline>path.resolve</codeline>)
+- Asynchronous File Operations (<codeline>fs.promises <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/lib-fs-promises)</span></codeline>, <codeline>fs.promises.unlink <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/lib-fs-promises-unlink)</span></codeline>, <codeline>fs.readdir <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/lib-fs-readdir)</span></codeline>, <codeline>fs.readdirSync <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/lib-fs-readdirSync)</span></codeline>)
+
+### 2. **URL Processing and Encoding**
+- Handling URLs Safely (<codeline>encodeURI</codeline>, <codeline>encodeURIComponent</codeline>, <codeline>decodeURI</codeline>, <codeline>decodeURIComponent</codeline>) <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/encoder-decoder)</span>
+
+### 3. **Child Process Management**
+- Executing External Commands (<codeline>child_process.exec</codeline>) <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/utils-child_process-exec)</span>
+- Managing Data Streams (<codeline>child_process.spawn</codeline>) <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/utils-child_process-spawn)</span>
+- Creating Multi-process Applications (<codeline>child_process.fork</codeline>) <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/utils-child_process-fork)</span>
+
+### 4. **Networking**
+- HTTP Servers and Clients (<codeline>http</codeline>, <codeline>https</codeline>)  
+- TCP/Socket Programming (<codeline>net</codeline>)
+
+### 5. **Streams & Buffers**
+- Readable, Writable, Duplex, Transform Streams (<codeline>stream</codeline>)  
+- Working with Binary Data (<codeline>Buffer</codeline>)
+
+### 6. **Utilities**
+- Event Handling (<codeline>events</codeline>)  
+- Utility Functions (<codeline>util</codeline>)  
+- System Information (<codeline>os</codeline>)
+
+### 7. **Cryptography & Compression**
+- Encryption, Hashing, Signatures (<codeline>crypto</codeline>)  
+- Data Compression and Decompression (<codeline>zlib</codeline>)
+
+---
+
+## **Part 3: External Libraries and Utilities**
+
+> Utilize external libraries for date handling and various Node.js utility functions.
+
+### 1. **Date and Time Management**
+- Using the <codeline>dayjs</codeline> Library for Date Manipulation
+
+### 2. **Buffer and JSON Handling**
+- Understanding and Utilizing Buffers
+- Safe JSON Parsing and Stringifying (<codeline>JSON.parse</codeline>, <codeline>JSON.stringify</codeline>)
+
+### 3. **Package Managers**
+- Managing Dependencies with <codeline>npm</codeline> and <codeline>yarn</codeline>
+
+### 4. **Web Frameworks**
+- Building Applications with <codeline>Express</codeline>, <codeline>Koa</codeline>, <codeline>Fastify</codeline>
+
+### 5. **HTTP Clients**
+- Making HTTP Requests with <codeline>axios</codeline> and <codeline>node-fetch</codeline>
+
+### 6. **Utility Libraries**
+- Utility Functions with <codeline>lodash</codeline>
+
+### 7. **Database ORM/ODM**
+- Object-Relational Mapping with <codeline>Sequelize</codeline> and <codeline>TypeORM</codeline>  
+- Working with MongoDB via <codeline>Mongoose</codeline>
+
+### 8. **Testing & Debugging**
+- Testing Frameworks: <codeline>Jest</codeline>, <codeline>Mocha</codeline>  
+- Debugging Utilities: <codeline>debug</codeline>
+
+### 9. **Logging & Monitoring**
+- Application Logging with <codeline>winston</codeline> and <codeline>pino</codeline>  
+- Error Tracking and Performance Monitoring with <codeline>Sentry</codeline>
+
+---
+
+## **Part 4: Error Handling & Performance Optimization**
+
+> Practical approaches to error management, performance monitoring, and optimization for real-world Node.js applications.
+
+### 1. **Error Management and Stack Tracing**
+- Capturing Error Stack Traces (<codeline>Error.captureStackTrace</codeline>)
+- Best Practices in Real-world Error Handling
+
+### 2. **Performance Monitoring and Analysis**
+- Monitoring CPU and Memory Usage (<codeline>process.cpuUsage</codeline>, <codeline>process.memoryUsage</codeline>) <span style={{ color: "#4286f4", fontWeight: "bold" }}> [[Link]](/language/ko/nodejs/beginner-nodejs-cpu-memory-monitoring)</span>
+- Identifying and Resolving Performance Bottlenecks
+
+### 3. **Real-world Operational Considerations**
+- Logging and Monitoring Strategies in Production
+- Deploying and Maintaining Node.js Applications
+
