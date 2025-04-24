@@ -9,7 +9,7 @@ export default function Footer() {
   const context = useContext(ThemeContext)
 
   return (
-    <footer>
+    <footer style={{ marginTop: '25px' }}>
       <div style={{ color: 'gray' }}>©Hanpy Corp. All rights reseved.</div>
       {/* <Link href="/posts/new">글쓰기</Link>
       <Link href="/posts">게시글</Link>

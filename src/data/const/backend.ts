@@ -74,27 +74,27 @@ const subCategoryDetail: {
       [
         {
           href: '/backend/ko/base/architecture-basics-solid-01-srp',
-          title: '[solid] 1. Single Responsibility',
+          title: '[solid] Single Responsibility',
         },
         {
           href: '/backend/ko/base/architecture-basics-solid-02-ocp',
-          title: '[solid] 2. Open Closed',
+          title: '[solid] Open Closed',
         },
         {
           href: '/backend/ko/base/architecture-basics-solid-03-lsp',
-          title: '[solid] 3. Liskov Substitution',
+          title: '[solid] Liskov Substitution',
         },
         {
           href: '/backend/ko/base/architecture-basics-solid-04-isp',
-          title: '[solid] 4. Interface Segregation',
+          title: '[solid] Interface Segregation',
         },
         {
           href: '/backend/ko/base/architecture-basics-solid-05-dip',
-          title: '[solid] 5. Dependency Inversion',
+          title: '[solid] Dependency Inversion',
         },
         {
           href: '/backend/ko/base/architecture-basics-01-layered-architecture',
-          title: 'Layered Architecture',
+          title: '[structure] Layered Architecture',
         },
         {
           href: '/backend/ko/base/message-queue',
@@ -102,6 +102,10 @@ const subCategoryDetail: {
         },
       ],
       [
+        {
+          href: '/backend/ko/base/api-management-api-rate-limiting',
+          title: 'API Rate Limiting',
+        },
         {
           href: '/backend/ko/base/performance-measurement-performance_k6',
           title: 'K6',

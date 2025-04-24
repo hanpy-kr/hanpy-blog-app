@@ -1,0 +1,130 @@
+---
+deployment: true
+category: Backend
+title: 'Redis Atomic Lock(SET NX) 활용법과 동시성 문제 해결 전략'
+summary: 'Redis의 Atomic Lock(SET NX)을 이용해 동시성 문제를 쉽고 빠르게 해결하는 방법을 알아봅니다.'
+pageKey: redis-atomic-lock-setnx
+lng: KOR
+publishedAt: 2025-06-22
+# tags: [Redis, Atomic Lock, SET NX, 분산 락, 동시성 제어]
+---
+
+# Redis Atomic Lock (SET NX)을 활용한 분산 락 및 동시성 문제 해결 전략
+
+개발을 하다 보면 여러 명의 사용자가 동시에 같은 데이터를 수정하거나 접근하는 경우를 자주 만날 수 있습니다. 특히나 요즘처럼 클라우드 기반의 분산 환경이 보편화되면서 동시성 제어(Concurrency Control)는 더욱 중요한 주제가 되었습니다.
+
+<br />
+
+여러 사람이 같은 자원을 동시에 사용할 때 발생하는 대표적인 문제로는 "중복 결제"나 "재고 초과 판매" 같은 심각한 이슈들이 있습니다. 이런 문제를 효율적으로 해결할 때 사용하는 기법 중 하나가 바로 **분산 락**(Distributed Lock)입니다.
+
+<br />
+
+오늘은 분산 락을 구현할 때 자주 사용되는 Redis의 Atomic Lock 기능, 특히 Redis의 <codeline>SET NX</codeline> 명령어에 대해 알아보겠습니다.
+
+---
+
+## 분산 락이란 무엇이고, 왜 Redis를 사용할까요?
+
+**분산 락**(Distributed Lock)은 여러 대의 서버가 동일한 자원에 접근할 때 하나의 서버만 접근할 수 있도록 제한하는 기술입니다. 이를 통해 중요한 데이터를 동시에 수정하는 상황에서 발생할 수 있는 데이터 충돌이나 무결성 문제를 예방할 수 있습니다.
+
+<br />
+
+분산 락을 구현하는 방법은 여러 가지가 있지만, Redis를 사용하는 방법이 널리 활용됩니다. 그 이유는 Redis가 다음과 같은 장점을 갖고 있기 때문이죠.
+
+- 뛰어난 성능과 빠른 응답 속도
+- 간단한 사용법과 높은 확장성
+- Atomic(원자적) 연산 보장
+
+특히 Redis는 하나의 명령어로 Atomic한 연산을 보장하기 때문에, 분산 환경에서도 경쟁 조건(Race Condition) 문제를 효과적으로 방지할 수 있습니다.
+
+---
+
+## Redis SET NX 명령어로 Atomic Lock 구현하기
+
+Redis에서 Atomic Lock을 구현할 때 사용하는 핵심 명령어가 바로 <codeline>SET</codeline> 명령어에 옵션으로 제공되는 <codeline>NX</codeline> (Not Exists) 옵션입니다. 이 옵션은 키가 존재하지 않을 때만 값을 저장하고, 이미 값이 존재하면 아무것도 하지 않는 명령입니다.
+
+<br />
+
+즉, 특정 자원에 대한 락을 얻으려 할 때 이 명령어를 사용하면, 누군가 먼저 락을 획득한 상태라면 두 번째 요청은 락을 얻지 못하게 됩니다. 이것이 바로 Atomic Lock의 핵심 원리입니다.
+
+<br />
+
+아래는 Redis로 간단히 Atomic Lock을 거는 예제입니다.
+
+```bash title="atomic lock" showLineNumbers
+SET resource_lock "locked" NX EX 30
+```
+
+- <codeline>resource_lock</codeline>: 락을 설정할 키
+- <codeline>"locked"</codeline>: 키에 설정할 값 (단순히 표시용)
+- <codeline>NX</codeline>: 키가 존재하지 않을 때만 설정
+- <codeline>EX 30</codeline>: 락의 유효 시간을 30초로 설정하여,
+  데드락(Deadlock)을 방지
+
+이 명령어가 성공하면 락을 획득한 것이고, 실패하면 이미 다른 서버에서 락을 보유하고 있다는 뜻입니다.
+
+---
+
+## 실무 예시로 보는 Redis Atomic Lock 활용 사례
+
+실제로 Redis Atomic Lock은 다양한 비즈니스 상황에서 효과적으로 사용됩니다.
+
+### 예시1. 한정 수량 상품 재고 관리
+
+쇼핑몰에서 인기 상품이 한정 수량으로 판매되는 경우, 동시 주문이 많으면 재고가 마이너스가 되거나 중복 구매 문제가 발생할 수 있습니다. 이때 Redis Atomic Lock을 사용하면 문제를 간단히 해결할 수 있습니다.
+
+<br />
+
+**1. 락 획득 시도**
+
+```bash title="atomic lock" showLineNumbers
+SET item_stock_lock "user123" NX EX 5
+```
+
+<br />
+
+**2. 락 획득 성공 여부 확인 후 재고 차감 진행**
+
+락을 얻었다면 재고 차감 처리를 진행하고, 실패했다면 다른 사용자에게 락이 있는 상태이므로 잠시 후 재시도를 합니다.
+
+### 예시2. 중복 결제 방지
+
+결제 시스템에서도 Atomic Lock을 통해 중복 결제를 방지할 수 있습니다. 사용자가 동일한 결제 요청을 반복적으로 보낼 때 첫 요청만 처리하고, 나머지는 Redis 락으로 차단할 수 있습니다.
+
+```bash title="atomic lock" showLineNumbers
+SET payment_lock:order123 "locked" NX EX 10
+```
+
+이렇게 락을 설정하면 같은 주문 번호로 오는 중복 요청을 손쉽게 차단할 수 있습니다.
+
+---
+
+## Redis Atomic Lock 사용 시 주의사항 및 팁
+
+Redis Atomic Lock을 실무에서 사용할 때 주의할 점도 있습니다.
+
+- <codeline>락 유효시간(EX)</codeline>을 적절히 설정하여 데드락(Deadlock)을
+  방지해야 합니다.
+- 락을 해제할 때는 반드시 키를 정확히 확인한 후 해제합니다. 의도치 않게 다른 사용자의 락을 해제하지 않도록 유의하세요.
+- Redis 장애에 대비하여 Redis 클러스터(Redis Sentinel, Redis Cluster)를 활용하면 더욱 안전하게 사용할 수 있습니다.
+
+---
+
+## 결론 및 정리
+
+<codeline>Redis Atomic Lock (SET NX)</codeline>는 간단한 명령어로 동시성 문제를
+효과적으로 해결할 수 있는 강력한 방법입니다. 특히 경쟁 조건이 발생하기 쉬운
+쇼핑몰 재고 관리나 결제 처리와 같은 비즈니스 로직에서 매우 유용하게 사용할 수
+있습니다.
+
+<br />
+
+오늘 소개한 방법을 잘 활용하면, 간단하면서도 강력한 동시성 제어 기능을 구현할 수 있습니다.
+
+---
+
+## 참고
+
+- [Redis SET Command 공식 문서](https://redis.io/commands/set/)
+- [Redis Distributed Lock Guide](https://redis.io/docs/manual/patterns/distributed-locks/)
+- [Redis Cluster 공식 문서](https://redis.io/docs/management/scaling/)

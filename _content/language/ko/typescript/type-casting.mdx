@@ -1,0 +1,59 @@
+
+
+# Type Casting
+
+타입 캐스팅(Type Casting)이란, 타입스크립트가 특정 값을 원하는 타입으로 해석하도록 강제하는 것이야.
+
+예를 들어, AxiosRequestConfig에는 _retry라는 속성이 없지만, 우리가 수동으로 추가하려고 할 때 타입 오류가 발생할 수 있어.
+이때, **타입 캐스팅(Type Assertion)**을 사용하면 타입스크립트가 오류를 발생시키지 않고 원하는 타입으로 해석할 수 있어.
+
+
+## 🚀 타입 캐스팅의 예시
+
+```
+const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+```
+
+✅ error.config는 원래 AxiosRequestConfig 타입이지만,
+✅ 우리가 _retry라는 속성을 추가하려고 하면 오류가 발생
+✅ 타입 캐스팅을 사용하여 InternalAxiosRequestConfig에 _retry를 추가할 수 있도록 확장!
+
+
+## ⚠️ 타입 캐스팅을 하지 않으면 발생하는 오류
+
+```
+error.config._retry = true; // ❌ 오류 발생! '_retry' 속성이 존재하지 않음
+
+```
+
+이유?
+
+✅ AxiosRequestConfig 타입에는 _retry 속성이 원래 존재하지 않음
+✅ 따라서 _retry 속성을 직접 추가하려고 하면 타입스크립트가 오류를 발생
+
+## 🛠 타입 캐스팅의 종류
+
+
+### 1. as 키워드 사용 (권장)
+```
+const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+```
+
+✅ error.config를 InternalAxiosRequestConfig로 간주하면서 _retry 속성을 추가한 커스텀 타입으로 캐스팅
+✅ 안전하고 직관적인 방식이라 권장됨
+
+### 2. <타입>을 사용하는 방식 (JSX에서 사용 불가능)
+```
+const originalRequest = <InternalAxiosRequestConfig & { _retry?: boolean }>error.config;
+```
+
+⚠️ 이 방식은 JSX 문법과 충돌할 수 있기 때문에 잘 사용하지 않음
+(React 프로젝트에서는 as 키워드를 사용해야 함)
+
+---
+
+## 정리
+
+✅ 타입 캐스팅(Type Casting, Type Assertion) = 타입스크립트가 특정 값을 원하는 타입으로 간주하도록 강제하는 것
+✅ as 키워드를 사용하여 캐스팅하는 방식이 가장 일반적 (as InternalAxiosRequestConfig & { _retry?: boolean })
+✅ 타입 캐스팅은 주의해서 사용해야 하며, 타입이 확실한 경우에만 적용하는 것이 좋음!

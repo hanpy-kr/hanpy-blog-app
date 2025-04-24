@@ -1,0 +1,268 @@
+---
+deployment: true
+category: Backend
+title: 'NestJS로 권한(Authorization) 관리 구현하기'
+summary: 'NestJS에서 사용자 인증과 권한을 관리하는 방법을 AuthGuard, Role-Based Access Control(RBAC)에 대해 알아봅시다.'
+pageKey: nestjs-authorization-guide
+lng: KOR
+publishedAt: 2025-04-12
+# tags: [NestJS, RBAC, Authorization, Backend, 인증, 권한 관리, AuthGuard]
+---
+
+# NestJS로 권한(Authorization) 관리 구현하기
+
+웹 서비스를 개발할 때 가장 중요한 부분 중 하나는 바로 **권한 관리**입니다. 특히 여러 역할(roles)을 가진 사용자들이 존재하는 경우, 어떤 사용자에게 어떤 권한을 부여할지 명확히 정의해야 하죠. NestJS는 이를 효율적으로 해결하기 위해 **Role-Based Access Control**(RBAC)와 **AuthGuard**라는 강력한 인증 미들웨어를 제공합니다.
+
+<br />
+
+Authorization(인가)은 사용자가 **무엇을 할 수 있는지 결정**하는 과정입니다. 예를 들어, 관리자(Admin)는 게시글 생성, 수정, 삭제가 가능하지만 일반 사용자(User)는 읽기만 허용하는 식입니다. NestJS에서는 **Guard와 Custom Decorator**를 이용해 간단한 RBAC(Role-Based Access Control) 방식을 구현할 수 있습니다.
+
+## 2. Role Enum 생성
+
+먼저 시스템 내 역할을 정의하는 Role Enum을 생성합니다.
+
+### role.enum.ts
+
+```typescript title="Enum Role" showLineNumbers
+export enum Role {
+  User = 'user',
+  Admin = 'admin',
+}
+```
+
+> 실무에서는 이 역할 정보를 DB나 외부 인증 시스템에서 받아오는 경우도 많습니다.
+
+## 3. @Roles() 커스텀 데코레이터 생성
+
+해당 데코레이터는 특정 API가 어떤 Role에게만 허용되는지 정의할 수 있게 해줍니다.
+
+### roles.decorator.ts
+
+```typescript
+import { SetMetadata } from '@nestjs/common'
+import { Role } from './role.enum'
+
+export const ROLES_KEY = 'roles'
+export const Roles = (...roles: Role[]) => SetMetadata(ROLES_KEY, roles)
+```
+
+## 4. 컨트롤러에서 사용 예시
+
+@Roles(Role.Admin) 데코레이터를 통해 **관리자만 접근 가능한 API**를 만들 수 있습니다.
+
+```typescript
+@Post()
+@Roles(Role.Admin)
+create(@Body() createCatDto: CreateCatDto) {
+  this.catsService.create(createCatDto);
+}
+```
+
+## 5. RolesGuard 생성 (핵심 로직)
+
+RolesGuard는 현재 요청한 사용자의 Role이 해당 API 접근에 적합한지 검사합니다.
+
+### roles.guard.ts
+
+```typescript
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
+import { Reflector } from '@nestjs/core'
+import { ROLES_KEY } from './roles.decorator'
+import { Role } from './role.enum'
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ])
+
+    if (!requiredRoles) {
+      return true // role 제한 없음
+    }
+
+    const { user } = context.switchToHttp().getRequest()
+    return requiredRoles.some((role) => user.roles?.includes(role))
+  }
+}
+```
+
+> Reflector는 커스텀 데코레이터로 설정한 메타데이터를 읽어옵니다.
+
+## 6. User 객체 구조 예시
+
+RolesGuard가 user.roles를 검사하므로 User 객체 안에 roles 배열이 있어야 합니다.
+
+```typescript
+class User {
+  id: number
+  username: string
+  roles: Role[]
+}
+```
+
+> user 정보는 JwtAuthGuard 같은 커스텀 AuthGuard에서 request.user에 주입해야 합니다.
+
+## 7. RolesGuard 전역 등록 (APP_GUARD)
+
+모든 컨트롤러에서 RolesGuard가 적용되게 하려면 전역 가드로 등록합니다.
+
+### app.module.ts
+
+```typescript
+import { APP_GUARD } from '@nestjs/core'
+
+@Module({
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
+})
+export class AppModule {}
+```
+
+## 8. 실패 시 반환 예시
+
+권한이 없는 사용자가 접근하면 NestJS가 자동으로 아래와 같은 403 에러를 반환합니다.
+
+```json
+{
+  "statusCode": 403,
+  "message": "Forbidden resource",
+  "error": "Forbidden"
+}
+```
+
+> 커스텀 에러 메시지를 원하면 RolesGuard에서 ForbiddenException을 직접 throw 하면 됩니다.
+
+---
+
+## ✅ 정리
+
+- @Roles()로 API 별 Role 지정
+- RolesGuard로 Role 검사
+- APP_GUARD로 전역 적용
+
+RBAC는 프로젝트의 보안성과 관리 효율성을 높여줍니다. 향후 확장성을 고려해 DB나 외부 인증 시스템과 연동해보는 것도 좋습니다.
+
+## 🚩 AuthGuard란 무엇인가요?
+
+NestJS에서는 인증 여부를 검사하기 위해 **AuthGuard**라는 편리한 개념을 제공합니다. AuthGuard는 요청이 컨트롤러에 도달하기 전에 실행되어 사용자의 인증 상태를 확인하는 미들웨어 역할을 합니다.
+
+예를 들어, 특정 API에 접근하려면 사용자가 반드시 로그인된 상태여야 하는 경우, 컨트롤러의 엔드포인트 위에 아래와 같이 설정하면 됩니다.
+
+<codeline>auth.guard.ts 예제</codeline>
+
+```typescript
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest()
+    const user = request.user
+
+    return Boolean(user) // 로그인된 사용자만 접근 허용
+  }
+}
+```
+
+이렇게 작성된 AuthGuard를 컨트롤러나 메서드 레벨에서 적용하면, 해당 API에 접근하는 사용자에 대해 인증 검사를 자동으로 수행합니다.
+
+---
+
+## 🔐 RBAC(Role-Based Access Control)의 개념 이해하기
+
+RBAC는 사용자의 역할(예: 관리자, 일반 사용자, 게스트 등)을 기반으로 접근 권한을 제어하는 방식입니다. 역할을 기반으로 관리하기 때문에 권한 관리를 명확하고 간단하게 할 수 있어 실무에서 매우 많이 사용되는 방법입니다.
+
+간단히 NestJS에서 RBAC를 적용하는 예제를 살펴보겠습니다.
+
+```typescript
+import { SetMetadata } from '@nestjs/common'
+
+// 역할 정의
+export enum Role {
+  User = 'user',
+  Admin = 'admin',
+}
+
+export const Roles = (...roles: string[]) => SetMetadata('roles', roles)
+```
+
+이제 컨트롤러에서 이 역할을 간편히 부여할 수 있습니다:
+
+```typescript
+@Controller('users')
+export class UserController {
+  @Get()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin') // 어드민 사용자만 접근 가능
+  findAll() {
+    return '관리자만 볼 수 있는 데이터'
+  }
+}
+```
+
+---
+
+## 🔐 RBAC를 효과적으로 구현하는 방법 (RolesGuard)
+
+NestJS에서는 RBAC를 더욱 쉽게 구현할 수 있도록 **RolesGuard**라는 Guard를 사용합니다. 다음과 같이 구현하여 사용자의 역할을 검사하고 권한을 부여합니다.
+
+```typescript
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
+    const roles = this.reflectRoles(context)
+    if (!roles) return true // 별도 역할이 설정되지 않으면 접근 허용
+
+    const request = context.switchToHttp().getRequest()
+    const user = request.user
+
+    return roles.includes(user.role) // 사용자 역할이 일치하면 접근 허용
+  }
+
+  private reflectRoles(context: ExecutionContext): string[] {
+    return Reflect.getMetadata('roles', context.getHandler())
+  }
+}
+```
+
+이처럼 간단한 코드로 역할 기반 권한 제어를 효율적으로 관리할 수 있습니다.
+
+---
+
+## ⚠️ NestJS 권한 관리 시 주의할 점
+
+실무 환경에서 NestJS 권한 관리를 도입할 때 놓치기 쉬운 포인트를 몇 가지 짚어드리겠습니다.
+
+- **AuthGuard와 RolesGuard를 항상 함께 사용하세요.**  
+  인증(Auth)과 권한 관리(Roles)는 분리된 개념이며, 반드시 별도의 가드로 관리하여 명확성을 유지해야 합니다.
+- **미들웨어(Guard) 재사용성을 높이세요.**  
+  AuthGuard와 RolesGuard는 가능한 범용적으로 설계하여, 모든 컨트롤러에서 쉽게 사용할 수 있도록 하는 것이 좋습니다.
+
+- **무조건 인증이 필요한 경우 전역 가드를 사용하는 것도 좋은 방법입니다.**  
+  NestJS의 <codeline>app.useGlobalGuards()</codeline>를 사용하면, 전체 서비스의 기본 인증 정책을 효과적으로 관리할 수 있습니다.
+
+---
+
+## 📌 정리 및 결론
+
+RBAC(Role-Based Access Control)와 AuthGuard를 함께 사용하면 NestJS에서 명확한 권한 제어가 가능하며, 복잡한 권한 관리를 보다 손쉽고 안정적으로 처리할 수 있습니다. 복잡한 사용자 권한 체계를 효과적으로 관리해야 한다면, 이 글에서 소개한 NestJS의 AuthGuard와 RBAC 방식을 적극 활용해 보시길 권장합니다.
+
+이제 권한 관리로 고민하지 말고, 더욱 안전하고 효율적인 NestJS 서비스를 만들어보세요!
+
+---
+
+## 참고
+
+- [NestJS 공식 문서 - Guards](https://docs.nestjs.com/guards)
+- [NestJS 공식 문서 - Authorization (RBAC)](https://docs.nestjs.com/security/authorization)
+- [Express.js CSRF Protection](https://expressjs.com/en/resources/middleware/csurf.html) (보안 참고용)
