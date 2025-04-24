@@ -1,0 +1,202 @@
+---
+deployment: true
+category: Backend
+title: 'API Rate Limiting'
+summary: '서비스의 안정성을 유지하고 시스템을 보호하는 API Rate Limiting의 개념과 다양한 알고리즘을 알아봅시다.'
+pageKey: api_rate_limiting_practical_guide
+lng: KOR
+publishedAt: 2025-11-02
+# tags: [API, Rate Limiting, Backend, 성능 최적화, 시스템 보호]
+---
+
+# API Rate Limiting
+
+"갑자기 웹사이트 접속이 느려졌어요!", "앱이 응답을 안 해요!" 개발을 하다 보면 이런 긴급한 연락을 받을 때가 종종 있습니다. 서비스가 인기를 얻어 많은 사용자들이 몰리는 건 좋은 일이지만, 과도한 트래픽이 한꺼번에 몰리면 서비스가 불안정해지거나 심지어 중단될 수 있습니다.
+
+<br />
+
+이러한 문제를 미연에 방지하고 서비스 가용성을 유지하기 위한 중요한 기술 중 하나가 바로 <codeline>API Rate Limiting</codeline>입니다. 이번 글에서는 API Rate Limiting의 필요성과 실무에서 효과적으로 활용하는 방법을 보다 깊이 있게 살펴보겠습니다.
+
+---
+
+## 1. API Rate Limiting이란 무엇일까요?
+
+<codeline>Rate Limiting</codeline>은 **일정 시간 동안 클라이언트가 API를 호출할 수 있는 횟수를 제한**하는 기술입니다. 예를 들어, "1분에 최대 100번의 요청 허용"과 같은 방식입니다. 이를 통해 과도한 요청으로부터 시스템 자원을 보호하고 서비스 안정성을 유지할 수 있습니다.
+
+<br />
+
+제한 횟수를 초과하면 일반적으로 클라이언트에게 <codeline>HTTP 상태 코드 429 - Too Many Requests</codeline>를 반환하여 명확히 알립니다. 추가적으로 응답 헤더에 다음 정보를 제공하면 더욱 명확한 안내가 가능합니다.
+
+- <codeline>X-RateLimit-Limit</codeline>: 최대 허용 횟수
+- <codeline>X-RateLimit-Remaining</codeline>: 남은 횟수
+- <codeline>X-RateLimit-Reset</codeline>: 제한 초기화까지 남은 시간
+
+---
+
+## 2. Rate Limiting vs. Rate Shaping
+
+혼잡 제어 기법에는 <codeline>Rate Limiting</codeline> 외에도 <codeline>Rate Shaping</codeline>이라는 기술이 있습니다. 이 둘의 차이는 간단히 다음과 같습니다.
+
+- **Rate Limiting**: 제한을 넘는 즉시 차단하며 서비스 자원을 즉각 보호합니다.
+- **Rate Shaping**: 요청이 늘어날수록 응답 속도를 점진적으로 조절하여 사용자 경험을 부드럽게 유지합니다.
+
+실무에서는 보통 Rate Limiting을 기본으로 적용하고, 좀 더 고급 전략이 필요할 때 Rate Shaping을 선택적으로 사용합니다.
+
+---
+
+## 3. Rate Limiting 알고리즘
+
+실무에서 자주 사용되는 대표적인 Rate Limiting 알고리즘을 구체적으로 살펴봅니다.
+
+### 3-1. Fixed Window (고정 시간 창 방식)
+
+고정된 시간 단위(예: 1분) 내에 특정 수의 요청만 허용하는 방식입니다.
+
+- **장점**: 이해하기 쉽고 간단한 구현
+- **단점**: 특정 시간대 말미에 요청이 몰리면 순간적 폭주가 발생할 수 있음
+
+```javascript title="API Rate Limiting" showLineNumbers
+const rateLimitStore = {}
+
+function fixedWindowLimiter(req, res, next) {
+  const currentMinute = Math.floor(Date.now() / 60000) // 현재 분 단위 시간
+  rateLimitStore[currentMinute] = (rateLimitStore[currentMinute] || 0) + 1
+
+  if (rateLimitStore[currentMinute] > 100) {
+    return res.status(429).json({ message: 'Too Many Requests' })
+  }
+}
+```
+
+---
+
+### 3-2. Sliding Window (슬라이딩 윈도우 방식)
+
+고정 창의 단점을 보완해, 최근 일정 시간 동안의 요청 수를 동적으로 확인하여 제한을 적용합니다.
+
+- **장점**: 정교하게 요청을 제한 가능
+- **단점**: 메모리 사용량이 증가할 수 있음
+
+```javascript title="API Rate Limiting" showLineNumbers
+const WINDOW_SIZE_MS = 60000;              // 1분
+const MAX_REQUESTS_PER_WINDOW = 100;       // 최대 100회
+
+const requestLog = []
+
+function slidingWindowLimiter(req, res, next) {
+  const now = Date.now()
+  requestLog.push(now)
+
+  // 오래된 기록이 있으면 배열 맨 앞(가장 오래된)부터 제거 (60s 이전 기록 정리)
+  while (requestLog.length && requestLog[0] < now - WINDOW_SIZE_MS) {
+    requestLog.shift()
+  }
+
+  // 최근 1분간 요청이 100건 초과하면 제한
+  if (requestLog.length > MAX_REQUESTS_PER_WINDOW) {
+    return res.status(429).json({ message: 'Too Many Requests' })
+  }
+}
+```
+
+---
+
+### 3-3. Token Bucket (토큰 버킷 알고리즘)
+
+지정된 속도로 채워지는 토큰을 사용하며 요청 시 토큰을 소모하는 방식입니다.
+
+- **장점**: 순간적인 요청 폭증 대응에 유리
+- **단점**: 구현이 상대적으로 복잡할 수 있음
+
+```javascript title="API Rate Limiting" showLineNumbers
+/**
+ * capacity: 버킷의 최대 토큰 수
+ * refillRate: 초당 충전할 토큰 수
+ */
+class TokenBucket {
+  constructor(capacity, refillRate) {
+    this.capacity = capacity        // 버킷 최대 토큰 수
+    this.tokens = capacity          // 현재 가진 토큰 수 (초기엔 가득)
+    this.refillRate = refillRate    // 초당 충전할 토큰 수
+    this.lastRefill = Date.now()    // 마지막 충전 시각
+  }
+
+  allowRequest() {
+    const now = Date.now()
+    // 지난 시간(초) * 초당 충전율 만큼 토큰을 보충
+    const refill = ((now - this.lastRefill) / 1000) * this.refillRate
+    // 토큰을 현재값 + 추가량 계산, capacity 이상은 넘지 않도록
+    this.tokens = Math.min(this.capacity, this.tokens + refill)
+    this.lastRefill = now
+
+    // 토큰이 1개 이상 남아 있으면 하나 소비하고 허용
+    if (this.tokens >= 1) {
+      this.tokens -= 1
+      return true
+    }
+    return false
+  }
+}
+```
+
+---
+
+### 3-4. Leaky Bucket (누수 버킷 알고리즘)
+
+토큰 버킷과 유사하지만 요청 처리 속도를 일정하게 유지하는 방식입니다.
+
+- **장점**: 처리량을 일정하게 유지 가능
+- **단점**: 처리 속도 초과 요청은 즉시 거부됨
+
+```javascript title="API Rate Limiting" showLineNumbers
+class LeakyBucket {
+  constructor(capacity, leakRate) {
+    this.capacity = capacity        // 버킷의 최대 용량(최대 누적 요청 수)
+    this.water = 0                  // 현재 버킷에 담긴 “물”(요청) 양
+    this.leakRate = leakRate        // 초당 흘려보낼(처리할) 요청 수
+    this.lastChecked = Date.now()   // 마지막으로 누수(처리) 계산을 한 시각
+  }
+
+  allowRequest() {
+    const now = Date.now()
+    // 지난 시간(초) 동안 흘러나간 물(처리된 요청) 양
+    const leaked = ((now - this.lastChecked) / 1000) * this.leakRate
+    // 버킷에서 흘러나간 만큼 물을 빼되, 최소 0 이상 유지
+    this.water = Math.max(0, this.water - leaked)
+    this.lastChecked = now
+    // 새 요청 1단위를 더 담아도 용량(capacity)을 넘지 않으면 허용
+    if (this.water + 1 <= this.capacity) {
+      this.water += 1
+      return true
+    }
+    return false
+  }
+}
+```
+
+---
+
+## 4. Rate Limiting 최적화 방법
+
+효과적으로 Rate Limiting을 적용하기 위해서는 다음과 같은 사항을 고려해야 합니다.
+
+- 시스템 부하 및 트래픽 패턴 분석을 통해 적절한 알고리즘과 제한 값을 결정합니다.
+- 분산 서버 환경에서는 Redis와 같은 분산 캐시를 사용해 일관된 Rate Limiting 정책을 유지합니다.
+- 명확한 상태 코드 및 헤더 반환을 통해 클라이언트가 정확히 상황을 파악할 수 있도록 합니다.
+
+---
+
+## 정리
+
+API Rate Limiting은 서비스 가용성을 유지하고 시스템 보호를 위한 필수 기술로, Fixed Window, Sliding Window, Token Bucket, Leaky Bucket 같은 다양한 알고리즘으로 구현 가능합니다.
+
+<br />
+
+알고리즘은 서비스 특성과 트래픽 패턴에 맞게 선택하며, 분산 환경에서는 Redis와 같은 캐시 시스템을 활용하여 정확한 Rate Limiting 구현이 필수적이라 할 수 있습니다.
+
+---
+
+## 참고
+
+- [AWS API Gateway - Rate Limiting](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-request-throttling.html)
+- [MDN Web Docs - HTTP 429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429)

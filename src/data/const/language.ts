@@ -1,6 +1,6 @@
 export enum LanguageCategory {
-  TYPESCRIPT = 'typescript',
   NODEJS = 'nodejs',
+  TYPESCRIPT = 'typescript',
 }
 
 const subCategory: Record<

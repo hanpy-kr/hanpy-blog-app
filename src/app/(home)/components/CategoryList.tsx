@@ -25,6 +25,10 @@ export default function CategoryList({ defaultTab = 'All' }) {
     <>
       <HStack justify={'center'}>
         <Stack w={'90%'} maxW={'800px'} gap={'20px'} borderRadius={'8px'}>
+          <CategoryListItem
+            target={BlogTargetCategory.LANGUAGE}
+            bg={'#faf6f5'}
+          />
           {/* // BACKEND SECTION ================================= */}
           <CategoryListItem
             target={BlogTargetCategory.BACKEND}
@@ -32,10 +36,6 @@ export default function CategoryList({ defaultTab = 'All' }) {
           />
           <CategoryListItem target={BlogTargetCategory.DESIGN} bg={'#faf3f5'} />
           <CategoryListItem target={BlogTargetCategory.INFRA} bg={'#fafaf5'} />
-          <CategoryListItem
-            target={BlogTargetCategory.LANGUAGE}
-            bg={'#faf6f5'}
-          />
         </Stack>
       </HStack>
     </>
