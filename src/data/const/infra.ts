@@ -2,7 +2,7 @@ export enum InfraCategory {
   BASE = 'base',
   KUBERNETES = 'kubernetes',
   DOCKER = 'docker',
-  COMPUTE_INFRASTRUCTURE = 'compute-infrastructure'
+  COMPUTE_INFRASTRUCTURE = 'compute-infrastructure',
 }
 
 const subCategory: Record<
@@ -85,7 +85,16 @@ const subCategoryDetail: {
           title: 'firewall & Network Policy',
         },
       ],
-      [],
+      [
+        {
+          href: '/infra/ko/base/git-trouble-shoot-not_fast_forward_abort_fix',
+          title: '[git] Not possible to fast-forward',
+        },
+        {
+          href: '/infra/ko/base/git-trouble-shoot-could_not_detach_head',
+          title: '[git] could not detach HEAD',
+        },
+      ],
     ],
   },
   docker: {
@@ -194,10 +203,10 @@ const subCategoryDetail: {
         {
           href: '/infra/ko/compute-infrastructure/serverless-3-architecture',
           title: 'Architecture',
-        }
-      ]
+        },
+      ],
     ],
-  }
+  },
 }
 
 // Nav 목차
