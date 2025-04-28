@@ -3,17 +3,17 @@ import { ItemType } from '../service/types'
 export const businessPatterns: ItemType[] = [
   {
     id: 'BUSINESS_SENTENCE_26',
-    en: 'I\'m having trouble connecting to the internet, can you hear me?.',
+    en: "I'm having trouble connecting to the internet, can you hear me?.",
     ko: '인터넷에 연결하는 데 문제가 있습니다. 제 목소리가 들리나요?',
   },
   {
     id: 'BUSINESS_SENTENCE_27',
-    en: 'Can someone help me troubleshoot why I can\'t see the presentation slides?',
+    en: "Can someone help me troubleshoot why I can't see the presentation slides?",
     ko: '프레젠테이션 슬라이드가 보이지 않는 문제 해결을 도와줄 사람이 있습니까?',
   },
   {
     id: 'BUSINESS_SENTENCE_28',
-    en: 'Whatever you do, please don\'t forget to submit your report before the deadline',
+    en: "Whatever you do, please don't forget to submit your report before the deadline",
     ko: '무엇을 하든지 마감일 전에 보고서를 제출하는 것을 잊지 마십시오.',
   },
   {

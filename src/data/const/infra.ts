@@ -2,6 +2,7 @@ export enum InfraCategory {
   BASE = 'base',
   KUBERNETES = 'kubernetes',
   DOCKER = 'docker',
+  COMPUTE_INFRASTRUCTURE = 'compute-infrastructure'
 }
 
 const subCategory: Record<
@@ -37,6 +38,14 @@ const subCategory: Record<
       'Focuses on Kubernetes, the industry-leading container orchestration platform. Learn about deployment strategies, pods, services, scalability, monitoring, best practices, troubleshooting, and advanced concepts to efficiently manage containerized applications in production environments.',
     href: '/infra/ko/kubernetes/1-1.Introduction',
     icon: '/icons/kubernetes.svg',
+  },
+  [InfraCategory.COMPUTE_INFRASTRUCTURE]: {
+    id: InfraCategory.COMPUTE_INFRASTRUCTURE,
+    name: 'compute infrastructure',
+    description:
+      'Covers the critical foundations of modern compute environments, including GPU clusters, serverless platforms, high-performance computing, and resource orchestration. Learn how to optimize, scale, and manage diverse compute resources efficiently across on-premise and cloud environments for various workloads such as AI, backend services, and scientific applications.',
+    href: '/infra/ko/compute-infrastructure/serverless-1-intro',
+    icon: '/icons/utils.svg',
   },
 }
 
@@ -170,6 +179,25 @@ const subCategoryDetail: {
       ],
     ],
   },
+  [InfraCategory.COMPUTE_INFRASTRUCTURE]: {
+    title: ['Serverless'],
+    subTitle: [
+      [
+        {
+          href: '/infra/ko/compute-infrastructure/serverless-1-intro',
+          title: 'Introduction',
+        },
+        {
+          href: '/infra/ko/compute-infrastructure/serverless-2-compare',
+          title: 'Services',
+        },
+        {
+          href: '/infra/ko/compute-infrastructure/serverless-3-architecture',
+          title: 'Architecture',
+        }
+      ]
+    ],
+  }
 }
 
 // Nav 목차
