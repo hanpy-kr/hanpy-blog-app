@@ -1,0 +1,110 @@
+---
+deployment: true
+category: Backend
+title: 'Serverless 아키텍처 설계 핵심 구성 요소 (Serverless Series 3편)'
+summary: '실무에서 Serverless 아키텍처를 설계할 때 필수적으로 고려해야 하는 핵심 요소들을 정리합니다.'
+pageKey: serverless_architecture_essentials
+lng: KOR
+publishedAt: 2025-06-05
+# tags: [Serverless, Architecture, Backend, Cloud]
+---
+
+# Serverless 아키텍처 설계 핵심 구성 요소
+
+Serverless 플랫폼을 선택했다면, 이제 실제 아키텍처를 어떻게 설계할 것인지 고민해야 합니다. 단순히 함수를 작성하는 것만으로는 충분하지 않습니다. 안정성, 확장성, 보안성, 그리고 비용 최적화까지 고려한 종합적인 설계가 필요합니다. 이번 글에서는 Serverless 아키텍처를 성공적으로 구축하기 위해 반드시 이해하고 준비해야 할 핵심 구성 요소들을 알아봅시다.
+
+---
+
+# 이벤트 소스(Event Source)
+
+Serverless 아키텍처의 중심에는 항상 "이벤트"가 있습니다. 함수(Function)는 특정 이벤트(HTTP 요청, 데이터베이스 변경, 파일 업로드, 메시지 큐 신호 등)가 발생할 때만 실행됩니다. 즉, 이벤트 기반 아키텍처(Event-Driven Architecture)를 자연스럽게 따라가야 합니다.
+
+<br />
+
+어떤 이벤트가 발생했을 때 어떤 함수가 호출될지 명확히 매핑하는 것이 중요합니다. 이벤트의 흐름을 체계적으로 관리하지 않으면, 디버깅이나 장애 대응이 어렵고 서비스의 복잡도가 급격히 증가할 수 있습니다.
+
+- AWS: S3 객체 업로드, DynamoDB 스트림, SNS 알림, SQS 메시지 수신 등
+- GCP: Pub/Sub 메시지 발행, Cloud Storage 파일 업로드 등
+- Azure: Blob Storage 변경, Service Bus 메시지 수신 등
+
+복잡한 이벤트 흐름을 가진 시스템에서는 이벤트 소스 간 의존성과 순서를 명확히 설계하는 것이 필수적입니다.
+
+---
+
+# API Gateway 및 인증(Auth)
+
+외부에서 들어오는 HTTP 요청을 처리하려면 API Gateway를 필수적으로 설정해야 합니다. API Gateway는 요청을 받아 Serverless 함수로 라우팅할 뿐만 아니라, 보안과 트래픽 제어의 관문 역할을 합니다. API Gateway 설계 시 고려할 점은 다음과 같습니다.
+
+- **인증(Authentication)**: OAuth2, OpenID Connect, IAM 인증, API Key 인증 등 다양한 방식을 지원합니다.
+- **인가(Authorization)**: 사용자 역할(Role)에 따라 접근 권한을 세분화해야 합니다.
+- **요청 검증(Request Validation)**: 잘못된 요청을 사전에 차단하여 함수의 부담을 줄입니다.
+- **Rate Limiting 및 Throttling**: 서비스 안정성을 위해 초당 요청 수를 제한합니다.
+- **사용자 정의 응답 매핑(Response Mapping)**: 클라이언트에 일관된 형태의 응답을 제공합니다.
+
+API Gateway와 인증 체계가 허술하면 보안 사고로 직결될 수 있으니, 처음부터 강력하게 설계하는 것이 중요합니다.
+
+---
+
+# 함수(Function) 설계
+
+Serverless 함수는 작고 가벼워야 하며, 빠르게 실행되어야 합니다. 이를 위해 다음과 같은 설계 원칙을 지켜야 합니다.
+
+- **단일 책임 원칙(Single Responsibility Principle)**: 한 함수는 한 가지 일만 처리하도록 명확히 분리합니다.
+- **짧은 실행 시간**: 함수 실행이 길어질수록 비용이 증가하고, 타임아웃 오류가 발생할 가능성도 높아집니다.
+- **Cold Start 최소화**: 초기화 시간이 긴 라이브러리 로드, 데이터베이스 연결은 최소화하거나 초기화 타이밍을 최적화합니다.
+- **Idempotency(멱등성) 보장**: 동일 요청이 여러 번 들어와도 결과가 변하지 않도록 설계하여, 장애 복구나 재시도 로직에서 문제가 발생하지 않도록 합니다.
+
+또한, 함수 간 의존성을 최소화하여 유지보수성을 높이는 것도 중요합니다.
+
+---
+
+# 상태 관리(State Management)
+
+Serverless 아키텍처는 기본적으로 Stateless(무상태)를 지향합니다. 그러나 현실적인 애플리케이션에서는 사용자의 세션, 워크플로우 진행 상태, 장기 트랜잭션 관리 등 상태가 필요한 경우가 많습니다. 이를 위해 외부 저장소를 활용해야 합니다.
+
+- **단기 상태 저장**: Redis, DynamoDB, Firestore 등을 활용해 빠른 세션 관리
+- **장기 워크플로우 상태 관리**: Step Functions(AWS), Workflows(GCP), Durable Functions(Azure)을 사용해 복잡한 작업 순서 관리
+- **이벤트 소싱(Event Sourcing)**: 모든 상태 변경을 이벤트로 기록해 일관성을 유지하는 패턴도 고려할 수 있습니다.
+
+상태를 함수 내에 보관하는 순간 Serverless의 장점을 잃게 되므로, 무조건 외부화하는 것이 기본 전략입니다.
+
+---
+
+# 모니터링 및 로깅
+
+Serverless 환경에서는 서버에 직접 SSH 접속해 로그를 확인할 수 없습니다. 따라서 철저한 모니터링과 로깅 시스템 구축이 필수입니다.
+
+- **로그 수집**: CloudWatch Logs(AWS), Stackdriver Logging(GCP), Azure Monitor를 통해 모든 함수 로그를 중앙 수집합니다.
+- **메트릭 수집**: 호출 횟수, 오류율, 응답 시간, 리소스 사용량 등을 실시간으로 모니터링합니다.
+- **알람 설정**: 오류율 급증, 호출 지연 발생 시 Slack, 이메일 등으로 빠르게 알림을 받을 수 있도록 합니다.
+- **분산 추적(Distributed Tracing)**: 복잡한 함수 호출 체인을 시각화하여 문제 원인을 빠르게 파악할 수 있도록 구성합니다.
+
+효과적인 모니터링 없이는 장애 원인 파악과 대응이 느려지고, 심각한 운영 이슈로 이어질 수 있습니다.
+
+---
+
+# 비용 최적화
+
+Serverless는 기본적으로 사용한 만큼 과금하는 구조지만, 잘못 설계하면 예상보다 훨씬 높은 요금이 청구될 수 있습니다.
+
+- **함수 실행 시간 최적화**: 비효율적인 코드나 불필요한 외부 API 호출을 줄여야 합니다.
+- **메모리 설정 최적화**: 과도한 메모리 설정은 낭비지만, 메모리를 적절히 높이면 실행 속도가 개선되어 오히려 비용이 줄어들 수 있습니다.
+- **요청 병합(Batching)**: 너무 세분화된 호출을 합쳐서 처리하면 호출 수를 줄이고 비용을 절감할 수 있습니다.
+- **Cache 활용**: 빈번하게 사용되는 데이터는 Redis, Cloud Memorystore 등을 이용해 캐싱하여 반복 연산 비용을 절감합니다.
+- **프로비저닝 콘커런시 사용 여부**: 콜드 스타트를 줄이기 위해 Provisioned Concurrency를 설정할 경우, 그 자체도 비용에 영향을 미치므로 신중하게 조정해야 합니다.
+
+장기적인 관점에서 비용을 관리하려면, 지속적인 리소스 최적화 작업이 반드시 필요합니다.
+
+---
+
+# 마무리
+
+Serverless 아키텍처 설계는 단순한 코드 작성 그 이상의 작업입니다. 이벤트 흐름, 인증과 보안, 상태 관리, 모니터링, 비용 최적화까지 아우르는 체계적이고 전략적인 접근이 필요합니다. 핵심은 '가능한 단순하게 유지하되, 필요한 복잡성은 반드시 관리할 수 있도록 설계하는 것'입니다. 앞으로 이어질 글에서는 이러한 구성 요소들을 실제 예제 기반으로 조합하여, 실전 환경에서 Serverless 아키텍처를 구축하는 방법을 구체적으로 살펴보겠습니다.
+
+---
+
+# 참고 자료
+
+- [AWS Serverless Best Practices](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
+- [Google Cloud Functions Best Practices](https://cloud.google.com/functions/docs/bestpractices)
+- [Azure Functions 개발자 가이드](https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference)

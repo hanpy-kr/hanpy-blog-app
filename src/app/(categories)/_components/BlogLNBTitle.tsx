@@ -124,28 +124,23 @@ const BlogLNBTitle = ({
         {CONTENT_CATEGORY[type].subCategoryDetail[subType].title.map(
           (value: any, index: any) => {
             return (
-              <>
-                <li className="LBN__subTitle">
-                  <h2 className="LBN__title">{value}</h2>
-                  <ul
-                    className="LBN__subTitle__container"
-                    key={`${JSON.stringify(value)}_${index}`}
-                  >
-                    {CONTENT_CATEGORY[type].subCategoryDetail[subType].subTitle[
-                      index
-                    ].map((subValue: any, subIndex: any) => {
-                      return (
-                        <Link
-                          href={subValue.href}
-                          key={`${subValue.title}_${subIndex}`}
-                        >
-                          <li className="LBN__subTitle">{subValue.title}</li>
-                        </Link>
-                      )
-                    })}
-                  </ul>
-                </li>
-              </>
+              <li key={`title_${index}`} className="LBN__subTitle">
+                <h2 className="LBN__title">{value}</h2>
+                <ul className="LBN__subTitle__container">
+                  {CONTENT_CATEGORY[type].subCategoryDetail[subType].subTitle[
+                    index
+                  ].map((subValue: any, subIndex: any) => {
+                    return (
+                      <Link
+                        href={subValue.href}
+                        key={`${subValue.title}_${subIndex}`}
+                      >
+                        <li className="LBN__subTitle">{subValue.title}</li>
+                      </Link>
+                    )
+                  })}
+                </ul>
+              </li>
             )
           },
         )}

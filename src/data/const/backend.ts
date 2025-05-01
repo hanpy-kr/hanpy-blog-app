@@ -244,6 +244,10 @@ const subCategoryDetail: {
           href: '/backend/ko/database/redis-BullMQ-01-overview',
           title: 'BullMQ Overview',
         },
+        {
+          href: '/backend/ko/database/redis-atomic-lock',
+          title: 'Atomic Lock (SET NX)',
+        },
       ],
       [
         {

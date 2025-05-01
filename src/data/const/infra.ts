@@ -41,7 +41,7 @@ const subCategory: Record<
   },
   [InfraCategory.COMPUTE_INFRASTRUCTURE]: {
     id: InfraCategory.COMPUTE_INFRASTRUCTURE,
-    name: 'compute infrastructure',
+    name: 'compute infra',
     description:
       'Covers the critical foundations of modern compute environments, including GPU clusters, serverless platforms, high-performance computing, and resource orchestration. Learn how to optimize, scale, and manage diverse compute resources efficiently across on-premise and cloud environments for various workloads such as AI, backend services, and scientific applications.',
     href: '/infra/ko/compute-infrastructure/serverless-1-intro',
@@ -76,6 +76,10 @@ const subCategoryDetail: {
         },
       ],
       [
+        {
+          href: '/infra/ko/base/aws-efs',
+          title: 'AWS - EFS',
+        },
         {
           href: '/infra/ko/base/internal-network-to-saas-communication',
           title: 'Internal Network to SaaS',
@@ -189,7 +193,7 @@ const subCategoryDetail: {
     ],
   },
   [InfraCategory.COMPUTE_INFRASTRUCTURE]: {
-    title: ['Serverless'],
+    title: ['Serverless', 'GPU'],
     subTitle: [
       [
         {
@@ -203,6 +207,16 @@ const subCategoryDetail: {
         {
           href: '/infra/ko/compute-infrastructure/serverless-3-architecture',
           title: 'Architecture',
+        },
+      ],
+      [
+        {
+          href: '/infra/ko/compute-infrastructure/gpu-1-gpu_models',
+          title: 'Models',
+        },
+        {
+          href: '/infra/ko/compute-infrastructure/gpu-2-gpu_server_vs_consumer_server',
+          title: 'Sever Guide',
         },
       ],
     ],
