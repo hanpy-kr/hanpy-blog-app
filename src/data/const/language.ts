@@ -56,6 +56,10 @@ const subCategoryDetail: {
           href: '/language/ko/nodejs/introduction-nvm',
           title: 'Node Version Manager',
         },
+        {
+          href: '/language/ko/nodejs/buffer-stream-intro',
+          title: 'Buffer & Stream',
+        },
       ],
       [
         // Managing Files and Directories
@@ -109,6 +113,10 @@ const subCategoryDetail: {
       ],
       [],
       [
+        {
+          href: '/language/ko/nodejs/error-captureStackTrace',
+          title: 'CaptureStackTrace',
+        },
         {
           href: '/language/ko/nodejs/beginner-nodejs-cpu-memory-monitoring',
           title: 'CPU and Memory Usage',
