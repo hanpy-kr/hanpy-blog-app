@@ -1,8 +1,8 @@
 ---
 deployment: true
-category: Backend
-title: 'TCP/IP - TIME_WAIT'
-summary: 'TCP의 신뢰성을 지키기 위한 TIME_WAIT 상태의 목적과, 네트워크 지연 속에서도 안정적인 연결 종료를 보장하는 TCP 상태 전이 원리에 대해 알아봅니다.'
+category: Infra
+title: 'TCP/IP TIME_WAIT'
+summary: 'TCP의 신뢰성을 지키기 위한 TIME_WAIT 상태의 목적과 네트워크 지연 속에서도 안정적인 연결 종료를 보장하는 TCP 상태 전이 원리에 대해 알아봅니다.'
 pageKey: tcp_time_wait_explained
 lng: KOR
 publishedAt: 2025-06-30
@@ -85,7 +85,7 @@ $ sudo ss -tan | grep TIME_WAIT
 
 ## 정리
 
-TCP 연결이 완전히 닫힌 뒤에도 소켓이 일정 시간 (2 x MSL) 동안 TIME_WAIT 상태로 남아 있는 이유는, 네트워크 지연이나 재전송된 오래된 패킷이 뒤늦게 도착했을 때 이를 안전하게 버리고, 동일한 <로컬 IP·포트, 원격 IP·포트> 조합의 새로운 연결이 이전 연결과 충돌하지 않도록 보장하기 위해서입니다. 즉, TIME_WAIT는 단순히 대기 시간을 늘려 놓은 것이 아니라, 유령 패킷(ghost packet)이나 세션 충돌로부터 시스템을 보호하는 일종의 방패막 역할을 수행합니다.
+TCP 연결이 완전히 닫힌 뒤에도 소켓이 일정 시간 (2 x MSL) 동안 TIME_WAIT 상태로 남아 있는 이유는, 네트워크 지연이나 재전송된 오래된 패킷이 뒤늦게 도착했을 때 이를 안전하게 버리고, 동일한 `로컬 IP·포트, 원격 IP·포트` 조합의 새로운 연결이 이전 연결과 충돌하지 않도록 보장하기 위해서입니다. 즉, TIME_WAIT는 단순히 대기 시간을 늘려 놓은 것이 아니라, 유령 패킷(ghost packet)이나 세션 충돌로부터 시스템을 보호하는 일종의 방패막 역할을 수행합니다.
 
 ---
 
