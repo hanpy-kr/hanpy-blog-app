@@ -1,0 +1,94 @@
+---
+deployment: true
+category: Backend
+title: 'TCP/IP - TIME_WAIT'
+summary: 'TCP의 신뢰성을 지키기 위한 TIME_WAIT 상태의 목적과, 네트워크 지연 속에서도 안정적인 연결 종료를 보장하는 TCP 상태 전이 원리에 대해 알아봅니다.'
+pageKey: tcp_time_wait_explained
+lng: KOR
+publishedAt: 2025-06-30
+---
+
+# TCP/IP - TIME_WAIT
+
+개발을 하다 보면 소켓 프로그래밍이나 서버 네트워크 구성에서 <codeline>TIME_WAIT</codeline>이라는 상태를 목격할 때가 있습니다. **"연결은 이미 끝났는데 왜 아직도 뭔가 남아있지?"**라는 의문이 들 수도 있습니다. 이 글에서는 TCP 상태 전이 흐름과 네트워크의 본질적인 특성을 바탕으로 <codeline>TIME_WAIT</codeline>이 왜 필요한지, 그리고 어떤 원리로 작동하는지 알아봅시다.
+
+<br />
+
+TCP는 연결 지향적 프로토콜입니다. 연결을 맺고(3-way handshake), 데이터를 주고받고, 다시 연결을 종료합니다(4-way handshake). 이때, 종료가 완료된 후에도 왜 소켓이 <codeline>TIME_WAIT</codeline>이라는 상태로 남아있게 됩니다. <codeline>TIME_WAIT</codeline>은 단순한 종료 대기 상태가 아니라, 지연된
+패킷(delayed packet)이나 재전송된 FIN 요청을 안전하게 처리하기 위한 역할을 하게됩니다.
+
+---
+
+## FIN이 먼저 도착하지 않는 경우
+
+TCP 연결을 종료할 때, FIN(종료) 메시지와 데이터·ACK 패킷이 네트워크 지연·재전송 과정에서 순서가 뒤바뀔 수 있습니다. 예를 들어:
+
+1. 서버가 애플리케이션 데이터를 전송
+2. 서버가 FIN을 보냄
+3. 네트워크 지연으로 **FIN이 먼저 도착**
+4. 이후 데이터 패킷이 늦게 도착 → 클라이언트는 이미 종료 절차를 밟았으므로 이 데이터는 **유령 패킷**(ghost packet)이 되어 폐기되어야 합니다.
+
+이처럼 FIN이 수신되면 연결을 닫아 버리기 때문에, 뒤늦게 도착한 데이터가 새로운 세션과 혼동될 수 있고, 치명적인 오류로 이어질 위험이 있습니다.
+
+---
+
+## TIME_WAIT 상태가 존재하는 이유
+
+TIME_WAIT는 바로 이 비정상 시나리오를 방지하기 위한 안전 장치입니다. 마지막으로 ACK를 보내고 연결을 적극적으로 닫은 쪽(Active closer)에서 TIME_WAIT 상태에 진입합니다. 지속 시간은 MSL(Maximum Segment Lifetime)의 두 배(예: MSL 기본 2분 → TIME_WAIT 4분, 운영체제별로 다름) 동안 유지됩니다. TIME_WAIT 기간 동안 할 수 있는 일은 다음과 같습니다.
+
+- 재전송된 FIN에 대해 **다시 ACK** 응답
+- 지연 도착한 패킷을 **폐기**
+- 동일한 4-튜플(소스 IP/포트 + 목적지 IP/포트)로 **새 연결 방지**
+
+결국 TIME_WAIT는 ‘완전히 닫힌 세션’에 늦게 도착한 패킷이 시스템을 혼란에 빠뜨리지 않도록 막아 주는 **보호막** 역할을 하게됩니다.
+
+---
+
+## 상태 전이 Flow
+
+아래는 TCP 연결 종료와 TIME_WAIT 진입 과정을 시각화한 흐름입니다.
+
+![image](https://resource.han-py.com/blog/infra/tcp-time-wait.png)
+
+이후 클라이언트는 2MSL 동안 <codeline>TIME_WAIT</codeline> 상태를 유지하고 나서야 <codeline>CLOSED</codeline> 상태로 넘어갑니다.
+
+---
+
+## 리눅스에서 확인하기
+
+터미널에서 아래처럼 <codeline>netcat</codeline>을 사용해 간단한 테스트를 해볼 수 있습니다.
+
+```bash
+# 서버 측 (터미널 1)
+$ nc -l 12345
+
+# 클라이언트 측 (터미널 2)
+$ nc localhost 12345
+(접속 후 종료)
+
+# TIME_WAIT 확인
+$ sudo ss -tan | grep TIME_WAIT
+```
+
+- nc(netcat)는 “네트워크의 스위스 군용 나이프”라 불리는 유틸리티로, TCP/UDP 연결을 손쉽게 만들고 쓸 수 있는 유틸리티 입니다.
+- -l 12345 옵션은 포트 12345를 수신(listen) 대기하라는 뜻으로 TCP 소켓을 열어 클라이언트의 연결 요청(SYN)을 기다립니다.
+- 클라이언트가 같은 호스트(localhost)의 포트 12345에 연결(connect) 요청을 보냅니다. 서버가 기다리고 있던 SYN 패킷을 받아 3-way handshake를 통해 연결이 성립됩니다.
+- 접속 종료는 보통 Ctrl+C나 Ctrl+D로 세션을 종료하게 되는데, 이때 TCP 연결의 종료(close) 과정도 4-way handshake로 진행됩니다.
+- -t : TCP 소켓만 표시
+- -a : 모든 소켓 상태(listening, established, etc.)
+- -n : 숫자(port) 그대로 표시
+- grep TIME_WAIT 로 TIME_WAIT 상태인 소켓만 걸러냅니다.
+
+연결 종료 후 클라이언트 쪽 포트가 <codeline>TIME_WAIT</codeline> 상태로 남아있는 것을 확인할 수 있습니다.
+
+---
+
+## 정리
+
+TCP 연결이 완전히 닫힌 뒤에도 소켓이 일정 시간 (2 x MSL) 동안 TIME_WAIT 상태로 남아 있는 이유는, 네트워크 지연이나 재전송된 오래된 패킷이 뒤늦게 도착했을 때 이를 안전하게 버리고, 동일한 <로컬 IP·포트, 원격 IP·포트> 조합의 새로운 연결이 이전 연결과 충돌하지 않도록 보장하기 위해서입니다. 즉, TIME_WAIT는 단순히 대기 시간을 늘려 놓은 것이 아니라, 유령 패킷(ghost packet)이나 세션 충돌로부터 시스템을 보호하는 일종의 방패막 역할을 수행합니다.
+
+---
+
+## 참고 문서
+
+- [Transmission Control Protocol](https://datatracker.ietf.org/doc/html/rfc793)

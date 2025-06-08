@@ -63,6 +63,22 @@ const subCategoryDetail: {
     subTitle: [
       [
         {
+          href: '/infra/ko/base/open-systems-interconnection',
+          title: 'OSI 7 Layer',
+        },
+        {
+          href: '/infra/ko/base/tcp-ip-protocol',
+          title: 'TCP/IP',
+        },
+        {
+          href: '/infra/ko/base/tcp-time-wait',
+          title: 'TCP TIME_WAIT',
+        },
+        {
+          href: '/infra/ko/base/dns',
+          title: 'DNS',
+        },
+        {
           href: '/infra/ko/base/tls',
           title: 'TLS',
         },
@@ -73,6 +89,18 @@ const subCategoryDetail: {
         {
           href: '/infra/ko/base/csrf',
           title: 'CSRF',
+        },
+        {
+          href: '/infra/ko/base/how-the-web-works-in-one-line',
+          title: 'How The Web Works',
+        },
+        {
+          href: '/infra/ko/base/tcp-3way-handshake',
+          title: 'TCP 3-Way Handshake',
+        },
+        {
+          href: '/infra/ko/base/tcp-4way-handshake',
+          title: 'TCP 4-Way Handshake',
         },
       ],
       [

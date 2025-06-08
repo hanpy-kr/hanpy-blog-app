@@ -196,7 +196,7 @@ table {
 ol,
 ul {
   list-style: none;
-  margin: 10px 0px;
+  margin: 15px 0px;
   font-size: 16px;
 }
 
@@ -442,7 +442,8 @@ table {
   display: block;
 }
 
-th, td {
+th,
+td {
   padding: 0.75rem;
   border: 1px solid #e5e7eb;
   text-align: left;
@@ -461,7 +462,8 @@ tr:nth-child(even) {
   border-color: #374151;
 }
 
-.dark th, .dark td {
+.dark th,
+.dark td {
   border-color: #374151;
 }
 
