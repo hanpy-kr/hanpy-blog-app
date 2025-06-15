@@ -8,7 +8,7 @@ import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
 import Link from 'next/link'
 import NotFoundContainer from '@/components/common/NotFoundContainer'
-import { InfraCategory } from '@/data/const/infra'
+import { InfraCategory } from '@/app/(categories)/types'
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],

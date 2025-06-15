@@ -1,7 +1,13 @@
-import { BackendCategory, CONTENT_BACKEND } from '@/data/const/backend'
-import { CONTENT_DESIGN, DesignCategory } from '@/data/const/design'
-import { CONTENT_INFRA, InfraCategory } from '@/data/const/infra'
-import { CONTENT_LANGUAGE, LanguageCategory } from '@/data/const/language'
+import {
+  BackendCategory,
+  DesignCategory,
+  InfraCategory,
+  LanguageCategory,
+} from '@/app/(categories)/types'
+import { CONTENT_BACKEND } from '@/data/const/backend'
+import { CONTENT_DESIGN } from '@/data/const/design'
+import { CONTENT_INFRA } from '@/data/const/infra'
+import { CONTENT_LANGUAGE } from '@/data/const/language'
 import {
   Card,
   CardBody,

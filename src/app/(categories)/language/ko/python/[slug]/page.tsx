@@ -1,6 +1,6 @@
 import { useMDXComponent } from 'next-contentlayer/hooks'
 
-import { allDesignForKORs } from 'contentlayer/generated'
+import { allLanguageForKORs } from 'contentlayer/generated'
 
 import { Roboto_Flex } from 'next/font/google'
 
@@ -8,30 +8,30 @@ import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
 import Link from 'next/link'
 import NotFoundContainer from '@/components/common/NotFoundContainer'
-import { DesignCategory } from '@/app/(categories)/types'
+import { LanguageCategory } from '@/app/(categories)/types'
+
+const SUB_TITLE = LanguageCategory.PYTHON
+const PREFIX_PATH = `language/ko/${SUB_TITLE}`
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
 })
 
-const SUB_TITLE = DesignCategory.PATTERN
-const PREFIX_PATH = `design/ko/${SUB_TITLE}`
-
 export default function Page({ params }: { params: { slug: string } }) {
-  const post = allDesignForKORs.find(
-    (p) => p._raw.flattenedPath === `${PREFIX_PATH}/${params.slug}`,
-  )
+  const post = allLanguageForKORs.find((p) => {
+    return p._raw.flattenedPath === `${PREFIX_PATH}/${params.slug}`
+  })
 
-  // if (!post) throw new Error(`Post not found for slug: ${params.slug}`)
   if (!post) return <NotFoundContainer />
 
   const MDXComponent = useMDXComponent(post.body.code)
+
   return (
     <div className={robotoFlex.className}>
-      <BlogLayout type="design" subType={SUB_TITLE}>
-        <div className="frontend__content">
-          <p className="frontend__header">{SUB_TITLE}</p>
-
+      <BlogLayout type="language" subType={SUB_TITLE}>
+        <div className="infra__content">
+          <p className="infra__header">{SUB_TITLE}</p>
+          {/* My Post: {params.slug} */}
           <MDXComponent />
         </div>
         {/* </section> */}

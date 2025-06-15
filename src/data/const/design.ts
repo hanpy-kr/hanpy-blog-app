@@ -1,6 +1,4 @@
-export enum DesignCategory {
-  PATTERN = 'pattern',
-}
+import { DesignCategory } from '@/app/(categories)/types'
 
 const subCategory: Record<
   DesignCategory,

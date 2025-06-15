@@ -1,9 +1,4 @@
-export enum InfraCategory {
-  BASE = 'base',
-  KUBERNETES = 'kubernetes',
-  DOCKER = 'docker',
-  COMPUTE_INFRASTRUCTURE = 'compute-infrastructure',
-}
+import { InfraCategory } from '@/app/(categories)/types'
 
 const subCategory: Record<
   InfraCategory,

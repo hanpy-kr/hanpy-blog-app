@@ -1,6 +1,5 @@
 'use client'
 
-import { BackendCategory, CONTENT_BACKEND } from '@/data/const/backend'
 import {
   Box,
   Button,

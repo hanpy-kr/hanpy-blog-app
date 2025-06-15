@@ -1,9 +1,4 @@
-export enum FrontendCategory {
-  WEB = 'web',
-  REACT = 'react',
-  NEXTJS = 'nextjs',
-  UTILS = 'utils',
-}
+import { FrontendCategory } from '@/app/(categories)/types'
 
 const subCategory: Record<
   FrontendCategory,

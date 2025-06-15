@@ -8,12 +8,13 @@ import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
 import Link from 'next/link'
 import NotFoundContainer from '@/components/common/NotFoundContainer'
+import { FrontendCategory } from '@/app/(categories)/types'
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
 })
 
-const SUB_TITLE = 'utils'
+const SUB_TITLE = FrontendCategory.UTILS
 const PREFIX_PATH = `frontend/ko/${SUB_TITLE}`
 
 export default function Page({ params }: { params: { slug: string } }) {

@@ -16,8 +16,7 @@ import { useState } from 'react'
 import { CONTENT_CATEGORY } from '@/data/const'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { BackendCategory } from '@/data/const/backend'
-import { InfraCategory } from '@/data/const/infra'
+import { CATEGORY_TYPE, SUB_CATEGORY_TYPE } from '../types'
 
 type CurrentCategoryInfoType = {
   name: string
@@ -25,27 +24,12 @@ type CurrentCategoryInfoType = {
   icon: string
 }
 
-export type SUB_CATEGORY_TYPE =
-  // Infra
-  | InfraCategory
-  | 'react'
-  | 'utils'
-  | 'pattern'
-  | 'nextjs'
-  | 'web'
-  // backend
-  | BackendCategory
-
-  // language
-  | 'nodejs'
-  | 'typescript'
-
 // TODO :  Refactor Type
 const BlogLNBTitle = ({
   type,
   subType,
 }: {
-  type: 'frontend' | 'backend' | 'infra' | 'design' | 'language'
+  type: CATEGORY_TYPE
   subType: SUB_CATEGORY_TYPE
 }) => {
   const router = useRouter()

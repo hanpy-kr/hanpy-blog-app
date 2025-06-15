@@ -1,7 +1,4 @@
-export enum LanguageCategory {
-  NODEJS = 'nodejs',
-  TYPESCRIPT = 'typescript',
-}
+import { LanguageCategory } from '@/app/(categories)/types'
 
 const subCategory: Record<
   LanguageCategory,
@@ -29,6 +26,15 @@ const subCategory: Record<
     description:
       "Node.js is a JavaScript runtime environment that enables developers to run JavaScript on servers and build scalable, event-driven applications. In this category, you'll find tutorials, guides, practical examples, and advanced techniques focused on Node.js development, performance optimization, and backend solutions.",
   },
+  python: {
+    id: LanguageCategory.PYTHON,
+    name: 'Python',
+    // href: '/language/ko/python/contents',
+    href: '/language/ko/python/pyarmor',
+    icon: 'https://resource.han-py.com/blog/logs/python_logo.svg',
+    description:
+      "Python is a versatile, high-level programming language widely used in web development, data science, automation, artificial intelligence, and more. In this category, you'll find detailed tutorials, practical examples, best practices, and advanced concepts to help you master Python programming and build efficient, robust applications.",
+  },
 }
 
 const subCategoryDetail: {
@@ -41,7 +47,12 @@ const subCategoryDetail: {
   }
 } = {
   nodejs: {
-    title: ['Introduction & Fundamentals', 'Built-in Modules', 'External Libraries', 'Error & Performance'],
+    title: [
+      'Introduction & Fundamentals',
+      'Built-in Modules',
+      'External Libraries',
+      'Error & Performance',
+    ],
     subTitle: [
       [
         {
@@ -121,7 +132,7 @@ const subCategoryDetail: {
           href: '/language/ko/nodejs/beginner-nodejs-cpu-memory-monitoring',
           title: 'CPU and Memory Usage',
         },
-      ]
+      ],
     ],
   },
   typescript: {
@@ -165,6 +176,17 @@ const subCategoryDetail: {
         {
           href: '/language/ko/typescript/typescript-ts-01-prototype-chain',
           title: 'Prototype Chain (setPrototypeOf)',
+        },
+      ],
+    ],
+  },
+  python: {
+    title: ['utils'],
+    subTitle: [
+      [
+        {
+          href: '/language/ko/python/pyarmor',
+          title: 'Basic Types',
         },
       ],
     ],

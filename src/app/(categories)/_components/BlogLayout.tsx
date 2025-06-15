@@ -1,7 +1,8 @@
 import Header from '@/app/(home)/components/Header'
 import Footer from '@/app/(home)/components/Footer'
 import './BlogLayout.css'
-import BlogLNBTitle, { SUB_CATEGORY_TYPE } from './BlogLNBTitle'
+import BlogLNBTitle from './BlogLNBTitle'
+import { CATEGORY_TYPE, SUB_CATEGORY_TYPE } from '../types'
 
 const BlogLayout = ({
   children,
@@ -9,7 +10,7 @@ const BlogLayout = ({
   subType, // kubernetes / docker
 }: {
   children: React.ReactNode
-  type: 'frontend' | 'backend' | 'infra' | 'design' | 'language'
+  type: CATEGORY_TYPE
   subType: SUB_CATEGORY_TYPE
 }) => {
   return (

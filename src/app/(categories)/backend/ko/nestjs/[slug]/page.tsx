@@ -8,8 +8,7 @@ import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
 import Link from 'next/link'
 import NotFoundContainer from '@/components/common/NotFoundContainer'
-import { BackendCategory } from '@/data/const/backend'
-
+import { BackendCategory } from '@/app/(categories)/types'
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
 })

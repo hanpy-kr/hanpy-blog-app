@@ -8,8 +8,9 @@ import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
 import Link from 'next/link'
 import NotFoundContainer from '@/components/common/NotFoundContainer'
+import { LanguageCategory } from '@/app/(categories)/types'
 
-const SUB_TITLE = 'typescript'
+const SUB_TITLE = LanguageCategory.TYPESCRIPT
 const PREFIX_PATH = `language/ko/${SUB_TITLE}`
 
 const robotoFlex = Roboto_Flex({

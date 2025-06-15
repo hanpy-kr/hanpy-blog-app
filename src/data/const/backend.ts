@@ -1,10 +1,4 @@
-export enum BackendCategory {
-  BASE = 'base',
-  DATABASE = 'database',
-  NESTJS = 'nestjs',
-  GRPC = 'grpc',
-  UTILS = 'utils',
-}
+import { BackendCategory } from '@/app/(categories)/types'
 
 // Record<BackendCategory, { name: string; href: string; icon: string }>
 const subCategory: Record<
