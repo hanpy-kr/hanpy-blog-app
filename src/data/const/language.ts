@@ -56,6 +56,22 @@ const subCategoryDetail: {
     subTitle: [
       [
         {
+          href: '/language/ko/nodejs/beginner-imperative-programming',
+          title: 'Imperative Programming',
+        },
+        {
+          href: '/language/ko/nodejs/beginner-declarative-programming',
+          title: 'Declarative Programming',
+        },
+        {
+          href: '/language/ko/nodejs/beginner-oop-vs-fp',
+          title: 'OOP vs FP',
+        },
+        {
+          href: '/language/ko/nodejs/beginner-first-class',
+          title: 'First-Class Citizen',
+        },
+        {
           href: '/language/ko/nodejs/introduction',
           title: 'Introduction',
         },
