@@ -9,6 +9,7 @@ import BlogLayout from '@/app/(categories)/_components/BlogLayout'
 import Link from 'next/link'
 import NotFoundContainer from '@/components/common/NotFoundContainer'
 import { FrontendCategory } from '@/app/(categories)/types'
+import { Metadata } from 'next'
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
@@ -16,6 +17,25 @@ const robotoFlex = Roboto_Flex({
 
 const SUB_TITLE = FrontendCategory.UTILS
 const PREFIX_PATH = `frontend/ko/${SUB_TITLE}`
+
+export async function generateMetadata(
+  { params }: {
+    params: Promise<{ slug: string }>
+  },
+): Promise<Metadata> {
+  const slug = (await params).slug
+
+  const post = allFrontendForKORs.find((p) => {
+    console.log(p.summary)
+    return p._raw.flattenedPath === `${PREFIX_PATH}/${slug}`
+  })
+ 
+  return {
+    title: post?.title,
+    description: post?.summary,
+    applicationName: 'hanpy blog'
+  }
+}
 
 export default function Page({ params }: { params: { slug: string } }) {
   const post = allFrontendForKORs.find(

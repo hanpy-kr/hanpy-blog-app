@@ -10,6 +10,7 @@ import useI18N from '@/hooks/useI18N'
 import Link from 'next/link'
 import NotFoundContainer from '@/components/common/NotFoundContainer'
 import { InfraCategory } from '@/app/(categories)/types'
+import { Metadata } from 'next'
 
 const SUB_TITLE = InfraCategory.COMPUTE_INFRASTRUCTURE
 const PREFIX_PATH = `infra/ko/${SUB_TITLE}`
@@ -17,6 +18,25 @@ const PREFIX_PATH = `infra/ko/${SUB_TITLE}`
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
 })
+
+export async function generateMetadata(
+  { params }: {
+    params: Promise<{ slug: string }>
+  },
+): Promise<Metadata> {
+  const slug = (await params).slug
+
+  const post = allInfraForKORs.find((p) => {
+    console.log(p.summary)
+    return p._raw.flattenedPath === `${PREFIX_PATH}/${slug}`
+  })
+ 
+  return {
+    title: post?.title,
+    description: post?.summary,
+    applicationName: 'hanpy blog'
+  }
+}
 
 export default function Page({ params }: { params: { slug: string } }) {
   const post = allInfraForKORs.find((p) => {
