@@ -46,6 +46,11 @@ const _fieldsWithCommon = {
     type: 'string',
     required: true,
   },
+  tags: {
+    type: 'list',
+    of: { type: 'string' },
+    required: false,
+  },
 }
 const _fieldsWithFrontend = {
   deployment: {
@@ -83,7 +88,7 @@ export const FrontendForKOR = defineDocumentType(() => ({
   name: 'FrontendForKOR',
   filePathPattern: `frontend/ko/**/*.mdx`,
   contentType: 'mdx',
-  fields: _fieldsWithFrontend as {},
+  fields: _fieldsWithCommon as {},
   // 도메인 위치 변경 필요 시 사용
   // computedFields: {
   //   url: {
@@ -98,7 +103,7 @@ export const FrontendForENG = defineDocumentType(() => ({
   name: 'FrontendForENG',
   filePathPattern: `frontend/en/**/*.mdx`,
   contentType: 'mdx',
-  fields: _fieldsWithFrontend as {},
+  fields: _fieldsWithCommon as {},
   // 도메인 위치 변경 필요 시 사용
   // computedFields: {
   //   url: {

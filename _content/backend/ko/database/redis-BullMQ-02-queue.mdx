@@ -6,10 +6,10 @@ summary: 'BullMQ를 사용하여 Node.js 환경에서 효율적이고 신뢰성 
 pageKey: bullmq_queue_guide
 lng: KOR
 publishedAt: 2025-07-03
-# tags: \[Node.js, BullMQ, Queue, Backend, Redis]
+tags: [Node.js, BullMQ, Queue, Backend, Redis]
 ---
 
-# BullMQ로 Queue 관리하기
+# BullMQ - Queue
 
 웹 애플리케이션이나 백엔드 시스템을 개발할 때 장시간 소요되는 작업을 비동기적으로 처리하거나, 트래픽 급증 상황에서도 안정적으로 작업을 처리하려면 작업 큐(Job Queue)를 사용합니다. Node.js 생태계에서 가장 인기 있고 신뢰성 높은 큐 관리 도구 중 하나가 바로 **BullMQ**입니다.
 
@@ -178,6 +178,55 @@ await queue.obliterate()
 ```
 
 Obliterate: 큐와 그 내용을 완전히 제거합니다.
+
+---
+
+## 작업 조회하기
+
+### getDelayed()
+
+Queue 인스턴스에서 아직 실행되지 않고 지연되어 대기 중인 작업들을 조회할 때 사용합니다. 사용 파라미터는 아래와 같습니다.
+
+```javascript title="BullMQ - Queue" showLineNumbers
+queue.getDelayed(start?: number, end?: number, asc?: boolean): Promise<Job[]>
+```
+
+| 파라미터    | 설명               | 기본값             |
+| ------- | ---------------- | --------------- |
+| `start` | 시작 인덱스 (페이징용)    | `0`             |
+| `end`   | 끝 인덱스 (포함)       | `-1` (전체)       |
+| `asc`   | 오래된 순서대로 정렬할지 여부 | `false` (최신 순서) |
+
+
+```javascript title="BullMQ - Queue" showLineNumbers
+// 이 작업들은 delay 옵션으로 등록된 후 아직 실행되지 않은 상태
+const delayedJobs: Job[] = await queue.getDelayed();
+
+// 전체 지연 작업 가져오기
+const jobs = await queue.getDelayed(); // start=0, end=-1, 최신 순
+
+// 오래된 순서대로 상위 10개 지연 작업 가져오기
+const jobs = await queue.getDelayed(0, 9, true);
+```
+
+getDelayed() 자체에는 시간 필터 기능이 없기 때문에, 가져온 후 직접 필터링해야 합니다.
+
+```javascript title="BullMQ - Queue" showLineNumbers
+const allDelayedJobs = await queue.getDelayed();
+const now = Date.now();
+
+// 예: 앞으로 30분 안에 실행될 작업만 보기
+const within30Min = allDelayedJobs.filter(job => {
+  const scheduledAt = job.timestamp + job.delay;
+  return scheduledAt <= now + 30 * 60 * 1000;
+});
+
+console.log(`30분 내 실행될 작업 수: ${within30Min.length}`);
+```
+
+- job.timestamp: 작업이 큐에 추가된 시점 (ms)
+- job.delay: 설정된 지연 시간 (ms)
+- timestamp + delay = 실제 실행 예정 시각
 
 ---
 

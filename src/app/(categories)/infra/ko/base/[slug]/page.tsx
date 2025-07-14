@@ -27,14 +27,14 @@ export async function generateMetadata(
   const slug = (await params).slug
 
   const post = allInfraForKORs.find((p) => {
-    console.log(p.summary)
     return p._raw.flattenedPath === `${PREFIX_PATH}/${slug}`
   })
  
   return {
     title: post?.title,
     description: post?.summary,
-    applicationName: 'hanpy blog'
+    applicationName: 'hanpy blog',
+    keywords: post?.tags,
   }
 }
 

@@ -1,0 +1,163 @@
+---
+deployment: true
+category: Language
+title: 'TypeScript - Unknown'
+summary: 'TypeScript에서의 unknown은 any와 비슷하지만, 타입 검사를 강제함으로써 안전한 코드 작성을 돕는 강력한 기능입니다.'
+pageKey: TypeScript_Unknown
+lng: KOR
+publishedAt: 2025-07-18
+tags: [Node.js, Typescript, unknown]
+---
+
+# TypeScript - Unknown
+
+TypeScript에서 unknown 타입은 any와 비슷해 보이지만, 실제로는 타입 안전성을 높이는 중요한 개념입니다. 많은 개발자가 any를 사용할 때 발생하는 문제를 경험했을 것입니다. any는 어떠한 타입도 허용하지만, 타입 검사를 우회하기 때문에 예상치 못한 오류를 발생시킬 가능성이 높습니다. 반면, unknown은 타입 검사를 강제하여 이러한 문제를 방지할 수 있습니다.
+
+## unknown 타입이란?
+
+unknown은 TypeScript 3.0에서 도입된 타입으로, 모든 타입을 받을 수 있지만, 직접 사용하려면 타입 검사를 거쳐야 합니다. 이는 any와 달리 타입 안정성을 보장하면서도 유연한 데이터 처리를 가능하게 합니다.
+
+<br />
+
+예를 들어, any를 사용하면 타입 검사를 하지 않아도 함수 내부에서 어떤 연산이든 수행할 수 있습니다.
+
+
+```TypeScript title="TypeScript" showLineNumbers
+function logMessage(msg: any) {
+  console.log(msg.toUpperCase()); // 런타임 오류 가능성 존재
+}
+
+logMessage(42); // 숫자에는 toUpperCase()가 없음 → 런타임 오류 발생
+```
+
+반면, unknown을 사용하면 타입 검사를 강제해야 합니다.
+
+```TypeScript title="TypeScript" showLineNumbers
+function logMessage(msg: unknown) {
+  if (typeof msg === "string") {
+    console.log(msg.toUpperCase()); // 타입 검사를 거쳤기 때문에 안전
+  } else {
+    console.log("Invalid message type");
+  }
+}
+
+logMessage(42); // "Invalid message type"
+```
+
+위 코드처럼 unknown은 값을 바로 사용할 수 없고, 명확한 타입 검사를 수행해야만 접근이 가능합니다. 따라서 unknown을 사용하면 any보다 타입 안정성이 크게 향상됩니다.
+
+
+
+## 2. any와 unknown의 차이점
+
+| 비교 항목 | any   | unknown     | 
+| ---- | ------ | --------------- | 
+| 모든 타입 할당 가능   | ✅ 가능 | ✅ 가능   | 
+| 타입 검사 없이 사용 가능   | ✅ 가능 | ❌ 불가능 | 
+| 타입 안정성   | 낮음 | 높음 | 
+| 코드 유지보수성   | 낮음 | 높음 | 
+
+any를 사용하면 코드가 빠르게 작성될 수 있지만, 런타임 오류가 발생할 가능성이 높아집니다. 반면, unknown은 타입 검사를 요구하기 때문에 실수를 방지할 수 있습니다.
+
+
+## 3. unknown의 활용 예시
+### 3.1. unknown을 사용한 안전한 에러 핸들링
+
+catch 블록에서 unknown을 사용하면 에러의 타입이 명확하지 않을 때도 안전하게 처리할 수 있습니다.
+
+```TypeScript title="TypeScript" showLineNumbers
+try {
+  throw new Error("Something went wrong!");
+} catch (err: unknown) {
+  if (err instanceof Error) {
+    console.log(err.message); // 타입 검사를 거쳐야 안전하게 접근 가능
+  } else {
+    console.log("Unknown error");
+  }
+}
+```
+
+위 코드에서 catch(err: unknown)을 사용하면, 예외적으로 발생하는 에러가 어떤 타입이든 안전하게 처리할 수 있습니다.
+
+### 3.2. API 응답을 처리할 때
+
+백엔드에서 반환된 데이터의 타입이 명확하지 않을 때 unknown을 사용하면 예상치 못한 오류를 방지할 수 있습니다.
+
+
+```TypeScript title="TypeScript" showLineNumbers
+async function fetchData(): Promise<unknown> {
+  return await fetch("https://api.example.com/data").then(res => res.json());
+}
+
+async function processData() {
+  const data: unknown = await fetchData();
+  if (typeof data === "object" && data !== null && "name" in data) {
+    console.log((data as { name: string }).name); // 타입 검사를 거쳐야 접근 가능
+  } else {
+    console.log("Invalid data format");
+  }
+}
+```
+
+위 코드에서 fetchData의 반환 타입을 unknown으로 지정함으로써, 데이터를 사용할 때 반드시 타입 검사를 하도록 강제합니다.
+
+
+## 4. unknown[]을 활용한 가변 인자 처리
+
+...rest 파라미터에도 unknown[]을 사용할 수 있습니다. 예를 들어, 여러 타입의 데이터를 로깅하는 함수에서 unknown[]을 활용하면 유연하면서도 안전한 코드를 작성할 수 있습니다.
+
+```TypeScript title="TypeScript" showLineNumbers
+class Logger {
+  error(message: unknown, ...rest: unknown[]): void {
+    console.log("---- ERROR LOG ----");
+    if (typeof message === "string") {
+      console.log(message.toUpperCase()); // 안전한 타입 검사 후 처리
+    } else {
+      console.log("Unknown error:", message);
+    }
+    console.log("Additional info:", rest);
+  }
+}
+
+const logger = new Logger();
+logger.error("Server error", { code: 500 }, new Error("DB Connection failed"));
+```
+
+위 코드에서 message: unknown과 ...rest: unknown[]을 사용함으로써, 다양한 타입의 데이터를 안전하게 처리할 수 있습니다.
+
+
+## unknown을 타입 가드로 활용
+
+TypeScript에서는 unknown을 활용해 커스텀 타입 가드를 만들 수도 있습니다.
+
+```TypeScript title="TypeScript" showLineNumbers
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
+function printMessage(msg: unknown) {
+  if (isString(msg)) {
+    console.log(msg.toUpperCase()); // 타입 가드를 거쳤기 때문에 안전
+  } else {
+    console.log("Not a string");
+  }
+}
+
+printMessage("Hello!"); // "HELLO!"
+printMessage(123); // "Not a string"
+```
+
+위 코드에서 isString(value: unknown): value is string 타입 가드를 사용하면, printMessage 함수 내부에서 msg가 문자열인지 안전하게 확인할 수 있습니다.
+
+## 6. 언제 unknown을 사용할까?
+
+- 입력 타입을 미리 알 수 없지만, 내부에서 안전한 처리가 필요할 때
+- API 응답처럼 외부 데이터를 처리할 때
+- catch(err)에서 예외를 안전하게 처리할 때
+- 다양한 타입을 받을 수 있는 유틸리티 함수나 로깅 함수
+
+반면, 정확한 타입을 알고 있다면 unknown보다는 명확한 타입을 직접 지정하는 것이 좋습니다. 불필요하게 unknown을 사용하면 오히려 타입 검사가 과도해질 수 있기 때문입니다.
+
+## 정리
+
+unknown은 any와 비슷하지만, 타입 검사를 강제함으로써 안전한 코드 작성을 돕는 강력한 기능입니다. 특히, API 응답 처리, 예외 핸들링, 가변 인자 처리 등에서 유용하게 사용할 수 있습니다. any를 무분별하게 사용하면 예상치 못한 버그가 발생할 가능성이 크므로, unknown을 적절히 활용하여 타입 안전성을 유지하는 것이 중요합니다.

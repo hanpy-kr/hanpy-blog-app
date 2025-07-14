@@ -35,7 +35,8 @@ export async function generateMetadata(
   return {
     title: post?.title,
     description: post?.summary,
-    applicationName: 'hanpy blog'
+    applicationName: 'hanpy blog',
+    keywords: post?.tags,
   }
 }
 

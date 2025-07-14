@@ -36,12 +36,12 @@ export const metadata: Metadata = {
     siteName: 'Hanpy Blog',
     images: [
       {
-        url: '/meta/image.jpeg', // Must be an absolute URL
+        url: 'https://hanpy-blog.com/meta/image.jpeg', // Must be an absolute URL
         width: 800,
         height: 600,
       },
       {
-        url: '/meta/image.jpeg', // Must be an absolute URL
+        url: 'https://hanpy-blog.com/meta/image.jpeg', // Must be an absolute URL
         width: 1800,
         height: 1600,
         alt: 'Hanpy Logo',
