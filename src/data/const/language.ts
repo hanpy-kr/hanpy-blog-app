@@ -172,6 +172,10 @@ const subCategoryDetail: {
           href: '/language/ko/typescript/typescript-essential-03-symbol',
           title: 'Symbol',
         },
+        {
+          href: '/language/ko/typescript/unknown',
+          title: 'Unknown',
+        },
       ],
       [
         {

@@ -97,6 +97,10 @@ const subCategoryDetail: {
           href: '/infra/ko/base/tcp-4way-handshake',
           title: 'TCP 4-Way Handshake',
         },
+        {
+          href: '/infra/ko/base/network-switch',
+          title: 'Switch',
+        },
       ],
       [
         {
