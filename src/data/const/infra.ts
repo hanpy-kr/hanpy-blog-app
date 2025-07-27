@@ -58,6 +58,14 @@ const subCategoryDetail: {
     subTitle: [
       [
         {
+          href: '/infra/ko/base/network-1-introduction',
+          title: 'Introduction',
+        },
+        {
+          href: '/infra/ko/base/network-2-performance-command',
+          title: 'Performance',
+        },
+        {
           href: '/infra/ko/base/open-systems-interconnection',
           title: 'OSI 7 Layer',
         },
@@ -96,6 +104,10 @@ const subCategoryDetail: {
         {
           href: '/infra/ko/base/tcp-4way-handshake',
           title: 'TCP 4-Way Handshake',
+        },
+        {
+          href: '/infra/ko/base/quic-handshake',
+          title: 'QUIC',
         },
         {
           href: '/infra/ko/base/network-switch',
