@@ -23,7 +23,7 @@ const subCategory: Record<
     name: 'docker',
     description:
       'Explores Docker fundamentals and advanced topics, including containerization concepts, Dockerfile creation, Docker Compose for multi-container apps, optimization strategies, best practices for container security, and practical examples for building and deploying applications using Docker.',
-    href: '/infra/ko/docker/1-1.Introduction',
+    href: '/infra/ko/docker/docker-1-introduction',
     icon: '/icons/docker.svg',
   },
   kubernetes: {
@@ -141,8 +141,19 @@ const subCategoryDetail: {
     ],
   },
   docker: {
-    title: [],
-    subTitle: [],
+    title: ['Beginner'],
+    subTitle: [
+      [
+        {
+          href: '/infra/ko/docker/docker-1-introduction',
+          title: 'Introduction',
+        },
+        {
+          href: '/infra/ko/docker/docker-2-privileged',
+          title: 'privileged',
+        },
+      ]
+    ],
   },
   kubernetes: {
     title: ['Beginner', 'Middle', 'Trouble-Shooting'],

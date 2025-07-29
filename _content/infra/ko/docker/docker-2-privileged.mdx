@@ -1,0 +1,105 @@
+---
+
+deployment: true
+category: Infra
+title: '도커에서 --privileged 옵션이 위험한 이유'
+summary: '도커의 --privileged 옵션이 왜 위험한지, 리눅스 Capability 개념부터 특권 컨테이너의 보안 리스크까지 정리해봅니다.'
+pageKey: docker_privileged_container
+lng: KOR
+publishedAt: 2025-08-11
+tags: [docker, container, privileged]
+---
+
+# Docker --privileged
+
+docker를 다루다 보면 --privileged 옵션을 사용하는 명령어를 한 번쯤 보셨을 겁니다. 처음에는 "그냥 권한을 좀 더 주는 거겠지" 하고 생각하기 쉽지만, 이 옵션은 도커 컨테이너의 보안을 완전히 무너뜨릴 수 있는 매우 위험한 도구입니다. 오늘은 이 특권 컨테이너(privileged container)가 왜 위험한지, 그 근본적인 원리와 대안을 알아봅시다.
+
+## 리눅스의 능력(Capability)이란?
+
+리눅스를 잘 아는 분이라면 "루트(root) 유저는 뭐든 할 수 있다"는 사실도 알고 계실 텐데요. 루트 권한이 너무 강력하다 보니, 리눅스는 이를 좀 더 잘게 쪼개어 관리할 수 있도록 **Capability**(능력)이라는 개념을 도입했습니다. Capability는 쉽게 말해, 루트 권한을 여러 조각으로 나눈 것입니다. 예를 들어, CAP_NET_BIND_SERVICE 능력은 **1024 이하 포트를 열 수 있는 권한**을 의미합니다. 즉, 루트가 아니라도 이 능력만 있다면 특정 포트에 바인딩할 수 있게 되는 것이죠. 이처럼 리눅스는 다양한 능력을 통해 네트워크, 파일 시스템, 프로세스 제어 등 시스템 전반의 권한을 나누고, 각 프로세스가 꼭 필요한 권한만 갖도록 제어합니다. 이게 바로 보안에서 말하는 "최소 권한 원칙"의 구현입니다.
+
+## privileged 컨테이너란?
+
+기본적으로 도커 컨테이너는 **Unprivileged** 모드로 실행됩니다. docker에서 --privileged 옵션을 붙여 실행하면, 해당 컨테이너는 "특권 컨테이너"가 됩니다. 이 컨테이너는 일반적으로 제한되어 있는 대부분의 리눅스 능력을 전부 부여받게 되며, 시스템 콜, 네임스페이스, cgroup 등 핵심 자원에 마음껏 접근하여 커널 모듈 로딩, cgroup/namespace 조작, 호스트 파일 시스템 마운트 ,시스템 콜 조작들을 할 수 있습니다.
+
+<br />
+
+이는 컨테이너가 프로세스 단위의 가상화라는 점에서 특히 위험합니다. 컨테이너는 기본적으로 리눅스 커널을 공유하고 있으며, 커널의 일부를 수정하거나 접근할 수 있다는 것은 곧 **호스트 시스템 전체에 영향을 줄 수 있다는 뜻**입니다. 이는 컨테이너가 호스트 경계를 넘어 동작하는 **container escape** 사고를 유발할 수 있습니다. 특히 CAP_SYS_ADMIN 하나만 있어도 대부분의 공격이 가능합니다.
+
+<br />
+
+특권 컨테이너가 무조건 나쁜 건 아닙니다. 예외적으로 꼭 필요할 때가 있습니다. 대표적인 예가 Docker-in-Docker(DiD)입니다. 예를 들어, 자체 호스팅 GitHub Actions에서 컨테이너 안에서 또 다른 컨테이너를 실행해야 하는 경우가 그렇습니다. 이 경우 --privileged 없이는 내부에서 도커 엔진을 실행하거나 이미지 빌드를 수행하는 것이 불가능합니다. 이렇게 운영 목적상 필요한 상황도 있기 때문에, 이 옵션이 존재하는 것입니다.
+
+<br />
+
+리눅스에서는 capsh --print 명령어를 통해 컨테이너의 능력을 확인할 수 있습니다. 이를 통해 일반 컨테이너와 특권 컨테이너를 *비교해보면*, Bounding set(사용 가능한 능력 집합)의 차이가 명확하게 드러납니다.
+
+* **일반 컨테이너**: 몇 개의 기본적인 능력만 포함
+* **특권 컨테이너**: 거의 모든 리눅스 Capability가 포함되어 있음
+
+즉, 특권 컨테이너는 **호스트와 거의 동일한 권한 수준**으로 동작하게 되는 것입니다.
+
+## 보안 리스크
+
+특권 컨테이너가 가진 가장 큰 위험은 바로 "컨테이너 탈출(container escape)"입니다. 이는 컨테이너 내부의 프로세스가 **호스트 시스템의 경계를 넘어서 활동**하게 되는 심각한 보안 문제입니다.
+
+예를 들어, CAP\_SYS\_ADMIN 권한만 있어도 다음과 같은 일이 가능합니다.
+
+- 호스트의 파일 시스템을 마운트
+- cgroup 설정 변경
+- 호스트 네임스페이스 조작
+- 커널 모듈 로딩
+
+이 중 하나라도 악의적으로 활용된다면, **호스트 전체가 해킹당하는 것과 같은 수준의 사고**가 발생할 수 있습니다. 구글에서 "privileged container escape"만 검색해 봐도, 관련된 보안 사고 사례와 익스플로잇 방법이 차고 넘칩니다.필요하다고 무턱대고 --privileged 옵션을 쓰는 것은 매우 위험한 선택입니다. 대부분의 경우, **특권이 아니라 몇 가지 능력만 필요한 상황**이 많습니다. 이럴 때는 --cap-add 옵션을 사용하여 컨테이너에 **정말 필요한 능력만 추가**하는 것이 훨씬 안전합니다.
+
+```bash title="docker privileged" showLineNumbers
+# Docker에서 `--cap-add` 사용 예시
+docker run --cap-add=NET_ADMIN --cap-add=SYS_TIME ...
+```
+
+- `NET_ADMIN`: 네트워크 설정 권한
+- `NET_RAW`: RAW 및 PACKET 소켓 사용 권한
+
+이렇게 특정 능력만 부여하면 불필요한 권한 남용을 방지할 수 있습니다. 추가로 AppArmor나 SELinux 같은 리눅스 보안 모듈을 활용해도 좋습니다. 이들은 기본 설정만으로도 일반적이지 않은 행동을 차단하여 상당한 보호 효과를 제공합니다.
+
+```bash title="docker privileged" showLineNumbers
+# 디바이스 접근이 필요한 경우:
+docker run --device /dev/nvidia0 --device /dev/nvidiactl ...
+
+# 특정 capability만 필요한 경우:
+docker run --cap-add=NET_ADMIN ...
+
+# 볼륨 마운트나 cgroup 접근이 필요한 경우:
+docker run -v /sys/fs/cgroup:/sys/fs/cgroup:ro ...
+```
+
+필요 권한을 명확히 알고 있다면 --privileged 없이도 대부분의 기능은 작동 가능합니다. 또한 Dockerfile에서 이미지를 build할 때는 애초에 --privileged 옵션이 적용되지 않기 때문에, 이미지 자체는 **--privileged 없이도 동작할 수 있도록 설계**하는 것이 좋습니다.
+
+## Kubernetes에서 capabilities 설정 예시
+
+Kubernetes에서도 아래와 같이 capabilities의 설정이 가능합니다.
+
+```yaml title="docker privileged" showLineNumbers
+containers:
+  - name: example-app
+    image: example/image:latest
+    ports:
+    - containerPort: 8080
+    securityContext:
+      privileged: false
+      capabilities:
+        add: ["NET_ADMIN", "NET_RAW"]
+```
+
+
+## 정리
+
+1. **리눅스 Capability**는 루트 권한을 잘게 나누어 프로세스 단위로 필요한 권한만 부여할 수 있도록 만든 보안 시스템입니다. 이는 최소 권한 원칙을 구현하기 위한 핵심 메커니즘입니다.
+2. --privileged 옵션은 거의 모든 Capability를 부여하여 격리된 환경이라는 컨테이너의 장점을 무력화시킵니다. 필요 시에는 --cap-add나 보안 모듈(AppArmor, SELinux)로 대체할 수 있습니다.
+3. 대부분의 기능은 --privileged 없이도 동작 가능하며, 필요한 권한만 제한적으로 부여하는 방식이 훨씬 안전합니다.
+
+## 참고 자료
+
+- [Understanding Docker container escapes](https://unit42.paloaltonetworks.com/docker-container-breakout-vulnerabilities/)
+- [Privileged Containers Aren’t Containers](https://www.redhat.com/en/blog/containers-are-not-vms-privileged-containers)
+- [Docker Breakout / Privilege Escalation](https://www.trailofbits.com/post/docker-breakout-privilege-escalation)
