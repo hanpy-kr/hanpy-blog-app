@@ -17,7 +17,7 @@ const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
 })
 
-const SUB_TITLE = DesignCategory.PATTERN
+const SUB_TITLE = DesignCategory.SOFTWARE_DEV
 const PREFIX_PATH = `design/ko/${SUB_TITLE}`
 
 export async function generateMetadata(

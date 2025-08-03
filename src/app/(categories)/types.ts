@@ -14,6 +14,8 @@ export type SUB_CATEGORY_TYPE =
 
 export enum DesignCategory {
   PATTERN = 'pattern',
+  SOFTWARE_DESIGN = 'software-design',
+  SOFTWARE_DEV = 'software-development',
 }
 
 export enum FrontendCategory {

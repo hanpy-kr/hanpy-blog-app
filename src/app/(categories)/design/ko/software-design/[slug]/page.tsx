@@ -1,4 +1,4 @@
-// https://nextjs.org/docs/app/getting-started/metadata-and-og-images#memoizing-data-requests
+
 
 import { useMDXComponent } from 'next-contentlayer/hooks'
 
@@ -8,7 +8,6 @@ import { Roboto_Flex } from 'next/font/google'
 
 import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
-import Link from 'next/link'
 import NotFoundContainer from '@/components/common/NotFoundContainer'
 import { DesignCategory } from '@/app/(categories)/types'
 import { Metadata } from 'next'
@@ -17,7 +16,7 @@ const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
 })
 
-const SUB_TITLE = DesignCategory.PATTERN
+const SUB_TITLE = DesignCategory.SOFTWARE_DESIGN
 const PREFIX_PATH = `design/ko/${SUB_TITLE}`
 
 export async function generateMetadata(

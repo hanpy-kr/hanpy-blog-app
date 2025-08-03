@@ -18,6 +18,22 @@ const subCategory: Record<
     href: '/design/ko/pattern/01.Introduction',
     icon: '',
   },
+  [DesignCategory.SOFTWARE_DESIGN]: {
+    id: DesignCategory.SOFTWARE_DESIGN,
+    name: 'Software Design',
+    description:
+      'This category delves into the principles and methodologies behind structuring software systems. Explore topics such as modularity, separation of concerns, SOLID principles, and architectural patterns like MVC and layered architecture. Gain insight into how thoughtful design choices contribute to scalability, maintainability, and long-term success in software projects.',
+    href: '/design/ko/software-design/req-1-base',
+    icon: '',
+  },
+  [DesignCategory.SOFTWARE_DEV]: {
+    id: DesignCategory.SOFTWARE_DEV,
+    name: 'Software Development',
+    description:
+      'This category covers the end-to-end process of building software—from requirements gathering and planning to coding, testing, and deployment. Learn about development methodologies like Agile and DevOps, tools for version control and CI/CD, as well as strategies for team collaboration, code quality, and iterative improvement. Build reliable and efficient software through well-managed development workflows.',
+    href: '/design/ko/software-design/req-1-base',
+    icon: '',
+  },
 }
 
 const subCategoryDetail: {
@@ -67,6 +83,52 @@ const subCategoryDetail: {
         // },
       ],
     ],
+  },
+  [DesignCategory.SOFTWARE_DESIGN]: {
+    title: ['Beginner', 'Middle', 'Trouble-Shooting'],
+    subTitle: [[
+      {
+        href: '/design/ko/software-design/req-1-base',
+        title: 'Requirement',
+      },
+      {
+        href: '/design/ko/software-design/req-2-agile',
+        title: 'Agile',
+      },
+      {
+        href: '/design/ko/software-design/req-3-xp',
+        title: 'XP(Extreme Programming)',
+      },
+      {
+        href: '/design/ko/software-design/req-4-ui',
+        title: 'UI',
+      },
+      {
+        href: '/design/ko/software-design/req-5-computer-aided-software-engineering',
+        title: 'CASE',
+      },
+      {
+        href: '/design/ko/software-design/req-7-data-flow-diagram',
+        title: 'DFD',
+      },
+      {
+        href: '/design/ko/software-design/req-8-software-lifecycle',
+        title: 'Software Lifecycle',
+      },
+      {
+        href: '/design/ko/software-design/req-9-software-diagram',
+        title: 'Software Diagram',
+      },
+      {
+        href: '/design/ko/software-design/req-10-topdown-bottomup-design',
+        title: 'Topdown/Bottomup Design',
+      },
+     
+    ], [], []],
+  },
+  [DesignCategory.SOFTWARE_DEV]: {
+    title: ['Beginner', 'Middle', 'Trouble-Shooting'],
+    subTitle: [[], [], []],
   },
 }
 
