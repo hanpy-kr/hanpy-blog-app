@@ -1,0 +1,82 @@
+{
+  "name": "Hanpy Blog - Development & Tech Resources",
+  "short_name": "Hanpy Blog",
+  "description": "Comprehensive development blog covering backend, frontend, infrastructure, and interactive tools",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1f2937",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/meta/image.jpeg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/blog-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/blog-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["education", "productivity", "developer"],
+  "lang": "en",
+  "dir": "ltr",
+  "shortcuts": [
+    {
+      "name": "Spinning Wheel",
+      "short_name": "Spin",
+      "description": "Fun interactive spinning wheel tool",
+      "url": "/spin",
+      "icons": [{ "src": "/icons/spin-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Education Center",
+      "short_name": "Education",
+      "description": "Interactive learning platform",
+      "url": "/edu",
+      "icons": [{ "src": "/icons/edu-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Backend Posts",
+      "short_name": "Backend",
+      "description": "Backend development articles",
+      "url": "/backend",
+      "icons": [{ "src": "/icons/blog-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Frontend Posts",
+      "short_name": "Frontend",
+      "description": "Frontend development articles",
+      "url": "/frontend",
+      "icons": [{ "src": "/icons/blog-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/spin",
+      "id": "spin-wheel"
+    },
+    {
+      "platform": "webapp", 
+      "url": "/edu",
+      "id": "education-center"
+    }
+  ]
+}

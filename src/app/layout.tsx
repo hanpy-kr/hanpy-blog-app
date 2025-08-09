@@ -5,6 +5,7 @@ import './globals.css'
 import ToastProvider from '@/components/provider/ToastProvider'
 // import { AuthContextProvider } from '@/context/AuthContext'
 import { ThemeContextProvider } from '@/context/ThemeContext'
+import { getManifestForMetadata } from '@/utils/manifest'
 import {
   Roboto,
   //  Noto_Sans_KR
@@ -49,7 +50,7 @@ export const metadata: Metadata = {
     ],
     type: 'article',
   },
-
+  manifest: getManifestForMetadata('blog'),
 }
 
 export default function RootLayout({

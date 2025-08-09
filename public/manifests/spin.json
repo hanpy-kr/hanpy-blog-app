@@ -1,0 +1,49 @@
+{
+  "name": "Lucky Wheel - Free Spinning Wheel",
+  "short_name": "Lucky Wheel",
+  "description": "Free online spinning wheel for games, prizes, and decision making",
+  "start_url": "/spin",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait",
+  "scope": "/spin",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/meta/spin-og.jpeg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/spin-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/spin-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["games", "entertainment", "utilities", "productivity"],
+  "lang": "en",
+  "dir": "ltr",
+  "shortcuts": [
+    {
+      "name": "Spin Wheel",
+      "short_name": "Spin",
+      "description": "Quick access to spinning wheel",
+      "url": "/spin",
+      "icons": [{ "src": "/icons/spin-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false
+}
