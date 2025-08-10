@@ -40,6 +40,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     ...sitmapDatas,
+    {
+      url: `${BASE_URL}/spin`,
+      // lastModified: new Date().toISOString(),
+      lastModified: new Date('2025-08-10'),
+      // changeFrequency: 'yearly',
+      priority: 1,
+    },
   ]
 }
 // {
