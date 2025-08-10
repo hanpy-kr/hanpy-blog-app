@@ -1357,10 +1357,38 @@ export default function SpinWheelPage() {
         </div>
         
         <header className="page-header">
-          <h1>{isMounted ? t.title : 'Random Picker'}</h1>
+          <h1>{isMounted ? t.title : 'Lucky Wheel - Free Online Spinning Wheel'}</h1>
           <p className="page-description">
-            {isMounted ? t.description : 'Feel the RUSH of anticipation! Your destiny awaits with every spin!'}
+            {isMounted ? t.description : 'Spin the wheel of fortune and win amazing prizes! Perfect for games, giveaways, raffles, and decision making.'}
           </p>
+          
+          {/* SEO를 위한 정적 콘텐츠 */}
+          <div className="seo-content">
+            <h2>Free Online Spinning Wheel</h2>
+            <p>Experience the ultimate thrill of chance with our free online spinning wheel. Perfect for games, giveaways, raffles, and decision making. Our wheel features fair random selection and customizable options to suit your needs.</p>
+            
+            <h3>Features</h3>
+            <ul>
+              <li>Free online spinning wheel</li>
+              <li>Customizable sectors and colors</li>
+              <li>Fair random selection algorithm</li>
+              <li>Multiple language support</li>
+              <li>Mobile-friendly design</li>
+              <li>No registration required</li>
+            </ul>
+            
+            <h3>How to Use</h3>
+            <p>Simply click the spin button to start the wheel. You can customize the wheel by adding, removing, or editing sectors. Each sector can have different weights to control the probability of selection.</p>
+            
+            <h3>Perfect For</h3>
+            <ul>
+              <li>Decision making</li>
+              <li>Games and activities</li>
+              <li>Giveaways and raffles</li>
+              <li>Random selection</li>
+              <li>Fun activities</li>
+            </ul>
+          </div>
         </header>
         
         <section className="wheel-section" aria-labelledby="wheel-title">

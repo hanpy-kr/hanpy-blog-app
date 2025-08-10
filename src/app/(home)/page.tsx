@@ -22,7 +22,7 @@ export default function Home() {
         {/* <Carousel /> */}
         <CategoryList />
 
-        {/* <PostList /> */}
+        <PostList />
         <Footer />
       </div>
     </>
