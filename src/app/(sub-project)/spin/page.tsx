@@ -1339,44 +1339,6 @@ export default function SpinWheelPage() {
   
   return (
     <>
-      {/* SEO 메타데이터 - 클라이언트에서만 렌더링 */}
-      {isMounted && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@graph": [
-                {
-                  "@type": "WebPage",
-                  "@id": "/spin",
-                  "name": t.title,
-                  "description": t.description,
-                  "inLanguage": language,
-                  "isPartOf": {
-                    "@type": "WebSite",
-                    "name": "Hanpy Blog",
-                    "url": "/"
-                  }
-                },
-                {
-                  "@type": "SoftwareApplication",
-                  "name": t.title,
-                  "description": t.description,
-                  "applicationCategory": "Game",
-                  "operatingSystem": "Any",
-                  "offers": {
-                    "@type": "Offer",
-                    "price": "0",
-                    "priceCurrency": "USD"
-                  }
-                }
-              ]
-            })
-          }}
-        />
-      )}
-      
       <main className="spin-page">
         {/* 언어 선택기 - 우측 상단 고정 */}
         <div className="top-controls">
