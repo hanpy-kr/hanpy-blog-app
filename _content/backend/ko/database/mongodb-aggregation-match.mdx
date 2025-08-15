@@ -438,10 +438,10 @@ db.orders.aggregate([
 
 <codeline>Step 1 :</codeline> $match로 먼저 주문 필터링 (status: "pending")
 
-<br />
+
 
 <codeline>Step 2 :</codeline> $lookup으로 customers에서 active 상태만 가져옴
 
-<br />
+
 
 <codeline>Step 3 :</codeline> $match로 조인된 데이터 중 customerInfo가 존재하는 데이터만 필터링

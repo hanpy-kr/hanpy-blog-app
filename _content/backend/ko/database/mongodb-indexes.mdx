@@ -16,7 +16,7 @@ MongoDB에서 인덱스(Indexes)는 데이터 검색 성능을 비약적으로 �
 
 MongoDB에서 데이터는 <codeline>인덱스(index)와 컬렉션(collection)</codeline>이라는 두 가지 위치에 저장 할 수 있습니다. 첫째, <codeline>인덱스</codeline>는 B-Tree 자료구조를 기반으로 정렬되어 저장되기 때문에, 인덱스 검색, 삽입, 삭제 시 효율적인 탐색 및 정렬을 제공합니다. 데이터가 추가되거나 수정될 때 인덱스는 자동으로 정렬 상태를 유지하며, 쿼리가 실행되면 이 인덱스를 탐색하여 데이터를 빠르게 찾습니다. 인덱스는 \_id와 같은 기본 키를 포함하여 특정 필드에 설정할 수 있으며, 필요 시 개발자기 특정 필드에도 인덱스를 설정할 수 있습니다.
 
-<br />
+
 
 우리가 보통 Mongodb에서 데이터를 조회하는 부분이 컬렉션입니다. Mongodb는 큰 범위인 <codeline>데이터베이스(Database)</codeline>에 여러개의 <codeline>컬렉션(Collection)</codeline>이 존재하고, 컬렉션 안에는 Application에서 저장된 실제 데이터가 <codeline>문서(Document)</codeline> 형태로 포함되어 있습니다. MongoDB는 데이터를 BSON(Binary JSON) 형식으로 저장됩니다. BSON은 JSON의 확장 형식으로 더 많은 데이터를 지원합니다. 보통 컬렉션에 대한 조회가 필요하다면 쿼리를 작성하게 됩니다. 쿼리 작성 시 인덱스가 없다면 컨렉션의 모든 문서를 스캔하는 <codeline>풀 스캔(Collection Scan)</codeline>이 발생합니다. 따라서 효율적인 인덱스 추가로 검색 성능을 향상 시키는 것이 필수적이라 할 수 있습니다.
 
@@ -38,14 +38,14 @@ db.collection.find({
 
 실무에서는 모든 쿼리에 .explain() 메서드를 사용하여 성능을 분석합니다. <codeline>find().explain('executionStats')</codeline> 명령을 통해 쿼리가 인덱스를 타고 있는지, 아니면 collScan(컬렉션 스캔)으로 실행되고 있는지를 확인할 수 있습니다. 특히, 아래의 주요 항목을 주의 깊게 살펴보아야 합니다.
 
-<br />
+
 
 - nReturned: 반환된 문서 수.
 - totalKeysExamined: 읽은 인덱스 키 수.
 - totalDocsExamined: 읽은 문서 수.
 - executionTimeMillis: 쿼리 실행 시간.
 
-<br />
+
 
 totalDocsExamined에 비해 nReturned 값이 지나치게 작다면, 쿼리가 비효율적으로 실행되고 있음을 의미합니다. 이 경우 적절한 인덱스를 생성하여 쿼리를 최적화를 고려해야합니다. 최적화를 고려하지 않아도 되는 경우가 nReturned와 totalKeysExamined, totalDocsExamined의 수가 같은경우에 최적화가 되었다고 할 수 있습니다.
 
@@ -88,14 +88,14 @@ MongoDB는 효율적인 데이터 검색과 성능 최적화를 위해 다양한
 
 Single-Field Index는 하나의 필드에만 인덱스를 생성하는 방식으로, 가장 기본적이고 널리 사용되는 인덱스 유형입니다. 이 인덱스는 지정된 필드의 값을 기준으로 데이터를 정렬하여 검색 속도를 높입니다. 단일 필드에만 적용되며, 값이 오름차순(1) 또는 내림차순(-1)으로 정렬됩니다. 필드의 데이터 유형과 값에 따라 인덱스의 크기와 성능이 결정됩니다. 객체 타입 필드에 인덱스를 설정할 때 주의해야 합니다. 객체 필드의 키 순서가 인덱스 값에 영향을 미칩니다.
 
-<br />
+
 
 ```
 { a: 1, b: 2 }
 { b: 2, a: 1 }
 ```
 
-<br />
+
 
 예를 들어, 인덱스 생성 시 위의 두 객체는 동일한 객체로 취급되지 않습니다.
 
