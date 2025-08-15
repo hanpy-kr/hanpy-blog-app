@@ -14,14 +14,14 @@ Kubernetes가 구글에서 시작되었다는 이야기도 어느 정도는 맞�
 이에 따른 효율적인 관리를 위해 보그(Brog)라는 오케스트레이션(Orchestration) 도구를 만들어 내부적으로 사용하게 됩니다.
 이때 구글에서 사용한 보그(Brog)가 쿠버네티스의 시초가 되었고, Kubernetes의 기본 컨셉도 정해지게 됩니다.
 
-<br />
+
 
 보그의 성장과 함께 Container 기술이 성숙해지면서, 구글은 보그를 리눅스 재단에 기부하게 됩니다.
 리눅스 재단에서는 클라우드 네이티브 컴퓨팅 재단(CNCF, Cloud Native Computing Foundation)을 만들었고,
 시드 기술로 기부받은 보그(Brog)를 바탕으로, 오픈소스 Kubernetes 1.0을 발표합니다.
 2015년 등장과 동시에 개발환경/운영환경의 큰 변화를 가져왔고, 현 시점에서 가장 표준화된 컨테이너 오케스트레이션(Container Orchestration)이라고 할 수 있습니다.
 
-<br />
+
 
 컨테이너 오케스트레이션은 <codeline>컨테이너의 포로비저닝/배포/네트워킹/확장/가용성/자원에 대한 통합 관리</codeline> 합니다.
 Amazon Web Services(AWS), Google Cloud Platform, IBM Cloud 및 Microsoft Azure를 비롯한 대부분의 주요 퍼블릭 클라우드 제공업체에서도 Kubernetes 서비스를 제공하기 때문에 쉽게 사용가능합니다. 컨테이너 오케스트레이션을 이해하기 위해서는 초기 컨테이너와 도커의 이해가 우선적으로 필요합니다.
@@ -30,14 +30,14 @@ Amazon Web Services(AWS), Google Cloud Platform, IBM Cloud 및 Microsoft Azure�
 
 초기에는 쿠버네티스가 아닌, LXC(Linux Containers)를 활용하여 컨테이너를 사용하였습니다. LXC는 리눅스 환경 내에서 Namespace와 파일시스템/네트워크(하드웨어 자원) 분리를 지원합니다. 여기서 조금 더 발전한 형태가 바로 Docker입니다. Docker는 아래의 명령어만으로 간단히 nginx를 실행시킬 수 있습니다. 간단한 예
 
-<br />
+
 
 ```bash title="docker" showLineNumbers
 $ sudo docker pull nginx:latest
 $ docker container run --name my-webserver -d -p 8080:80 nginx
 ```
 
-<br />
+
 
 - --name : 컨테이너의 이름을 my-webserver로 설정
 - -d : 백그라운드로 실행하겠다는 설정
@@ -52,7 +52,7 @@ Docker를 사용하면 만들어진 애플리케이션을 간단한 명령어 �
 
 만약, 내가 만든 애플리케이션을 도커 이미지로 만들려면, Dockerfile을 먼저 만들어야 합니다. Dockerfile의 내부 샘플 코드는 아래와 같습니다.
 
-```Dockerfile title="Dockerizing" showLineNumbers
+```javascript title="Dockerizing" showLineNumbers
 COPY package.json /app/package.json
 ```
 
@@ -84,7 +84,7 @@ $ docker run -p 3000:3000 hanpy/my-app:dev_1
 
 사실상 컨테이너와 호스트를 쿠버네티스에서 관리해 줍니다. 이 부분의 의의는 하드웨어 자원을 추상적인 영역으로 올렸고, 물리 서버에 집중하기보다 비즈니스 개발에 집중할수 있다고 할 수 있습니다.
 
-<br />
+
 
 ---
 

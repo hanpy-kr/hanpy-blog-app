@@ -1,29 +1,125 @@
-.LBN__title {
-  font-size: 1rem;
-  font-weight: 600;
-  /* line-height: 3rem; */
-
-  margin-top: 2rem;
+/* ========== Tokens ========== */
+:root {
+  --lnb-accent: #2563eb;   /* blue-600 */
+  --lnb-accent-weak: #dbeafe;
+  --lnb-fg: #0f172a;       /* slate-900 */
+  --lnb-muted: #64748b;    /* slate-500 */
+  --lnb-border: #e5e7eb;   /* gray-200 */
+  --lnb-hover: #f8fafc;    /* slate-50 */
+  --lnb-panel: #ffffff;
+  --lnb-focus: #93c5fd;    /* blue-300 */
 }
 
-.LBN__subTitle__container {
+:root.dark, .dark {
+  --lnb-accent: #60a5fa;   /* blue-400 */
+  --lnb-accent-weak: #0b2447;
+  --lnb-fg: #e5e7eb;
+  --lnb-muted: #94a3b8;    /* slate-400 */
+  --lnb-border: #1f2937;   /* gray-800 */
+  --lnb-hover: #0f172a;    /* slate-900 */
+  --lnb-panel: #0b1220;
+  --lnb-focus: #1d4ed8;
+}
+
+/* ========== Container ========== */
+.LNB {
+  width: 100%;
+  max-width: 22rem;
+  color: var(--lnb-fg);
+  /* background: var(--lnb-panel); */
+  /* border: 1px solid var(--lnb-border); */
+  /* border-radius: 10px; */
+  padding: 0.75rem;
+  position: sticky;        /* 필요 없으면 제거 */
+  top: 1rem;               /* 헤더 아래 고정 여백 */
+}
+
+/* ========== Section ========== */
+.LNB__title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  margin: 1rem 0 0.25rem;
+  letter-spacing: -0.005em;
+}
+
+.LNB__section {
   list-style: none;
-  margin: 0px;
-
-  color: gray;
-  border-left: 1.5px solid black;
-  /* padding: 0.2rem 0; */
-
-  font-size: 0.9rem;
+  padding: 0;
+  margin: 0.25rem 0 0;
 }
 
-.LBN__subTitle {
-  /* padding: 0.2rem; */
-  /* padding: 0 0 0 1rem; */
-  margin: 8px 0 0 0;
-  cursor: pointer;
-  &:before {
-    content: '';
-    margin-right: 0px;
-  }
+.LNB__sectionItem { margin: 0; }
+
+/* ========== List ========== */
+.LNB__list {
+  margin: 0.25rem 0 0.75rem 1.1rem; /* 들여쓰기 */
+  padding: 0.25rem 0 0.25rem 0.25rem;
+  border-left: 1px solid color-mix(in srgb, var(--lnb-border) 70%, transparent);
+}
+
+.LNB__list li {
+  margin: 0.25rem 0;
+  line-height: 1.6;
+  list-style: none;
+}
+
+/* 기본 마커는 은은하게, 현재/hover일 때만 강조 */
+.LNB__list li::marker {
+  color: color-mix(in srgb, var(--lnb-muted) 80%, transparent);
+  font-size: 0.7em;               /* 점 크기 축소 */
+}
+
+/* ========== Link Item ========== */
+.LNB__link {
+  display: inline-block;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  color: var(--lnb-muted);
+  text-decoration: none;
+  border-radius: 8px;
+  outline: none;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.LNB__link:hover {
+  background: var(--lnb-hover);
+  color: var(--lnb-fg);
+}
+
+/* 포커스 링 */
+.LNB__link:focus-visible {
+  box-shadow: 0 0 0 3px var(--lnb-focus);
+  background: var(--lnb-hover);
+  color: var(--lnb-fg);
+}
+
+/* 현재 페이지: 텍스트/마커/인디케이터 동시 강조 */
+.LNB__link[aria-current="page"] {
+  color: var(--lnb-fg);
+  font-weight: 750;
+  background: color-mix(in srgb, var(--lnb-accent-weak) 35%, transparent);
+  position: relative;
+}
+.LNB__link[aria-current="page"]::before {
+  content: '';
+  position: absolute;
+  left: -0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px; height: 6px;
+  border-radius: 9999px;
+  background: var(--lnb-accent);
+}
+/* 현재 li의 마커도 파란색으로 */
+.LNB__link[aria-current="page"]::marker {
+  color: var(--lnb-accent);
+  font-size: 0.75em;
+}
+
+/* 밀도 프리셋 (원하면 클래스 토글로 전환) */
+.LNB.is-compact .LNB__list li { margin: 0.125rem 0; line-height: 1.5; }
+.LNB.is-comfortable .LNB__list li { margin: 0.4rem 0; line-height: 1.7; }
+
+/* 모션 선호 */
+@media (prefers-reduced-motion: reduce) {
+  .LNB__link { transition: none !important; }
 }

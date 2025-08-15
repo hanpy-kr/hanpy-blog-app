@@ -19,11 +19,11 @@ tags: [Serverless, AWS, GCP, Azure, Backend]
 
 AWS Lambda는 Serverless의 대명사로 불릴 만큼 시장에서 가장 널리 사용되는 플랫폼입니다. 2014년 출시 이후 Serverless 개념을 대중화하며 강력한 생태계를 구축해왔습니다. Lambda는 AWS S3, DynamoDB, SNS, API Gateway 등 다양한 AWS 서비스와 긴밀하게 연동되며, Node.js, Python, Java, Go, C#, Ruby 등 여러 언어를 지원합니다.
 
-<br />
+
 
 Lambda는 높은 확장성, 글로벌 리전 커버리지, 다양한 이벤트 트리거 지원을 제공합니다. 특히 VPC 통합, 환경 변수 설정, 프로비저닝 콘커런시(Provisioned Concurrency)를 통한 콜드 스타트 완화 등 실전 운영에 필요한 기능들이 매우 충실하게 제공됩니다.
 
-<br />
+
 
 그러나 초기 설정이 복잡할 수 있으며, IAM 권한 관리가 세밀하게 요구됩니다. 특히 복잡한 보안 정책이 필요한 경우 Lambda 접근 제어는 주의 깊게 설계해야 합니다. 또한, 콜드 스타트 문제는 여전히 실시간 응답이 중요한 워크로드에서 주의해야 할 요소입니다.
 
@@ -33,11 +33,11 @@ Lambda는 높은 확장성, 글로벌 리전 커버리지, 다양한 이벤트 �
 
 GCP Cloud Functions는 Google Cloud Platform의 Serverless 컴퓨팅 서비스로, Google Storage, Pub/Sub, Firestore와 같은 데이터 중심 서비스와 자연스럽게 연동됩니다.
 
-<br />
+
 
 설정과 배포가 매우 간편하며, Firebase와의 통합이 뛰어나 모바일 앱 및 웹 백엔드 개발에 강점을 가집니다. 지원하는 언어는 Node.js, Python, Go이며, 최근에는 Java, Ruby, PHP도 베타 지원하고 있어 선택 폭이 넓어지고 있습니다.
 
-<br />
+
 
 Cloud Functions는 초 단위로 과금되며, 사용량이 없을 때 비용이 발생하지 않는 구조입니다. 다만, VPC 연결 및 네트워크 구성은 AWS Lambda에 비해 단순하여 복잡한 네트워크 아키텍처를 구축하려는 경우 한계가 있을 수 있습니다.
 
@@ -47,11 +47,11 @@ Cloud Functions는 초 단위로 과금되며, 사용량이 없을 때 비용이
 
 Azure Functions는 Microsoft Azure가 제공하는 Serverless 플랫폼입니다. 다양한 언어(.NET, C#, Java, Python, JavaScript 등)를 지원하며, Visual Studio 및 기타 Azure 서비스와의 통합성이 매우 뛰어납니다.
 
-<br />
+
 
 Azure Functions의 핵심 강점은 다양한 트리거와 바인딩 지원입니다. HTTP 요청, Timer, Blob Storage, Cosmos DB 등 다양한 데이터 소스와 손쉽게 연동할 수 있으며, Durable Functions를 통해 복잡한 상태 관리 워크플로우를 구성할 수도 있습니다.
 
-<br />
+
 
 Windows와 Linux 환경 모두 지원하며, 엔터프라이즈급 시스템 통합이 필요한 경우 뛰어난 확장성과 안정성을 제공합니다. 다만, 초기 설정이 복잡할 수 있고 러닝 커브가 존재해 초심자에게는 다소 어려울 수 있습니다.
 
@@ -73,7 +73,7 @@ Serverless 플랫폼을 선택할 때는 단순한 기능 비교를 넘어 서�
 
 Serverless 플랫폼 선택은 단순한 가격과 속도 경쟁이 아니라, 전체 서비스 운영 전략과 밀접한 결정입니다. 각 플랫폼은 고유한 강점과 한계를 가지고 있으며, 이를 명확히 이해하고 프로젝트의 요구사항에 맞춰 신중하게 선택하는 것이 성공적인 서비스 구축의 핵심입니다.
 
-<br />
+
 
 다음 글에서는 "Serverless 아키텍처 설계 핵심 구성 요소"를 주제로, 다양한 Serverless 서비스를 어떻게 조합하고 최적화할 수 있을지 심층적으로 살펴보겠습니다.
 

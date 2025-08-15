@@ -12,7 +12,7 @@ publishedAt: 2025-06-30
 
 개발을 하다 보면 소켓 프로그래밍이나 서버 네트워크 구성에서 <codeline>TIME_WAIT</codeline>이라는 상태를 목격할 때가 있습니다. **"연결은 이미 끝났는데 왜 아직도 뭔가 남아있지?"**라는 의문이 들 수도 있습니다. 이 글에서는 TCP 상태 전이 흐름과 네트워크의 본질적인 특성을 바탕으로 <codeline>TIME_WAIT</codeline>이 왜 필요한지, 그리고 어떤 원리로 작동하는지 알아봅시다.
 
-<br />
+
 
 TCP는 연결 지향적 프로토콜입니다. 연결을 맺고(3-way handshake), 데이터를 주고받고, 다시 연결을 종료합니다(4-way handshake). 이때, 종료가 완료된 후에도 왜 소켓이 <codeline>TIME_WAIT</codeline>이라는 상태로 남아있게 됩니다. <codeline>TIME_WAIT</codeline>은 단순한 종료 대기 상태가 아니라, 지연된
 패킷(delayed packet)이나 재전송된 FIN 요청을 안전하게 처리하기 위한 역할을 하게됩니다.

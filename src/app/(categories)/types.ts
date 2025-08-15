@@ -43,5 +43,6 @@ export enum InfraCategory {
   BASE = 'base',
   KUBERNETES = 'kubernetes',
   DOCKER = 'docker',
+  TOOLS = 'tools',
   COMPUTE_INFRASTRUCTURE = 'compute-infrastructure',
 }

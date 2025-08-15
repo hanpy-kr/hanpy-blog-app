@@ -6,13 +6,11 @@ import { Roboto_Flex } from 'next/font/google'
 
 import './page.css'
 import BlogLayout from '@/app/(categories)/_components/BlogLayout'
-import useI18N from '@/hooks/useI18N'
-import Link from 'next/link'
 import NotFoundContainer from '@/components/common/NotFoundContainer'
 import { InfraCategory } from '@/app/(categories)/types'
 import { Metadata } from 'next'
 
-const SUB_TITLE = InfraCategory.COMPUTE_INFRASTRUCTURE
+const SUB_TITLE = InfraCategory.TOOLS
 const PREFIX_PATH = `infra/ko/${SUB_TITLE}`
 
 const robotoFlex = Roboto_Flex({

@@ -12,7 +12,7 @@ publishedAt: 2024-08-07
 
 Control Plane은 사용자의 요청을 받아 Node와 container를 관리합니다. ( Control Plane의 구조적 설명은 하단 설명을 참고해 주세요. ) Pod가 어느 Node에 배치가 될지는 Scheduler가 관리해 줍니다. 하지만 상황에 따라 물리적 Node와 Pod 사이에는 복잡한 제약조건이 존제할 수도 있습니다.
 
-<br />
+
 
 Scheduler는 filtering/scoring 과정을 통해 Node 배치를 결정합니다. 당연한 이야기지만 이러한 과정에는 개발자는 개입하지 않고 쿠버네티스가 선택하여 배치합니다. filtering은 배드를 배치 할 수 없는 Node를 filtering하는 역할을합니다. scoring은 필터링 되지 않는 Node에서 어느 노드가 파드의 배치가 적합한지를 종합적으로 고려하여 선택하는 역할을 합니다. 하지만 개발자의 개입을 통해 특정 Node에만 배치를 하거나 하지 말아야하는 경우도 발생하게 됩니다. 관련 설정하는 방법에 대해 하나씩 알아보도록 합시다.
 
@@ -20,18 +20,18 @@ Scheduler는 filtering/scoring 과정을 통해 Node 배치를 결정합니다. 
 
 특정 Node를 선택하여 파드는 넣는 경우는 보통 GPU가 포함된 Node에 인공지능과 관련된 pod를 올리는 경우라고 할 수 있습니다. 이러한 경우 우리는 보통 Selector/Label를 사용하게 됩니다.
 
-<br />
+
 
 - label : 식별을 위한 태그를 넣어줄 수 있습니다.
 - selector : label을 식별하는 값이 selector입니다.
 
-<br />
+
 
 <a href="/infra/ko/kubernetes/1-6.selector-and-label">
   <codeline>Selector/Label 확인하기 (클릭)</codeline>
 </a>
 
-<br />
+
 
 정리하면, label이 데이터 값이라면, selector가 쿼리라고 할 수 있습니다.
 
@@ -70,14 +70,14 @@ $ kubectl taint node node-2 hw-type=gpu:NoSchedule
 
 위에서 taint의 NoSchedule 옵션을 적용하였습니다. 관련 사용할 수 있는 사항들은 아래와 같습니다.
 
-<br />
+
 
 - NoSchedule : 강력한 제약으로 Node에 pod가 스케줄 되지 못하는 설정입니다.
 - PreferNoSchedule : 소프트한 제약으로 다른 Node가 다 차서 가용할 수 있는 Node가
   없는 경우 배치합니다. 일반적으로 배치하지 않습니다. - NoExecute : 이미 존재하는
   pod도 모두 제거하는 옵션입니다.
 
-<br />
+
 
 Tolerations란 Taint옵션을 무시하여 배치할 수 있는 옵션으로 Taint옵션을 오버라이딩합니다. 기본적으로 Taint옵션을 걸어두고, Taint옵션을 무시하는 방식으로 pod를 배치할 수 있습니다.
 
@@ -99,7 +99,7 @@ spec:
 
 위의 내용에서 key, value, effect 옵션이 모두 일치해야한 Taint 무시가 가능합니다. 보통 Taint와 Tolerations를 복합적으로 사용해야 원하는 동작을 수행시킬 수 있습니다.
 
-<br />
+
 
 Node에서 pod를 선택하는 간단한 방법을 알아보았습니다. 좀 더 구체적으로 pod를 지정하는 방법으로는 Node Affinity를 활용해서 가능합니다. 관련 내용은 다음 블로그에서 확인해 보도록 하겠습니다.
 
@@ -111,11 +111,11 @@ Node에서 pod를 선택하는 간단한 방법을 알아보았습니다. 좀 �
 
 앞에서 배운 <a href="/infra/ko/kubernetes/1-4.kubernetes-components"><codeline>클릭</codeline></a> 부분에 대한 간단히 정리를 해보려합니다.
 
-<br />
+
 
 ![image](/image/infra/control-plane.png)
 
-<br />
+
 
 #### API Server
 

@@ -12,13 +12,13 @@ publishedAt: 2024-03-22
 
 쿠버네티스는 컨테이너 오케스트레이션의 역할을 하고, 컨테이너를 운영체제 가상화 기술이라는 것을 알아보았습니다. 그리고 쿠버네티스는 컨테이너를 포함하고 있습니다. 따라서 쿠버네티스에서는 컨테이너를 실행하기 위한 운영체제를 가상화 할 수 있는 하나 이상의 하드웨어를 가지고 있다고 할 수 있습니다. 이러한 이유로 쿠버네티스를 자원에 대한 분리/격리를 할 수 있는 가상 운영체제라고 할 수 있습니다. 컨테이너 기준으로 운영체제를 볼 때, 가상 환경과 실제 환경의 차이는 없습니다.
 
-<br />
+
 
 위에서 말한 하드웨어의 주된 목적은 컨테이너를 실행하는 것입니다.
 이 말은 하드웨어에는 컨테이너에 할당 가능한 cpu나 메모리를 가지고 있다는 말이고, 컨테이너 런타임이나 컨테이너 실행을 위한 운영체제도 설치되어 있습니다.
 이라한 하드웨어를 호스트나 서버라고 부르기도 합니다. 쿠버네티스에서는 이러한 하드웨어를 <codeline>Node</codeline>라고 부르고 Node를 관리하는 부분을 Control Plane이라고 부릅니다. 우리가 지금까지 이야기했던 하드웨어는 Node의 개념으로 이해하여 주시면 됩니다.
 
-<br />
+
 
 ---
 
@@ -26,8 +26,8 @@ publishedAt: 2024-03-22
 
 Control Plane은 사용자의 요청을 받아 Node와 container를 관리합니다. 초창기에는 Node를 관리한다는 의미로 Master Node라 불리는 시기도 있었지만, 현재는 Control Plane으로 불립니다. 동일하게 Node도 초창기에는 Worker Node라고 불렸었습니다. 현재의 Control Plane의 경우에는 분산처리 기능도 추가되면서 Node만 관리하던 옛날의 마스터 노드와는 기능 변경이 많이 일어났다고 할 수 있습니다. 이전 자료를 찾아보면 관련된, 용어들에 대하여 헷갈리지 않도록 주의해두면 좋을 것 같습니다.
 
-<br />
-<br />
+
+
 
 ### Control Plane 구성요소
 
@@ -35,31 +35,31 @@ Control Plane은 사용자의 요청을 받아 Node와 container를 관리합니
 
 일반적인 API Server와 비슷합니다. 사용자의 입력에 따라 상태를 저장하고 Node들과 통신하여 Node와 Container의 변화를 인지하고 동작을 수행합니다. 대표적인 예로 kubectl을 명령어로 자주 사용하게 된다. 이러한 kubectl도 API server를 사용하여 만들어진 cli tool이라고 할 수 있다.
 
-<br />
+
 
 #### etcd(엣시디, 이티시디)
 
 쿠버네티스에 관한 정보를 저장하는 곳으로, container나 cluster가 모두 날라가더라도 etcd에 백업되어 있다면 백업시점으로 상태를 되돌리는 것이 가능합니다. 메모리 스토어와 파일 스토어를 혼용해서 사용되며, 분산 환경에서 가용성이 매우 크고 안전합니다. etcd는 라이브러리이기 때문에 다른 환경에서도 사용가능하다.
 
-<br />
+
 
 #### Scheduler
 
 여러개의 생성된 Node 중에 어느 Node에 컨테이너를 생성할지를 정하는 역할을 합니다. 내부 알고리즘은 복잡하게 만들어져 있지만, 너프하게 이해한다면 Node에게 균등하게 Container를 생성해 준다고 할 수 있습니다.
 
-<br />
+
 
 #### Controller Manager
 
 쿠버네티스 내부에는 각각의 독립적인 컨트롤러( ex. Node 컨트롤러, Job 컨트롤러, Service Account 컨트롤러 등등)들이 있습니다. 이러한 독립적인 컨트롤러들을 모아 관리하는 역할을 하는 것이 Controller Manager입니다. 쿠버네티스의 다양한 컨트롤러를 관리하며 API Server가 해야할 일들을 알려주는 역할을 합니다.
 
-<br />
+
 
 #### Cloud Controller Manager
 
 다양한 Cloud 서비스(AWS, MS)에 최적화되어 사용할 수 있도록 관리합니다. 클라우드 서비스에 따른 저장소나 트래픽이 각각 다르기 때문에 관련 연동을 담당합니다. 만약 클라우드 서비스를 사용하지 않고, local 노트북에서 쿠버네티스를 테스트 한다면, Control Plane에서 Cloud Contoroller Mnager를 구성할 이유는 없습니다.
 
-<br />
+
 
 ---
 
@@ -67,7 +67,7 @@ Control Plane은 사용자의 요청을 받아 Node와 container를 관리합니
 
 기본적으로 Node는 컨테이너가 실행되는 공간으로 필수적으로 필요한 최소한의 프로세스들만 존재합니다.
 
-<br />
+
 
 ## Node 구성요소
 
@@ -75,14 +75,14 @@ Control Plane은 사용자의 요청을 받아 Node와 container를 관리합니
 
 Container를 실행하거나 종료하는 역할을 합니다. 이때 주의할 점은 Kubetlet이 직접 Container를 실행/종료하는 것이 아니고, API Server를 통해 명령을 받아서 작동합니다.
 
-<br />
+
 
 #### Kube-proxy (큐브 프록시)
 
 Container는 독립적인 공간입니다. 따라서 네트워크 통신을 위해서는 Container의 네트워크를 관리해주는 것이 필요한데 그것이 kube-proxy입니다.
 
-<br />
-<br />
+
+
 
 ## 구성요소에 따른 작동 순서
 
@@ -94,46 +94,46 @@ Container는 독립적인 공간입니다. 따라서 네트워크 통신을 위�
 6. 컨테이너 실행 후에도 Kubelet은 Container 상태를 모니터링하면서 API Server에 상태를 업데이트 합니다. 이때 API Server에서는 전달받은 상태를 etcd에 저장합니다.
 7. Container가 새롭게 생긴 후에 네트워크 연결 시점을 API Server에서 Kube-proxy에 알려줍니다. Kube-proxy는 라우팅 규칙을 업데이트 하여 컨테이너가 네트워크에 연결될 수 있도록 작업을 진행합니다.
 
-<br />
+
 
 ## [참고] 컨테이너 컨셉
 
 여러 Node 중에 하나의 Node에 container를 실행하는 명령어는 무엇일까?
 
-<br />
+
 
 ```
 $ kubernetes run my-container --node=node-03
 ```
 
-<br />
+
 
 - node-03이라는 Node 안에서 my-container를 실행해 주세요. 라는 명령으로 보입니다.
 - 위와 같은 명령어는 없다고 생각합시다. 사용자가 직접 생성할 Node를 선택하지 않고 선택권을 쿠버네티스에 위임합니다.
 
 Docker와 같은 명령어는 없습니다. Node에 띄우는 것은 컨테이너 오케스트레이션인 쿠버네티스가 알아서 한다는 것을 기억합시다.
 
-<br />
+
 
 ## 정리
 
 쿠버네티스를 구성하는 요소를 Control Plane과 Node에 대해 알아보았습니다. 둘의 가장 큰 차이는 Control Plane은 쿠버네티스를 관리하는 역할을 하고 Node는 쿠버네티스가 실행되는 공간이라고 할 수 있습니다.
 
-<br />
+
 
 ---
 
-<br />
+
 
 ## reference
 
 https://kubernetes.io/docs/concepts/overview/components/
 
-<br />
+
 
 ---
 
-<br />
+
 
 ## word
 

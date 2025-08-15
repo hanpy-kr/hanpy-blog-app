@@ -13,11 +13,11 @@ tags: [Node.js, 파일 시스템, Backend, fs 모듈, 비동기 함수]
 
 Node.js로 서버나 유틸성 스크립트를 만들다 보면 디렉토리 내부의 파일 목록을 가져와야 하는 경우가 종종 있습니다. 이미지 처리 파이프라인을 만든다거나, 정적 파일을 자동으로 읽어서 클라이언트에 전달하는 식의 작업이 그렇죠.
 
-<br />
+
 
 이럴 때 많이 사용하는 함수가 바로 <codeline>fs.readdir</codeline>입니다. 이 함수는 Node.js의 파일 시스템(<codeline>fs</codeline>) 모듈에서 제공하는 **비동기 방식의 디렉토리 읽기 함수**입니다.
 
-<br />
+
 
 <codeline>fs.readdirSync</codeline>와는 달리, <codeline>fs.readdir</codeline>은 비동기 방식이라 이벤트 루프를 차단하지 않고 효율적으로 파일 목록을 가져올 수 있습니다.
 

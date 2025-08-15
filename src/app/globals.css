@@ -1,488 +1,321 @@
-reset css html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-/* h1, */
-/* h2, */
-/* h3, */
-/* h4, */
-/* h5, */
-/* h6, */
-/* p, */
-/* blockquote, */
-/* pre, */
-/* a, */
-abbr,
-acronym,
-address,
-big,
-cite,
-/* code, */
-del,
-dfn,
-em,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-/* ul, */
-/* li, */
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-}
+/* ========== Base Reset (안전/의미 보존형) ========== */
+*,
+*::before,
+*::after { box-sizing: border-box; }
 
-img {
-  margin: auto;
-  display: block;
-}
-
-/* css overridding */
-h1 {
-  display: block;
-  font-size: 2em;
-  margin-bottom: 0.67em;
-
-  /* margin-top: 0.67em;
-  margin-bottom: 0.67em;
-  margin-left: 0;
-  margin-right: 0; */
-  font-weight: bold;
-}
-h2 {
-  display: block;
-  font-size: 1.5em;
-  margin-bottom: 0.23em;
-  margin-top: 1.5em;
-
-  /* margin-top: 0.83em;
-  margin-bottom: 0.83em;
-  margin-left: 0;
-  margin-right: 0; */
-  font-weight: bold;
-}
-h3 {
-  display: block;
-  font-size: 1.17em;
-  margin-top: 1em;
-  margin-bottom: 0.17em;
-
-  /* margin-top: 1em;
-  margin-bottom: 1em;
-  margin-left: 0;
-  margin-right: 0; */
-  font-weight: bold;
-}
-h4 {
-  display: block;
-  margin-top: 1em;
-  margin-bottom: 0.14em;
-  /* margin-top: 1.33em;
-  margin-bottom: 1.33em;
-  margin-left: 0;
-  margin-right: 0; */
-  font-weight: bold;
-}
-h5 {
-  display: block;
-  font-size: 0.83em;
-  margin-bottom: 0.1em;
-  /* margin-top: 1.67em;
-  margin-bottom: 1.67em;
-  margin-left: 0;
-  margin-right: 0; */
-  font-weight: bold;
-}
-h6 {
-  display: block;
-  font-size: 0.67em;
-  /* margin-top: 2.33em;
-  margin-bottom: 2.33em;
-  margin-left: 0;
-  margin-right: 0; */
-  font-weight: bold;
-}
-hr {
-  margin: 50px 0px 20px 0px;
-}
-/* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
-}
-body {
-  line-height: 1;
-}
-
-blockquote,
-q {
-  quotes: none;
-}
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: '';
-  content: none;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-/* =========================== ol / li ========================== */
-ol,
-ul {
-  list-style: none;
-  margin: 15px 0px;
+html {
+  /* 시스템 폰트 폴백 + 사용자 지정 변수 */
   font-size: 16px;
 }
 
-/* ol li {
-  margin-bottom: 3px;
-  border-radius: 10px;
-  padding: 0px 10px;
-  transition: all 1s;
-} */
+:root {
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Helvetica Neue", Arial, "Liberation Sans", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-ol li,
-ul li {
-  margin-bottom: 3px;
-  border-radius: 10px;
-  padding: 0px 10px;
-  transition: all 1s;
+  /* Layout */
+  --content-max: 75ch;                 /* ~66–80자 */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+
+  /* Colors (Light) */
+  --bg: #ffffff;
+  --fg: #111827;                       /* gray-900 */
+  --muted: #6b7280;                    /* gray-500 */
+  --border: #e5e7eb;                   /* gray-200 */
+  --accent: #2563eb;                   /* blue-600 */
+  --accent-weak: #dbeafe;              /* blue-100 */
+  --code-bg: #f5f5f5;
+  --code-fg: #1f2937;                  /* gray-800 */
+  --code-border: #dddddd;
+  --quote-bg: #f9fafb;                 /* very light */
+  --quote-border: #e5e7eb;
+  --table-zebra: #f9fafb;
+  --highlight-line: #e6efff;           /* 가벼운 블루 */
+
+  /* Git diff tint (light) */
+  --diff-plus-bg: #eaf6ec;
+  --diff-plus-bar: #16a34a;            /* green-600 */
+  --diff-minus-bg: #fdecec;
+  --diff-minus-bar: #dc2626;           /* red-600 */
 }
 
-/* 순서 있는 리스트 (ol) 항목에 숫자 색상 */
-ol li::before {
-  content: counter(list-item) '. ';
-  color: #007bff;
-  font-weight: bold;
-  margin-right: 10px;
+:root.dark,
+.dark {
+  --bg: #0b1220;                       /* 조금 더 딥한 남색 톤 */
+  --fg: #e5e7eb;
+  --muted: #9ca3af;
+  --border: #1f2937;
+  --accent: #60a5fa;                   /* blue-400 */
+  --accent-weak: #0b2447;
+  --code-bg: #0f172a;                  /* slate-900 */
+  --code-fg: #e5e7eb;
+  --code-border: #1f2937;
+  --quote-bg: #0e1628;
+  --quote-border: #1f2937;
+  --table-zebra: #0e1628;
+  --highlight-line: #0f2a52;
+
+  --diff-plus-bg: #0f2a1a;
+  --diff-plus-bar: #22c55e;
+  --diff-minus-bg: #2a0f14;
+  --diff-minus-bar: #f87171;
 }
 
-/* 순서 없는 리스트 (ul) 항목에 불릿 색상 */
-ul li::before {
-  content: '•';
-  color: #007bff;
-  font-size: 18px;
-  margin-right: 10px;
+/* 시스템 선호 다크모드 자동 대응 (클래스 토글과 병행) */
+@media (prefers-color-scheme: dark) {
+  :root { color-scheme: dark; }
 }
 
-ol li:hover,
-ul li:hover {
-  background-color: #f8f8f8;
-  /* cursor: pointer; */
-}
-
-/* =========================================================== */
-
-html,
-body {
+/* ========== Document ========== */
+html, body {
   margin: 0;
-  font-family: var(--roboto);
-  /* font-family: va; */
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--roboto, var(--font-sans));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-codeline {
-  background-color: #f3f3f0;
-  padding: 1px 3px;
-  border-radius: 4px;
-  font-weight: 500;
+body {
+  line-height: 1.7;
 }
 
-/* dark mode */
-
-.white {
-  transition: all 0.25s linear;
-  background-color: white;
+/* 블로그 본문 컨테이너 예시(필요 시 상위에서 클래스 부여) */
+.prose, .markdown, .mdx-content {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: 1rem;
 }
 
-.dark {
-  transition: all 0.25s linear;
-  background-color: #1e2937;
-  min-height: 100vh;
+/* 이미지: 반응형 + 캡션 호환 */
+img, svg, video, canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
-.dark a,
-.dark .form label,
-.dark .post__delete,
-.dark .profile__logout,
-.dark .form__title,
-.dark .post__navigation--active,
-.dark .post__title,
-.dark .post__author-name,
-.dark .footer__theme-btn,
-.dark .profile__name {
-  color: white;
+/* 링크 상태 */
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
-.dark a:hover,
-.dark a:focus,
-.dark .post__text,
-.dark .post__text--pre-wrap,
-.dark .profile__email,
-.dark .post__date,
-.dark .form__block {
-  color: lightgray;
+/* ========== Headings ========== */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
-.dark .form__error {
-  color: #ff6a71;
+h1 { font-size: clamp(1.875rem, 2vw + 1rem, 2.25rem); margin: 2rem 0 1rem; }
+h2 { font-size: clamp(1.5rem, 1.5vw + 1rem, 1.75rem); margin: 1.75rem 0 0.75rem; }
+h3 { font-size: clamp(1.25rem, 1vw + 0.9rem, 1.375rem); margin: 1.5rem 0 0.5rem; }
+h4 { font-size: 1.125rem; margin: 1.25rem 0 0.5rem; }
+h5 { font-size: 1rem;    margin: 1rem 0 0.5rem; }
+h6 { font-size: 0.875rem; margin: 0.75rem 0 0.5rem; color: var(--muted); }
+
+/* 수평선 */
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
 }
 
-.dark footer,
-.dark header {
-  background-color: #111827;
+/* ========== Text Blocks ========== */
+p { margin: 0.85rem 0; }
+
+strong { font-weight: 750; }
+em { font-style: italic; }
+
+blockquote {
+  margin: 1.25rem 0;
+  padding: 0.75rem 1rem;
+  background: var(--quote-bg);
+  border-left: 4px solid var(--accent);
+  border-right: 1px solid var(--quote-border);
+  color: var(--fg);
 }
 
-/* mdx contentlayer css setup */
-/* contentlayer - layout */
-
-[data-rehype-pretty-code-figure] {
-  margin: 1.5rem 0;
-  border-radius: 7px;
-  overflow: hidden;
+/* 인라인 코드 */
+code, kbd, samp {
+  font-family: var(--font-mono);
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius-sm);
+  padding: 0.15em 0.35em;
+  font-size: 0.95em;
 }
 
-[data-rehype-pretty-code-figure] pre {
-  overflow-x: auto;
-  padding: 0.1rem 0;
-  border: 1px solid #8b8b8b;
-  margin-top: 0;
+/* 코드블록 */
+pre {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius-md);
+  overflow: auto;
+  line-height: 1.6;
+  margin: 1rem 0;
+  padding: 0.75rem 0.875rem;
+}
+pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: block;
+  white-space: pre;
+  font-family: var(--font-mono);
+  font-size: 0.95em;
 }
 
-[data-rehype-pretty-code-title] {
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.1rem 1rem;
-  border: 1px solid #8b8b8b;
-  border-top-left-radius: 0.4rem;
-  border-top-right-radius: 0.4rem;
-  border-bottom-style: none;
+/* ========== Lists ========== */
+/* 의미 보존: 기본 마커 유지 + ::marker 컬러만 조정 */
+ul, ol {
+  margin: 0.85rem 0 0.85rem 1.25rem;  /* 왼쪽 들여쓰기 */
+  padding: 10px 0px;
+  font-size: 1rem;
+}
+li { margin: 0.25rem 0; }
+
+ul ::marker { color: var(--accent); }
+ol ::marker {
+  color: var(--accent);
+  font-weight: 700;
 }
 
-[data-rehype-pretty-code-title] + pre {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
+/* 호버 배경은 읽기 흐름 방해 → 제거(선택적) */
+/* li:hover { background: color-mix(in srgb, var(--accent) 4%, transparent); } */
 
-.dark [data-rehype-pretty-code-title] {
-  /* 다크모드 설정 관련 */
-}
-
-/* contentlayer - codeline number setup 
-
-ex. showLineNumbers
-ex. showLineNumbers{n}
-
-*/
-[data-rehype-pretty-code-figure] code {
-  counter-reset: line;
-}
-
-[data-rehype-pretty-code-figure] [data-line]::before {
-  counter-increment: line;
-}
-
-[data-line-numbers] > [data-line]::before {
-  padding: 0px;
-
-  content: counter(line);
-
-  display: inline-block;
-  width: 1rem;
-  margin-right: 1rem;
-  text-align: right;
-  color: gray;
-}
-
-[data-line-numbers-max-digits='2'] > [data-line]::before {
-  width: 1rem;
-}
-
-[data-line-numbers-max-digits='3'] > [data-line]::before {
-  width: 2rem;
-}
-
-/* contentlayer - codeline highlight setup 
-
-ex. {6}
-ex. {1-2}
-ex. {2, 9}
-
-*/
-[data-highlighted-line] {
-  background-color: #b3c0de40;
-}
-
-/* contentlayer - github commit : plus / mines 
-
-ex. {2}#minus {3}#plus
-
-*/
-[data-highlighted-line-id='minus'] {
-  padding: 4px;
-
-  position: relative;
-  background-color: #fcdcdc;
-}
-
-[data-highlighted-line-id='minus']::before {
-  content: '-';
-  position: absolute;
-  top: 0;
-  left: 0;
-  font-weight: 500;
-  padding-left: 0.3rem;
-  color: #834444;
-}
-
-[data-highlighted-line-id='plus'] {
-  padding: 4px;
-
-  position: relative;
-  background-color: #3c6c49;
-}
-
-[data-highlighted-line-id='plus']::before {
-  content: '+';
-  position: absolute;
-  top: 0;
-  left: 0;
-  font-weight: 500;
-  padding-left: 0.3rem;
-  color: #43ac5c;
-}
-
-/* contentlayer - word accent
-ex. /Link/ /MDXComponent/ /className/3 /className/3-5
-- 관련 단어 모두 강조
-- 한개만 강조하려면, 뒤에 순서 적어준다.
-*/
-
-/*
-contentlayer - custome
-*/
-li::marker {
-  color: #cbd5e1;
-  position: absolute;
-}
-
-/* MDX Table Styles */
+/* ========== Tables ========== */
+.table-wrapper { width: 100%; overflow-x: auto; margin: 1rem 0; }
 table {
   width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
-  overflow-x: auto;
-  display: block;
+  min-width: 600px; /* 긴 내용 대비 */
 }
-
-th,
-td {
+th, td {
   padding: 0.75rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   text-align: left;
 }
-
 th {
-  background-color: #f3f4f6;
-  font-weight: 600;
+  background: color-mix(in srgb, var(--accent-weak) 40%, var(--bg) 60%);
+  font-weight: 700;
 }
+tbody tr:nth-child(even) { background: var(--table-zebra); }
 
-tr:nth-child(even) {
-  background-color: #f9fafb;
-}
-
-.dark table {
-  border-color: #374151;
-}
-
-.dark th,
-.dark td {
-  border-color: #374151;
-}
-
-.dark th {
-  background-color: #1f2937;
-}
-
-.dark tr:nth-child(even) {
-  background-color: #111827;
-}
-
-/* Table Wrapper Styles */
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
+/* ========== rehype-pretty-code (Contentlayer) ========== */
+[data-rehype-pretty-code-figure]{
   margin: 1rem 0;
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius-md);
+  background: var(--code-bg);
+  overflow: hidden;                  /* 자식 라운드 강제 일치 */
 }
 
-.table-container {
-  min-width: 100%;
-  display: inline-block;
+/* 코드 영역: 이중 테두리 제거 + 충분한 패딩 */
+[data-rehype-pretty-code-figure] pre{
+  margin: 0;
+  padding: .875rem 1rem;             /* 좌우 여백 확보 */
+  background: transparent;           /* figure 배경 사용 */
+  border: 0;                         /* 이중 보더 제거 */
+  line-height: 1.6;
+  tab-size: 2;
 }
+
+/* 타이틀 바: 상단만, 이중 카드 느낌 제거 */
+[data-rehype-pretty-code-title]{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: .3rem .875rem;
+  background: color-mix(in srgb, var(--accent-weak) 45%, var(--bg) 15%);
+
+  /* 개별 라운드 제거(부모 overflow로 이미 처리됨) */
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* Line numbers */
+[data-rehype-pretty-code-figure] code { counter-reset: line; }
+[data-rehype-pretty-code-figure] [data-line]::before {
+  counter-increment: line;
+}
+
+
+[data-line-numbers] > [data-line]::before {
+  content: counter(line);
+  display: inline-block;
+  width: 1rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: var(--muted);
+}
+
+/* Line highlight */
+[data-highlighted-line] {
+  background: var(--highlight-line);
+}
+
+/* GitHub-like diff */
+[data-highlighted-line-id='minus'] {
+  position: relative;
+  background: var(--diff-minus-bg);
+}
+[data-highlighted-line-id='minus']::before {
+  content: '-';
+  position: absolute; top: 0; left: 0;
+  padding-left: 0.5rem;
+  color: var(--diff-minus-bar); font-weight: 700;
+}
+[data-highlighted-line-id='plus'] {
+  position: relative;
+  background: var(--diff-plus-bg);
+}
+[data-highlighted-line-id='plus']::before {
+  content: '+';
+  position: absolute; top: 0; left: 0;
+  padding-left: 0.5rem;
+  color: var(--diff-plus-bar); font-weight: 700;
+}
+
+/* ========== Selections & Motion ========== */
+::selection {
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* ========== Legacy compat (원본 유지 요소 정리) ========== */
+/* codeline 커스텀 태그는 표준이 아니므로 span 클래스로 변경 권장 */
+codeline, .codeline {
+  background: var(--code-bg);
+  padding: 0.1rem 0.3rem;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  border: 1px solid var(--code-border);
+}
+
+/* .white/.dark 배경 토글은 변수 기반으로 이미 처리됨.
+   필요 시 레이아웃 배경만 조정 */
+.white { background: #ffffff; transition: background 0.25s linear; }
+.dark  { background: var(--bg); transition: background 0.25s linear; }
+
+/* 헤더/푸터 배경 예시 */
+.dark header, .dark footer { background: #111827; }
+
+/* 불필요/충돌 요소 제거:
+   - ol/ul의 list-style: none + ::before 생성 → 제거
+   - li::marker 색상만 사용(접근성, 중첩 호환) */

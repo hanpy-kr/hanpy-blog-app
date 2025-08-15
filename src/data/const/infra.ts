@@ -20,7 +20,7 @@ const subCategory: Record<
   },
   docker: {
     id: InfraCategory.DOCKER,
-    name: 'docker',
+    name: 'Docker',
     description:
       'Explores Docker fundamentals and advanced topics, including containerization concepts, Dockerfile creation, Docker Compose for multi-container apps, optimization strategies, best practices for container security, and practical examples for building and deploying applications using Docker.',
     href: '/infra/ko/docker/docker-1-introduction',
@@ -28,7 +28,7 @@ const subCategory: Record<
   },
   kubernetes: {
     id: InfraCategory.KUBERNETES,
-    name: 'kubernetes',
+    name: 'Kubernetes',
     description:
       'Focuses on Kubernetes, the industry-leading container orchestration platform. Learn about deployment strategies, pods, services, scalability, monitoring, best practices, troubleshooting, and advanced concepts to efficiently manage containerized applications in production environments.',
     href: '/infra/ko/kubernetes/1-1.Introduction',
@@ -36,11 +36,19 @@ const subCategory: Record<
   },
   [InfraCategory.COMPUTE_INFRASTRUCTURE]: {
     id: InfraCategory.COMPUTE_INFRASTRUCTURE,
-    name: 'compute infra',
+    name: 'Compute Infra',
     description:
       'Covers the critical foundations of modern compute environments, including GPU clusters, serverless platforms, high-performance computing, and resource orchestration. Learn how to optimize, scale, and manage diverse compute resources efficiently across on-premise and cloud environments for various workloads such as AI, backend services, and scientific applications.',
     href: '/infra/ko/compute-infrastructure/serverless-1-intro',
     icon: '/icons/utils.svg',
+  },
+  [InfraCategory.TOOLS]: {
+    id: InfraCategory.TOOLS,
+    name: 'Tools',
+    description:
+      'Explores essential infrastructure automation and management tools such as Packer, Terraform, and Ansible. Learn how these tools streamline provisioning, configuration, and deployment processes, enabling consistent, repeatable, and scalable infrastructure across multi-cloud and on-premise environments.',
+    href: '/infra/ko/tools/packer-1-introduction',
+    icon: '/icons/tools.png',
   },
 }
 
@@ -267,6 +275,21 @@ const subCategoryDetail: {
         {
           href: '/infra/ko/compute-infrastructure/gpu-2-gpu_server_vs_consumer_server',
           title: 'Sever Guide',
+        },
+      ],
+    ],
+  },
+  [InfraCategory.TOOLS]: {
+    title: ['Packer'],
+    subTitle: [
+      [
+        {
+          href: '/infra/ko/tools/packer-1-introduction',
+          title: 'Introduction',
+        },
+        {
+          href: '/infra/ko/tools/packer-2-hello-world',
+          title: 'Hello World',
         },
       ],
     ],

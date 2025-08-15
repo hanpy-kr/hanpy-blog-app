@@ -33,7 +33,7 @@ spec:
 만약 curl/wget를 통해 초기화가 필요한 부분들이 있다면, 이부분에서 셋팅을 해주면 됩니다.
 초기 셋팅 부분을 분리하여 Init container로 분리하여 준다면 기존 컨테이너에서 관련 로직을 분리하여 container 제작이 가능해집니다. 작업 순서를 확인해보면 Init container를 실행하고 정상종료가 된 후에 containers를 띄우게 됩니다. 만약 Init container가 정상 종료가 되지 않는다면(exit가 0이 아닌 경우) 다시 Init container를 재실행하게 됩니다.
 
-<br />
+
 
 당연한 말이지만, Init Container는 작업 순서는 우선 실행됩니다. 하지만 위의 yaml 내부의 containers에 main-container/second-container/last-container는 작업 순서를 보장하지 않습니다. Init Container를 여러개 등록하는 것도 가능합니다. 여러개의 컨테이너를 등록하는 것과 동일하게 yaml을 작성해 주면 됩니다. Init Container는 순서를 보장하기 때문에 순자 실행됩니다. 모든 Init Container의 실행 후에 종료가 된 이후에 기본 컨테이너를 실행하게 됩니다.
 

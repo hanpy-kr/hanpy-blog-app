@@ -13,7 +13,7 @@ tags: [Node.js, 파일 시스템, Backend, fs 모듈, 동기 함수]
 
 개발을 하다 보면 **특정 폴더 안에 어떤 파일들이 있는지 확인해야 할 때**가 생깁니다. 예를 들어, 업로드 폴더 안에 있는 모든 이미지 파일을 읽는다거나, 설정 파일들을 스크립트로 자동 처리하고 싶을 때 말이죠. 이럴 때 **Node.js의 <codeline>fs</codeline> 모듈**은 아주 유용한 도구가 됩니다.
 
-<br />
+
 
 그중에서도 오늘은 <codeline>fs.readdirSync</codeline>에 대해 이야기해볼게요. 이름이 살짝 딱딱해 보일 수 있지만, 사실 매우 직관적이고 간단한 함수입니다.
 
@@ -44,11 +44,11 @@ console.log(files);
 
  <codeline>fs.readdirSync</codeline>는 배열을 반환합니다. 예를 들어, <codeline>uploads</codeline> 폴더에 <codeline>image1.png</codeline>, <codeline>image2.jpg</codeline>, <codeline>thumbs</codeline>라는 하위 폴더가 있다면, 반환 결과는 다음과 비슷합니다.
 
-<br />
+
 
 <codeline>['image1.png', 'image2.jpg', 'thumbs']</codeline>
 
-<br />
+
 
 이 배열에는 디렉토리 이름이 포함될 수도 있고, 파일 이름이 포함될 수도 있어요. 단순히 이름만 가져오기 때문에, 이 항목이 파일인지 폴더인지 구분하려면 추가 작업이 필요합니다. 이건 아래에서 다룰게요.
 
