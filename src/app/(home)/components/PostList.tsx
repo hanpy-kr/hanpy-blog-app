@@ -165,7 +165,7 @@ export default function PostList({
                     <div className="post__profile-box">
                       {/* <div className="post__profile" /> */}
                       <div className="post__author-name">{post?.category}</div>
-                      <div className="post__date">{post?.publishedAt}</div>
+                      {/* <div className="post__date">{post?.publishedAt}</div> */}
                     </div>
                   </div>
                   <div className="post__text">{post?.summary}</div>

@@ -13,7 +13,7 @@ const MainInfo = () => {
           })
         }}
       >
-        Get Start
+        Get Started
       </button>
     </section>
   )

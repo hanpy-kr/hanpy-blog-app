@@ -181,7 +181,7 @@ pre code {
 /* 의미 보존: 기본 마커 유지 + ::marker 컬러만 조정 */
 ul, ol {
   margin: 0.85rem 0 0.85rem 1.25rem;  /* 왼쪽 들여쓰기 */
-  padding: 10px 0px;
+  padding: 4px 0px;
   font-size: 1rem;
 }
 li { margin: 0.25rem 0; }
