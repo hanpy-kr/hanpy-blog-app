@@ -1,0 +1,43 @@
+---
+deployment: true
+category: Backend
+title: 'Client Server Pattern'
+summary: 'Client-Server 패턴은 클라이언트가 요청을 보내고, 서버가 이를 처리하여 응답하는 구조로, 웹 애플리케이션 등에서 널리 사용되는 분산 시스템 모델입니다.'
+pageKey: client_server_pattern_overview
+lng: KOR
+publishedAt: 2025-08-20
+tags: [Client Server Pattern, 아키텍처]
+---
+
+# 클라이언트-서버 패턴(Client-Server Pattern)
+
+카페에 가서 커피를 주문하는 상황을 떠올려봅시다. 손님(클라이언트)은 주문을 하고, 바리스타(서버)는 커피를 만들어 제공합니다. 이때 손님은 커피를 직접 만들지 않고, 바리스타가 필요한 재료와 도구를 통해 서비스를 제공합니다. 손님이 많을수록 대기 시간이 늘어날 수 있고, 바리스타가 일시적으로 바쁠 수도 있습니다. 이처럼 요청과 응답의 흐름으로 이루어진 관계는 **클라이언트-서버 아키텍처**의 예시라 할 수 있습니다.
+
+---
+
+## 클라이언트-서버 아키텍처란
+
+**클라이언트-서버 아키텍처**는 시스템을 두 개의 주요 구성 요소-클라이언트(요청자)와 서버(응답자)—로 나누어, 역할과 책임을 명확히 분리하는 소프트웨어 아키텍처 패턴입니다. 클라이언트는 사용자 인터페이스를 통해 요청을 보내고, 서버는 해당 요청을 처리해 결과를 반환합니다. 웹 브라우저와 웹 서버, 이메일 클라이언트와 메일 서버 등 실생활 대부분의 네트워크 기반 시스템이 이 구조를 따릅니다.
+
+이 구조의 장점은 명확합니다. 서버는 중앙에서 데이터를 관리하고, 클라이언트는 가볍게 동작하며 요청을 처리할 수 있어 **유지보수성과 보안성**이 뛰어납니다. 또한 서버 하나에 여러 클라이언트를 연결할 수 있어 **확장성**도 좋습니다. 그러나 서버가 단일 장애 지점(Single Point of Failure)이 될 수 있고, **트래픽이 몰릴 경우 병목 현상**이 발생할 수 있다는 단점도 존재합니다.
+
+클라이언트-서버 구조는 단일 서버에서 멀티 서버로 확장하거나, 서버에 로드 밸런싱을 추가하는 방식으로 개선할 수 있습니다. 또한 REST API나 GraphQL 같은 현대적인 통신 방식을 통해 클라이언트와 서버 간의 데이터 교환을 보다 유연하고 효율적으로 만들 수 있습니다. 이처럼 클라이언트-서버는 단순한 구조 같지만, 다양한 시스템 설계의 기초가 되는 매우 중요한 아키텍처입니다.
+
+---
+
+## 정리
+
+클라이언트-서버 패턴은 네트워크 기반 시스템의 가장 기본적이고 널리 쓰이는 아키텍처 모델로, 요청과 응답이라는 단순한 구조를 통해 책임을 명확히 분리합니다. 중앙에서 자원을 관리하는 서버와 이를 활용하는 다수의 클라이언트라는 구조 덕분에 유지보수성과 확장성이 뛰어나지만, 단일 서버에 트래픽이 집중될 경우 병목이나 단일 장애 지점(SPOF)이 발생할 수 있다는 단점도 있습니다.
+
+현대 시스템에서는 이를 보완하기 위해 서버 이중화, 로드 밸런싱, 멀티 계층 아키텍처를 도입하며, REST API나 GraphQL 같은 통신 방식이 클라이언트와 서버 간 상호작용을 한층 더 유연하고 효율적으로 만들어줍니다. 결국 클라이언트-서버 아키텍처는 단순한 개념을 넘어, 오늘날 웹 애플리케이션과 분산 시스템의 기초이자 다른 아키텍처 패턴으로 확장되는 출발점이라 할 수 있습니다.
+
+---
+
+## 참고
+
+* [Client-Server Architecture (IBM)](https://www.ibm.com/docs/en/i/7.3?topic=SSAW57_7.3.0/com.ibm.websphere.nd.multiplatform.doc/ae/cjtbl_clientserver.html)
+* [What is Client-Server Model? (GeeksforGeeks)](https://www.geeksforgeeks.org/client-server-model/)
+* [Client-Server Architecture Overview (Microsoft Learn)](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc757010%28v=ws.10%29)
+* [REST vs. Client-Server (RedHat)](https://developers.redhat.com/articles/rest-architecture)
+
+---

@@ -1,0 +1,47 @@
+---
+deployment: true
+category: Backend
+title: 'Model-View-Controller Pattern'
+summary: 'Model-View-Controller 패턴은 사용자 인터페이스를 모델(데이터), 뷰(UI), 컨트롤러(로직)로 분리하여 유지보수성과 재사용성을 높이는 UI 중심 설계 패턴입니다.'
+pageKey: model_view_controller_pattern_overview
+lng: KOR
+publishedAt: 2025-08-22
+tags: [Model-View-Controller, MVC, 아키텍처]
+---
+
+# Model-View-Controller Pattern
+
+패스트푸드점의 키오스크를 떠올려보세요. 손님은 터치 스크린(뷰, View)을 통해 햄버거를 선택하고, 주문 버튼을 누르면 내부 시스템(컨트롤러, Controller)이 이를 받아 처리합니다. 결제와 재고 확인 등의 실제 정보는 시스템 내부의 데이터(모델, Model)에서 가져와 처리하죠. 손님은 단지 화면을 보고 버튼만 누르지만, 내부에서는 각각의 역할이 분리되어 협력합니다. 이처럼 보여지는 화면(View), 내부 처리 로직(Controller), 실제 데이터(Model)가 분리되어 동작하는 구조가 바로 MVC 패턴입니다.
+
+---
+
+## MVC란
+
+MVC 패턴(Model-View-Controller)은 사용자 인터페이스(UI)와 애플리케이션 로직을 명확히 분리하여 개발의 효율성과 유지보수성을 높이는 소프트웨어 설계 패턴입니다. 핵심 아이디어는 **관심사의 분리**(Separation of Concerns)로, 각 영역이 독립적으로 관리될 수 있도록 구조화하는 것입니다.
+
+- Model: 애플리케이션의 데이터와 비즈니스 로직을 담당합니다. 단순히 데이터베이스와의 연결을 의미하는 것이 아니라, "도메인 규칙과 상태를 관리하는 핵심 부분"입니다. 예를 들어 주문 내역, 사용자 정보, 상품 가격 계산 로직 등이 모델에 포함됩니다.
+- View: 사용자에게 정보를 시각적으로 보여주는 UI 요소입니다. 화면에 데이터를 출력하고, 사용자의 입력을 받는 역할을 하며, 자체적으로 데이터 로직을 처리하지 않습니다. 예를 들어 HTML/CSS 기반 웹 페이지, 모바일 앱 화면 등이 해당합니다.
+- Controller: 사용자 입력을 받아 처리하고, Model과 View를 연결하는 중개 역할을 합니다. 컨트롤러는 "버튼이 눌렸다", "결제 요청이 들어왔다" 같은 이벤트를 감지해 모델의 데이터를 수정하거나 뷰를 업데이트합니다.
+
+이 구조는 웹 개발, 데스크탑 애플리케이션, 모바일 앱 등 UI 중심의 시스템에서 자주 사용됩니다. 예를 들어, 사용자가 주문 버튼을 클릭하면 컨트롤러가 요청을 받아 모델의 데이터를 갱신하고, 뷰는 모델에서 변경된 정보를 반영해 새로운 화면을 보여줍니다.
+
+---
+
+## MVC의 장점과 한계
+
+이러한 역할 분리는 개발 팀 간 협업을 용이하게 하고, 기능별 테스트와 유지보수를 간단하게 만들어줍니다. 프론트엔드 개발자는 뷰를 개선하고, 백엔드 개발자는 모델과 로직을 최적화하며, 컨트롤러는 양쪽을 이어주는 접착제 역할을 하여 팀 내 역할을 명확히 나눌 수 있습니다.
+
+MVC의 대표적 구현은 Spring MVC(Java), ASP.NET MVC, Django(Python), Ruby on Rails 등 다양한 프레임워크에서 볼 수 있습니다. 다만, 규모가 커질수록 컨트롤러의 책임이 비대해지거나(View와 Controller 결합 문제), 모델이 복잡해지는 단점도 있습니다. 이 때문에 MVVM(Model-View-ViewModel), MVP(Model-View-Presenter) 같은 변형 패턴이 등장하여 MVC의 한계를 보완하고 있습니다.
+
+---
+
+## 정리
+
+MVC 패턴은 소프트웨어를 Model(데이터와 도메인 로직), View(사용자 인터페이스), **Controller(입력 처리와 중재 역할)**로 분리하는 설계 방식입니다. 이를 통해 UI와 내부 로직을 분리해 유지보수성과 확장성을 높이고, 팀 단위 협업도 용이하게 만듭니다. 다만 규모가 커질수록 Controller와 View 간 결합도가 높아지고 복잡성이 증가할 수 있어, 이를 보완하기 위해 MVP나 MVVM 같은 대체 패턴이 등장했습니다. 오늘날 MVC는 여전히 웹·모바일·데스크톱 애플리케이션 전반에서 널리 사용되며, 다양한 프레임워크의 기초 설계 개념으로 자리잡고 있습니다.
+
+---
+
+## 참고자료
+
+* [MVC Pattern Explained (Microsoft Learn)](https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions-1/overview/asp-net-mvc-overview)
+* [Model-View-Controller (Wikipedia)](https://en.wikipedia.org/wiki/Model-view-controller)

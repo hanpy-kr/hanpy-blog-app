@@ -87,10 +87,6 @@ const subCategoryDetail: {
           title: '[solid] Dependency Inversion',
         },
         {
-          href: '/backend/ko/base/architecture-basics-01-layered-architecture',
-          title: '[structure] Layered Architecture',
-        },
-        {
           href: '/backend/ko/base/message-queue',
           title: 'Message Queue',
         },

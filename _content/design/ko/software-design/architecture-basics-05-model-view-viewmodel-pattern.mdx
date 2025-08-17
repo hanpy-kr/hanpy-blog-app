@@ -1,0 +1,56 @@
+---
+deployment: true
+category: Backend
+title: 'MVVM Pattern'
+summary: 'MVVM(Model-View-ViewModel) 패턴은 사용자 인터페이스(UI)와 비즈니스 로직을 분리하고, 중간에 ViewModel이라는 중재자를 두어 데이터와 UI를 양방향으로 자동 연결해주는 소프트웨어 아키텍처입니다.'
+pageKey: mvvm_pattern_overview
+lng: KOR
+publishedAt: 2025-08-23
+tags: [MVVM Pattern, 아키텍처]
+---
+
+# MVVM Pattern
+
+스마트 거울이 있다고 상상해보세요. 거울(뷰)은 사용자에게 현재 날씨와 일정을 보여주고, 마이크를 통해 음성 명령을 받습니다. 사용자의 명령은 내부 시스템(ViewModel)으로 전달되어 데이터를 가공하고, 날씨 API나 캘린더에서 실제 데이터를 가져오는 역할(Model)이 수행됩니다. 거울은 스스로 데이터를 처리하지 않지만, 백그라운드에서 자동으로 갱신된 정보를 표시해줍니다. 이처럼 각 구성 요소가 느슨하게 연결되며 **양방향 데이터 바인딩**을 활용하는 구조가 바로 **MVVM 패턴**입니다.
+
+---
+
+## MVVM Pattern 이란
+
+MVVM(Model-View-ViewModel) 패턴은 사용자 인터페이스(UI)와 핵심 데이터(Model)를 분리하고, 중간 계층인 ViewModel을 두어 뷰와 데이터를 자동으로 연결하는 소프트웨어 아키텍처입니다.
+
+- **Model**: 애플리케이션의 데이터와 비즈니스 규칙을 표현하는 계층(예: API 응답, 도메인 객체, 데이터베이스 레코드)
+- **View**: 사용자에게 보여지는 화면(UI)
+- **ViewModel**: 뷰와 모델 사이에서 데이터를 가공·변환하고, 상태와 이벤트를 관리하는 계층
+
+MVVM의 가장 큰 특징은 **데이터 바인딩**입니다. 사용자가 입력한 값이 ViewModel에 즉시 반영되고, ViewModel 데이터가 바뀌면 View도 자동으로 갱신됩니다. 프레임워크에 따라 양방향(예: WPF, Vue.js) 또는 단방향(예: Android Jetpack) 바인딩 방식이 적용됩니다. 이를 통해 UI 코드와 로직 코드의 결합도를 낮추고, 테스트와 유지보수가 쉬워집니다.
+
+대표적인 MVVM 적용 사례로는 Microsoft의 WPF/Xamarin, Android Jetpack의 ViewModel + LiveData, Vue.js(유사 MVVM 구조)가 있습니다. 다만, 바인딩 로직이 과도하거나 ViewModel이 비대해지면 복잡도가 높아질 수 있어 주의가 필요합니다.
+
+---
+
+## 정리
+
+MVC와 MVVM은 모두 UI 중심 애플리케이션에서 코드의 역할을 분리해 유지보수성과 확장성을 높이는 설계 패턴입니다. MVC는 Controller를 통해 Model과 View를 연결하는 구조로 단순하지만, View와 Controller 의존성이 커질 수 있습니다. 반면 MVVM은 ViewModel을 두어 데이터 바인딩을 활용함으로써 View와 Model 간 결합도를 낮추고 테스트 용이성을 확보합니다.
+
+즉, MVC는 전통적이고 직관적인 패턴, MVVM은 현대적이고 데이터 바인딩에 최적화된 패턴이라 할 수 있습니다. 프로젝트 성격과 사용하는 프레임워크 특성에 맞춰 선택하는 것이 가장 중요하며, 특히 모바일·프론트엔드에서는 MVVM, 전통적인 웹 백엔드에서는 MVC가 주로 활용됩니다.
+
+
+| 구분                            | MVC (Model-View-Controller)                    | MVVM (Model-View-ViewModel)                                     |
+| ----------------------------- | -------------------------------------------------- | ------------------------------------------------------------------- |
+| **구성 요소**                     | Model, View, Controller                            | Model, View, ViewModel                                              |
+| **Controller / ViewModel 역할** | Controller가 사용자 입력을 처리하고 Model과 View를 연결           | ViewModel이 상태/데이터 변환을 담당하며 View와 Model 사이에서 데이터 바인딩 지원          |
+| **데이터 흐름**                   | 주로 단방향 흐름 (사용자 입력 → Controller → Model → View) | 데이터 바인딩 기반 흐름 (양방향 또는 단방향, 프레임워크에 따라 다름)                        |
+| **View의 의존성**                 | View가 Controller에 직접 의존                            | View는 ViewModel과 바인딩되어 Controller 의존도 낮음                            |
+| **테스트 용이성**                   | UI 로직과 비즈니스 로직이 뒤섞일 수 있어 테스트 분리가 상대적으로 어렵다         | ViewModel이 UI와 분리되어 있어 단위 테스트 용이                                |
+| **대표 구현**                     | Spring MVC, ASP.NET MVC, Django, Rails             | WPF, Xamarin, Android Jetpack (ViewModel+LiveData), Vue.js(유사 MVVM) |
+| **장점**                        | 단순한 구조, 명확한 역할 분리                                  | 데이터 바인딩으로 코드 간결화, 유지보수성·테스트 용이성                                     |
+| **단점**                        | View와 Controller 의존성이 커질 수 있음                      | 과도한 바인딩/복잡한 ViewModel 설계 시 관리 어려움                                   |
+
+
+---
+
+## 참고자료
+
+- [MVVM Pattern - Microsoft Learn](https://learn.microsoft.com/en-us/dotnet/architecture/mvvm/)
+- [MVVM Explained (Android Developers)](https://developer.android.com/topic/libraries/architecture/viewmodel)

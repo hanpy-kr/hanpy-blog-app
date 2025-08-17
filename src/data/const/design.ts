@@ -85,7 +85,7 @@ const subCategoryDetail: {
     ],
   },
   [DesignCategory.SOFTWARE_DESIGN]: {
-    title: ['Beginner', 'Middle', 'Trouble-Shooting'],
+    title: ['Beginner', 'Architecture Pattern', 'Trouble-Shooting'],
     subTitle: [[
       {
         href: '/design/ko/software-design/req-1-base',
@@ -134,8 +134,52 @@ const subCategoryDetail: {
      
     ], [
       {
-        href: '/design/ko/software-design/200-architecture-pattern',
-        title: 'Architecture Pattern',
+        href: '/design/ko/software-design/architecture-basics-00-introduction',
+        title: 'Introduction',
+      },
+      {
+        href: '/design/ko/software-design/architecture-basics-01-layered-architecture',
+        title: 'Layered',
+      },
+      {
+        href: '/design/ko/software-design/architecture-basics-02-client-server-pattern',
+        title: 'Client-Server',
+      },
+      {
+        href: '/design/ko/software-design/architecture-basics-03-pipe-filter-pattern',
+        title: 'Pipe-Filter',
+      },
+      {
+        href: '/design/ko/software-design/architecture-basics-04-model-view-controller-pattern',
+        title: 'MVC',
+      },
+      {
+        href: '/design/ko/software-design/architecture-basics-05-model-view-viewmodel-pattern',
+        title: 'MVVM',
+      },
+      {
+        href: '/design/ko/software-design/architecture-basics-06-model-view-presenter-pattern',
+        title: 'MVP',
+      },
+      {
+        href: '/design/ko/software-design/architecture-basics-07-peer-to-peer-pattern',
+        title: 'Peer-to-Peer',
+      },
+      {
+        href: '/design/ko/software-design/architecture-basics-08-event-bus-pattern',
+        title: 'Event-Bus',
+      },
+      {
+        href: '/design/ko/software-design/architecture-basics-09-blackboard-pattern',
+        title: 'Blackboard',
+      },
+      {
+        href: '/design/ko/software-design/architecture-basics-10-master-slave-pattern',
+        title: 'Master-Slave',
+      },
+      {
+        href: '/design/ko/software-design/architecture-basics-11-broker-pattern',
+        title: 'Broker',
       },
     ], []],
   },

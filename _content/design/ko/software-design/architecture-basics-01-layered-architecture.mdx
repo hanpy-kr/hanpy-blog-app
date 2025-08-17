@@ -1,0 +1,94 @@
+---
+deployment: true
+category: Backend
+title: 'Layered Architecture'
+summary: '소프트웨어 아키텍처의 기본 중 하나인 Layered Architecture(계층형 아키텍처)는 시스템을 계층(Layer)로 구성하는 방법 중 하나입니다.'
+pageKey: layered_architecture_overview
+lng: KOR
+publishedAt: 2025-05-10
+tags: [Layered Architecture, 아키텍처, 소프트웨어 설계, Backend]
+---
+
+# Layered Architecture
+
+소프트웨어 개발을 하다 보면 코드가 뒤죽박죽 섞여 "어디서부터 고쳐야 하지?"라고 고민하는 경우가 많습니다. 기능이 많아질수록 로직이 복잡해지고 유지보수가 어려워집니다. 이러한 문제를 예방하기 위해 소프트웨어 아키텍처가 중요해지는데요, 오늘 소개할 **Layered Architecture(레이어드 아키텍처)** 는 이런 복잡성을 해결하고 유지보수를 편리하게 만들어주는 기본적이고도 강력한 설계 방법 중 하나입니다.
+
+
+
+**Layered Architecture**란 소프트웨어 시스템을 관심사 별로 명확하게 구분하여 **계층**(layer)으로 나누고, 각 계층이 서로 역할과 책임을 명확히 하도록 분리하는 설계 방법입니다. 각 계층은 추상화된 인터페이스를 통해 인접한 계층끼리만 소통하며, 이는 계층 간의 **단방향 의존성**을 만들어줍니다.
+
+
+
+즉, 상위 계층은 바로 아래 계층에게 요청을 보내 처리하지만, 하위 계층은 상위 계층의 존재를 모르고 단지 요청을 받아 처리할 뿐입니다. **하위 계층은 상위 계층에 대한 서비스 제공자가 되고, 상위 계층은 하위 계층의 클라이언트**가 됩니다. 따라서 서로 마주보는 두 개의 계층 사이에서만 상호작용이 이루어지므로 변경 작업이 용이합니다. 이렇게 하면 코드가 잘 정리되고, 한 계층의 변경이 다른 계층에 최소한의 영향을 주게 되어 시스템 유지보수가 더욱 용이해집니다.
+
+---
+
+## 일반적인 4계층 구조 (4-layer)
+
+대부분의 웹 애플리케이션은 보통 Presentation Layer, Business Layer, Persistence Layer, Database Layer로 구분됩니다. 다만 반드시 네 계층으로 나누어야 한다는 규칙은 없으며, 이는 일반적으로 많이 쓰이는 개념적 구조일 뿐입니다. 실제 프로젝트에서는 서비스 규모, 팀 정책, 기술 스택에 따라 일부 계층을 단순화하거나 통합하기도 합니다.
+
+---
+
+### 1. Presentation Layer (표현 계층)
+
+Presentation Layer는 사용자 또는 외부 클라이언트와 직접 상호작용하는 최상위 계층입니다. 사용자가 시스템에 요청을 보내고 결과를 확인하는 인터페이스(UI/UX)를 제공하며, 입력을 받아 하위 계층으로 전달합니다.
+
+이 계층은 사용자가 보는 화면(UI)뿐 아니라 API를 통해 외부 서비스와 통신하는 부분까지 포함합니다. 중요한 점은, 이 계층에서는 비즈니스 로직을 처리하지 않고 사용자 경험에 집중한다는 것입니다.
+
+- 예시: 웹 페이지(View), 모바일 앱 UI, REST API Endpoint
+
+---
+
+### 2. Business Layer (비즈니스 로직 계층)
+
+Business Layer는 시스템의 핵심 로직을 담당하는 계층입니다. Presentation Layer로부터 받은 요청을 실제 서비스 규칙에 맞게 처리하고, 그 결과를 반환합니다.
+
+이 계층은 “서비스가 무엇을 하는가?”를 정의하는 곳이며, 도메인 규칙, 비즈니스 규칙, 트랜잭션 관리 같은 중요한 로직이 포함됩니다. 데이터 저장이나 조회 같은 기능은 직접 처리하지 않고, Persistence Layer에 위임합니다.
+
+- 예시: 주문 처리 로직, 사용자 인증 및 권한 검증, 결제 처리, 비즈니스 규칙 검증
+
+---
+
+### 3. Persistence Layer (영속성 계층)
+
+Persistence Layer는 비즈니스 로직과 데이터베이스 사이의 다리 역할을 하는 계층으로, 데이터의 저장·조회 같은 작업을 담당합니다. 핵심 목적은 데이터베이스와의 직접적인 상호작용을 추상화하여 상위 계층이 데이터 접근 방식이나 DBMS 종류에 의존하지 않도록 하는 것입니다.
+
+즉, Business Layer는 Persistence Layer가 제공하는 인터페이스만 호출하고, 내부적으로 어떤 데이터베이스를 쓰는지는 알 필요가 없습니다. 이 덕분에 데이터베이스 구현이 변경되더라도(예: MySQL → PostgreSQL), Business Layer에는 최소한의 수정만으로 대응할 수 있습니다.
+
+- 예시: ORM(Object-Relational Mapping), Repository 패턴, DAO(Data Access Object) 등
+
+---
+
+### 4. Database Layer (데이터베이스 계층)
+
+Database Layer는 실제 데이터를 영구적으로 보관하는 물리적 저장소를 의미합니다. Persistence Layer가 데이터 조작 로직을 담당한다면, Database Layer는 데이터를 저장·검색·관리하는 시스템 자체입니다.
+
+이 계층은 관계형 데이터베이스(RDBMS)뿐만 아니라 NoSQL, NewSQL, 클라우드 매니지드 DB까지 포함합니다. 상황에 따라 Persistence Layer와 Database Layer를 구분하지 않고 하나의 데이터 접근 계층으로 묶어 설명하기도 합니다.
+
+- 예시: MySQL, PostgreSQL, Oracle, MongoDB, DynamoDB 등
+
+---
+
+## Layered Architecture를 사용하는 이유와 장점
+
+이러한 4계층 구조로 아키텍처를 설계하면 다음과 같은 장점이 있습니다.
+
+- **명확한 책임 분리**: 각 계층이 명확한 역할과 책임을 가져 유지보수가 쉬워집니다.
+- **변경 영향 최소화**: 한 계층의 변경 사항이 다른 계층으로 쉽게 전파되지 않으므로, 수정이나 기능 추가가 용이합니다.
+- **유연성과 확장성**: 필요 시 특정 계층만 교체하거나 확장할 수 있어 시스템이 변화에 빠르게 대응할 수 있습니다.
+- **테스트 용이성**: 각 계층의 역할이 명확히 분리되어 있으므로, 단위 테스트와 통합 테스트가 더욱 쉽고 명료하게 이루어집니다.
+
+---
+
+## 정리
+
+Layered Architecture는 소프트웨어 아키텍처에서 가장 널리 사용되는 설계 방식으로, Presentation, Business, Persistence, Database와 같은 계층(Layer) 으로 시스템의 관심사를 분리하여 유지보수성과 확장성을 높여줍니다. 각 계층은 단방향 의존성을 가지며, 인접한 계층과만 소통하도록 설계되어 한 계층의 변경이 다른 계층으로 전파되는 영향을 최소화할 수 있습니다. 이 덕분에 시스템은 구조적으로 정리되고 테스트가 용이하며, 필요에 따라 특정 계층만 교체하거나 확장할 수 있는 유연성을 제공합니다.
+
+다만 주의할 점도 있습니다. Layered Architecture는 가장 기본적이고 직관적인 패턴이지만, 모든 요청이 계층을 순차적으로 거치면서 처리되기 때문에 성능이 떨어질 수 있고, 계층 간 의존성이 지나치게 강해지면 변경이 오히려 어려워질 수 있습니다. 따라서 상황에 따라 Persistence Layer와 Database Layer를 하나로 통합하거나, 성능·복잡성을 고려해 다른 아키텍처 스타일(예: Hexagonal, Microservices)과 혼합해 사용하는 것도 좋은 선택이 될 수 있습니다.
+
+---
+
+## 참고
+
+- [Microsoft - Application Architecture Guide - Layered Architecture](https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/layered)
+- [IBM Cloud Education - Layered Architecture](https://www.ibm.com/cloud/architecture/architectures/layered)
