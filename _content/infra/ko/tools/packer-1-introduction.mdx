@@ -1,0 +1,93 @@
+---
+deployment: true
+category: Infra
+title: 'Packer'
+summary: 'Packer는 HashiCorp에서 제공하는 오픈소스 도구로, 머신 이미지(Machine Image) 생성을 자동화하는 데 특화되어 있습니다.'
+pageKey: packer_1_intro
+lng: KOR
+publishedAt: 2025-09-02
+tags: [Packer, 머신 이미지 자동화, amazon-ebs 빌더, provisioner / post-processor, 멀티 클라우드 확장성]
+---
+
+# packer
+
+Packer는 HashiCorp에서 제공하는 오픈소스 도구로, 머신 이미지(Machine Image) 생성을 자동화하는 데 특화되어 있습니다. 여기서 머신 이미지는 운영체제와 필요한 소프트웨어가 사전에 설치된 서버 이미지로, 클라우드 환경이나 온프레미스 환경에서 동일한 설정의 서버를 빠르게 배포할 수 있게 해줍니다. Packer의 핵심 장점은 멀티 클라우드 지원입니다. AWS, Azure, GCP, VMware 등 다양한 플랫폼에서 동일한 빌드 프로세스로 이미지를 만들 수 있기 때문에, 환경 간 일관성을 확보하고 관리 부담을 줄일 수 있습니다.
+
+Packer는 Terraform과 같은 다른 HashiCorp 도구와 긴밀하게 연동되어 사용됩니다. Packer는 서버 이미지를 표준화하여 빌드하는 역할을 하고, Terraform은 이렇게 만들어진 이미지를 활용해 인프라를 배포하는 역할을 담당합니다. 특히, Packer는 HCL(HashiCorp Configuration Language) 기반 템플릿을 사용해 인프라를 코드 형태로 관리할 수 있으며, 이를 통해 자동화, 일관성, 재사용성이라는 세 가지 핵심 이점을 제공합니다. 자동화를 통해 사람의 개입 없이 동일한 작업을 반복적으로 실행할 수 있고, 일관성은 개발·테스트·운영 환경 간 이미지 차이를 최소화해줍니다. 또한 재사용성을 통해 한 번 작성한 템플릿을 여러 프로젝트에 손쉽게 적용할 수 있습니다.
+
+
+아래는 AWS에서 Amazon EBS 기반 AMI를 생성하는 Packer 템플릿 예시입니다.
+
+```hcl title="packer" showLineNumbers
+source "amazon-ebs" "example" {
+  ami_name      = "example-ami-${timestamp()}"
+  instance_type = "t2.micro"
+  region        = "us-east-1"
+  source_ami_filter {
+    filters = {
+      name                = "ubuntu/images/*ubuntu-*-amd64-server-*"
+      root-device-type    = "ebs"
+      virtualization-type = "hvm"
+    }
+    owners      = ["099720109477"]  # Canonical(우분투) 공식 계정
+    most_recent = true
+  }
+  ssh_username = "ubuntu"
+}
+
+build {
+  sources = [
+    "source.amazon-ebs.example"
+  ]
+
+  provisioner "shell" {
+    inline = [
+      "echo 'Hello, world!' > /tmp/example.txt"
+    ]
+  }
+
+  post-processor "shell-local" {
+    inline = [
+      "echo 'Build complete!'",
+    ]
+  }
+}
+```
+
+### source 블록
+
+머신 이미지를 빌드하기 위해 사용할 기본 환경(베이스 이미지)과 빌드 설정을 정의합니다. AWS의 `amazon-ebs` 소스를 지정하고, 어떤 AMI를 기준으로 빌드할지, 빌드 시 사용할 인스턴스 타입, 리전, SSH 계정 등을 설정합니다. 클라우드 종류에 따라 `source` 타입이 달라집니다. (예: AWS → `amazon-ebs`, Azure → `azure-arm`, GCP → `googlecompute`) 또한, `source_ami_filter`를 통해 빌드 기준이 되는 이미지 검색 조건을 세밀하게 설정이 가능합니다.
+
+- **ami_name**: 생성될 AMI의 이름으로 `${timestamp()}`를 사용해 고유 이름 생성
+- **instance_type**: 빌드 시 사용할 EC2 인스턴스 타입 (`t2.micro`)
+- **region**: 빌드가 진행될 AWS 리전 (`us-east-1`)
+- **source_ami_filter**: 기준이 되는 AMI 검색 조건
+- **source_ami_filter.name**: Ubuntu 서버 이미지 패턴
+- **source_ami_filter.owners**: Canonical 공식 계정 ID (099720109477)
+- **source_ami_filter.most_recent**: 최신 버전 선택
+- **ssh_username**: SSH 접속 계정 (ubuntu)
+
+
+
+### build 블록
+
+`source`에서 정의한 빌드 환경을 기반으로 **실제 빌드 과정**을 구성합니다. `build` 블록은 “이 소스 환경에서 이렇게 빌드하고 마무리한다”는 **작업 순서**를 정의하는 부분으로 여러 개의 `source`를 하나의 `build`에서 동시에 사용할 수도 있습니다.
+
+- **sources**: 어떤 `source` 블록을 사용할지 지정. 앞서 정의한 `amazon-ebs.example` 소스를 지정.
+- **provisioner "shell"**: 빌드된 환경에 추가로 실행할 스크립트나 설정 (예: 소프트웨어 설치, 파일 생성). 여기서는 `/tmp/example.txt` 파일을 만들고 `"Hello, world!"`를 기록.
+- **post-processor "shell-local"**: 빌드 완료 후 후속 작업 정의. (예: 결과물 복사, 알림, 압축) 이미지 빌드 완료 후 로컬에서 실행할 명령으로 `"Build complete!"` 메시지를 출력. 예제에서 사용한 shell-local은 로컬 머신에서 명령 실행을 의미합니다. 현재는 단순 echo지만, 실제로는 빌드 결과를 파일로 저장, Slack/Webhook 알림 전송, 아티팩트 이동 등에 활용 가능.
+
+
+## 정리
+
+Packer는 머신 이미지 생성을 자동화하는 도구로, 이번 예제에서는 AWS의 Ubuntu AMI를 기반으로 간단한 “Hello, world!” 파일을 생성하는 과정을 통해 기본 동작 방식을 살펴보았습니다. 실제로는 packer init → packer validate → packer build 순서로 실행하며, 빌드가 끝나면 AWS 콘솔의 EC2 → AMI 메뉴에서 결과 이미지를 확인할 수 있습니다. Packer의 핵심은 동일한 템플릿 구조를 활용해 AWS뿐만 아니라 Azure, GCP, VMware 등 다양한 환경에서도 일관된 이미지를 만들 수 있다는 점이며, 이를 통해 환경 간 표준화·보안 패치 자동화·운영 효율성을 효과적으로 달성할 수 있습니다.
+
+---
+
+## 참고 자료
+
+* [HashiCorp Packer 공식 문서](https://developer.hashicorp.com/packer/docs)
+* [Packer Required Plugins](https://developer.hashicorp.com/packer/docs/templates/hcl_templates/required_plugins)
+* [Amazon EBS Builder 플러그인](https://developer.hashicorp.com/packer/plugins/builders/amazon/ebs)
+* [Provisioners (Shell 등)](https://developer.hashicorp.com/packer/docs/provisioners)
+* [Post-Processors](https://developer.hashicorp.com/packer/docs/post-processors)

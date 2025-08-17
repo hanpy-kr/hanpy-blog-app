@@ -291,6 +291,22 @@ const subCategoryDetail: {
           href: '/infra/ko/tools/packer-2-hello-world',
           title: 'Hello World',
         },
+        {
+          href: '/infra/ko/tools/packer-3-variable',
+          title: 'Variable',
+        },
+        {
+          href: '/infra/ko/tools/packer-4-multi-cloud',
+          title: 'Multi Cloud',
+        },
+        {
+          href: '/infra/ko/tools/packer-5-eks-node',
+          title: 'EKS Node AMI',
+        },
+        {
+          href: '/infra/ko/tools/packer-6-advanced_ecr_tags',
+          title: 'AMI Build',
+        },
       ],
     ],
   },

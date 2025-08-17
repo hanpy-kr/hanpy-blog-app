@@ -1,0 +1,126 @@
+---
+deployment: true
+category: Infra
+title: 'packer - AWS EKS Node AMI 생성'
+summary: 'AWS EKS 공식 AMI를 기반으로 운영 환경에 맞춘 커스텀 EKS 노드 이미지를 빌드하는 방법을 소개합니다.'
+pageKey: packer_4_eks_node
+lng: KOR
+publishedAt: 2025-09-06
+tags: [Packer, EKS 최적화 AMI, 커스텀 노드 이미지, provisioner, manifest.json]
+---
+
+# packer - AWS EKS Node AMI 생성
+
+Amazon EKS(Elastic Kubernetes Service)는 AWS에서 제공하는 관리형 Kubernetes 서비스입니다. EKS 클러스터의 워커 노드(Worker Node)는 보통 **EKS 공식 AMI**를 사용하지만, 운영 환경에 맞춰 필요한 패키지나 에이전트를 사전에 설치한 커스텀 AMI를 빌드하면 배포 속도와 일관성을 크게 높일 수 있습니다.
+
+이번 예제는 AWS EKS 공식 AMI를 기반으로, Packer를 사용해 단순화된 커스텀 노드 AMI를 생성하는 방법을 다룹니다.
+
+## 예제 템플릿
+
+```hcl title="packer" showLineNumbers
+variable "cluster_version" {
+  default = "1.27"
+}
+
+variable "region" {
+  default = "ap-northeast-2"
+}
+
+source "amazon-ebs" "eks-node" {
+  ami_name      = "eks-node-${var.cluster_version}-${timestamp()}"
+  region        = var.region
+  instance_type = "m5.large"
+
+  source_ami_filter {
+    filters = {
+      name   = "amazon-eks-node-al2-${var.cluster_version}-v*"
+    }
+    most_recent = true
+    owners      = ["602401143452"] # Amazon EKS 공식 계정
+  }
+
+  ssh_username = "ec2-user"
+}
+
+build {
+  sources = ["source.amazon-ebs.eks-node"]
+
+  provisioner "shell" {
+    inline = [
+      "sudo yum update -y", # Optional (kubelet 버전을 올려서 EKS 버전과 불일치 문제가 생길 수 있음)
+      "sudo yum install -y amazon-ssm-agent"
+    ]
+  }
+
+  post-processor "manifest" {
+    output = "manifest.json"
+  }
+}
+```
+
+---
+
+## 핵심 개념
+
+### 1. EKS 공식 AMI 기반 빌드
+
+* `source_ami_filter`를 사용해 AWS가 제공하는 **EKS 노드 공식 AMI**를 검색
+
+  * `name`: `amazon-eks-node-al2-${var.cluster_version}-v*` 패턴으로 특정 Kubernetes 버전에 맞는 AMI 필터링
+  * `owners`: `"amazon"` → AWS 공식 계정
+  * `most_recent`: 최신 버전 AMI 선택
+
+이렇게 하면 AWS에서 지속적으로 업데이트하는 보안 패치와 최적화가 반영된 AMI를 기반으로 커스터마이징이 가능합니다.
+
+---
+
+### 2. 운영 환경에 맞춘 소프트웨어 설치
+
+* **`provisioner "shell"`** 단계에서는 빌드 시 실행할 명령을 정의
+  * `sudo yum update -y` : 최신 패키지 업데이트. kubelet 버전을 올려서 EKS 버전과 불일치 문제가 생길 수 있기 때문에, 운영에서는 보안 패치만 선택적 적용하거나, AWS에서 새로 배포하는 최신 EKS AMI를 기반으로 재빌드하는 게 더 안전
+  * `sudo yum install -y amazon-ssm-agent` : AWS Systems Manager 에이전트 설치
+
+실제 운영에서는 여기에 모니터링 에이전트, 로그 수집기, 네트워크 설정 등을 추가할 수 있습니다. 미리 설치 시 노드 부팅 후 곧바로 서비스가 가능하고 환경 간의 일관성을 확보할 수 있습니다.
+
+---
+
+### 3. `post-processor`로 빌드 결과 저장
+
+* **`post-processor "manifest"`**: 빌드된 AMI의 메타데이터를 JSON 파일(`manifest.json`)로 저장합니다.
+
+`manifest.json`에는 AMI ID, 빌드 시각, 리전과 같은 주요 정보들이 기록됩니다. 이 데이터는 이후 Terraform, Ansible, CI/CD 파이프라인 등에서 AMI 참조 시 자동화에 활용 가능합니다.
+
+---
+
+## 실행 예시
+
+```bash
+# 템플릿 초기화 및 검증
+packer init .
+packer validate .
+
+# AMI 빌드
+packer build .
+```
+
+빌드가 완료 확인하는 작업은 아래와 같습니다.
+
+- **AWS 콘솔 → EC2 콘솔 → AMIs** 에서 `eks-node-<버전>-<timestamp>` 이름의 새 AMI 확인
+- 로컬 디렉터리에서 `manifest.json` 열어 AMI ID 및 빌드 정보 확인
+- 해당 AMI로 EKS 노드 그룹을 구성해 정상 동작 검증
+
+
+---
+
+## 정리
+
+이번 예제는 AWS EKS 최적화 AMI(EKS 공식 AMI) 를 기반으로 필요한 패키지나 에이전트를 사전에 설치해 커스텀 노드 이미지를 빌드하는 기본 패턴을 보여줍니다. 이렇게 표준화된 AMI를 준비해두면 개발·스테이징·운영 환경 모두에서 동일한 구성을 재현할 수 있고, 신규 노드 기동 시 별도 설치 과정을 줄여 배포 속도와 일관성을 확보할 수 있습니다. 다만 운영에서는 항상 EKS 클러스터 버전과 맞는 AMI를 선택해야 하며, 무분별한 yum update는 kubelet 버전 불일치를 초래할 수 있으므로 주의가 필요합니다. 따라서 주기적으로 AWS가 제공하는 최신 EKS 최적화 AMI를 베이스로 삼아 보안 패치를 반영하고, 여기에 모니터링·로깅·보안 에이전트 등을 더해 조직 환경에 맞는 안정적인 노드 이미지를 구축하는 것이 베스트 프랙티스입니다.
+
+---
+
+## 참고 자료
+
+* [Amazon EKS 최적화 AMI 공식 문서](https://docs.aws.amazon.com/eks/latest/userguide/eks-optimized-ami.html)
+* [HashiCorp Packer 문서](https://developer.hashicorp.com/packer/docs)
+* [AWS Systems Manager Agent (SSM Agent)](https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent.html)
+* [EKS 버전과 kubelet 호환성](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html)

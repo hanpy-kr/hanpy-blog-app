@@ -123,8 +123,21 @@ const subCategoryDetail: {
         href: '/design/ko/software-design/req-10-topdown-bottomup-design',
         title: 'Topdown/Bottomup Design',
       },
+      {
+        href: '/design/ko/software-design/100-oop',
+        title: 'OOP',
+      },
+      {
+        href: '/design/ko/software-design/101-rumbaugh',
+        title: 'Rumbaugh',
+      },
      
-    ], [], []],
+    ], [
+      {
+        href: '/design/ko/software-design/200-architecture-pattern',
+        title: 'Architecture Pattern',
+      },
+    ], []],
   },
   [DesignCategory.SOFTWARE_DEV]: {
     title: ['Beginner', 'Middle', 'Trouble-Shooting'],
