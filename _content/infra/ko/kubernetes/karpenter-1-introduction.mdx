@@ -1,0 +1,156 @@
+---
+deployment: true
+category: Infra
+title: 'Karpenter'
+summary: 'Karpenter는 쿠버네티스 클러스터의 노드 수명 주기를 자동으로 관리하는 오픈소스 도구입니다. 파드를 실행할 적합한 노드가 부족한 상태(스케줄러가 스케줄링할 수 없는 Unschedulable 상태)를 감지하면, Karpenter는 해당 파드의 리소스 요구사항과 제약 조건을 평가하여 최적의 노드를 즉시 프로비저닝합니다.'
+pageKey: karpenter_1_intro
+lng: KOR
+publishedAt: 2025-09-08
+tags: [Karpenter, Kubernetes Autoscaling, NodePool, NodeClass, EC2NodeClass, EKS Autoscaler, Cluster Autoscaler vs Karpenter, Kubernetes Node Provisioning, AWS EKS 자동 확장, Kubernetes 비용 최적화]
+---
+
+# Karpenter
+
+Karpenter는 쿠버네티스 클러스터의 노드 수명 주기를 자동으로 관리하는 오픈소스 도구입니다. 파드를 실행할 적합한 노드가 부족한 상태(스케줄러가 스케줄링할 수 없는 Unschedulable 상태)를 감지하면, Karpenter는 해당 파드의 리소스 요구사항과 제약 조건을 평가하여 최적의 노드를 즉시 프로비저닝합니다. 워크로드가 줄어드는 상황에서 필요하지 않은 노드는 자동으로 삭제할 수 있습니다. 이처럼 Karpenter는 트래픽 변화에 따른 수동 조정 없이도, 클러스터가 항상 최적의 상태를 유지하도록 돕는 실시간 확장·축소 자동화 수단으로 활용됩니다.
+
+
+기존에는 Kubernetes 클러스터에서 노드(서버)를 자동으로 늘리고 줄이기 위해 `CAS(Cluster Autoscaler)`가 주로 사용되었습니다. 따라서 AWS EKS 환경에서는 CAS가 `Auto Scaling Group(ASG)`을 제어해서 EC2를 관리하였습니다. 안정적이고 Kubernetes와 잘 연동이 되었지만, ASG 기반이라 노드 타입 변경이 어렵고 유연성이 떨어지게 됩니다. 또한 이벤트가 아닌 풀링 방식으로 확인되었기 때문에 노드 증설 속도가 느릴 수 밖에 없었습니다. (ASG API 호출 -> EC2 생성 -> 조인)
+
+이러한 문제점들을 해결하기위해 Karpenter가 설계 되었습니다. EKS에서 기본적으로 제공되는 CAS + ASG 조합을 사용하여 아래와 같은 흐름으로 작동합니다.
+
+1. Pod 스케줄 실패 (자원 부족)
+2. CAS가 이를 감지
+3. CAS → ASG에 "EC2 인스턴스 2대 늘려" 요청
+4. ASG가 실제로 EC2 인스턴스 생성
+5. Node 조인 (새 노드가 클러스터에 등록)
+6. Pod 스케줄링 (노드에 어떤 파드를 올릴지 결정)
+7. Pod 배포 (파드를 실제로 실행)
+
+CAS와 ASG를 정리하면 아래와 같습니다.
+
+- ASG = AWS 리소스를 늘리고 줄이는 서비스
+- CAS = Kubernetes에서 ASG를 제어하는 컨트롤러
+
+Karpenter를 사용하면 아래와 같이 간단한 흐름으로 동작하게 됩니다.
+
+1. Pod 부족 (자원 부족으로 스케줄 실패)
+2. 맞춤 스펙으로 즉시 EC2 생성
+3. Node 조인 (새 노드가 클러스터에 등록)
+4. Pod 스케줄링 (노드에 어떤 파드를 올릴지 결정)
+5. Pod 배포 (파드를 실제로 실행)
+
+CAS는 ASG를 통해 노드를 늘리고 줄이는 안정적 도구지만, Karpenter는 ASG 없이도 빠르고 유연하게 EC2를 직접 생성·제거합니다.
+
+---
+
+## Karpenter란
+
+Karpenter는 크게 두 가지 일을 합니다. 첫 번째는 필요할 때 새 노드를 만들어 주는 것(확장)이고, 두 번째는 더 이상 필요 없는 노드를 제거하는 것(축소)입니다.
+
+### 노드 확장(노드 프로비저닝)
+
+쿠버네티스에서 새 파드를 배포하려고 할 때, 현재 클러스터에 적합한 노드가 없다면 파드는 Pending 상태가 됩니다. 이때 Karpenter가 감지하여 작업을 시작합니다. Karpenter는 먼저 어떤 파드가 스케줄링되지 못했는지 확인합니다. 그리고 그 파드가 필요한 CPU·메모리 크기, 어떤 노드에서만 실행되어야 하는지(노드 셀렉터), 어떤 노드와 함께 혹은 떨어져 있어야 하는지(어피니티/안티-어피니티), 톨러레이션, 가용 영역 분산 규칙(토폴로지 스프레드) 등을 모두 분석합니다.
+
+이 분석 결과를 바탕으로, NodePool이라는 리소스에 미리 정의된 정책과 대조해 어떤 스펙의 노드를 만들지 결정합니다. NodePool에는 인스턴스 타입, 가용 영역, OS 이미지(AMI), 노드 수명, 통합 정책(consolidation) 같은 세부 조건을 담아둘 수 있어, 운영자가 원하는 형태로 정확하게 노드를 생성할 수 있습니다.
+
+### 노드 축소
+
+반대로, 클러스터에 남아 있는 노드 중 일부는 더 이상 필요하지 않을 수 있습니다. 예를 들어, 워크로드가 줄어서 비어 있는 노드가 생기거나, NodePool의 조건이 변경되어 기존 노드가 규격에 맞지 않게 된 경우입니다. Karpenter는 이런 노드를 자동으로 감지해 제거합니다. 제거 방식도 NodePool 설정을 기준으로 진행되며, 크게 다음과 같은 상황에서 노드를 종료합니다.
+
+- **빈 노드**(Empty Node): 워크로드가 없는 노드
+- **만료**(Expiration): 설정된 수명에 도달한 노드
+- **드리프트**(Drift): 정책과 불일치하는 노드
+- **통합**(Consolidation): 리소스를 더 효율적으로 묶을 수 있는 경우 노드를 줄임
+
+이렇게 불필요한 노드를 제거하면, 클러스터는 항상 필요한 만큼만 리소스를 유지하게 되고, 비용 낭비도 막을 수 있습니다.
+
+---
+
+## NodePool
+
+NodePool은 말 그대로 노드들의 집합을 관리하는 설계도입니다. 여기서 어떤 인스턴스 타입을 사용할지, 어떤 OS 이미지를 쓸지, 어떤 워크로드를 담을지 등을 결정할 수 있습니다. Karpenter는 NodePool에서 정책을 확인 후에 노드를 생성합니다. 이 설계도에는 “어떤 종류의 노드를 만들지”, “어떤 상황에서 만들지”, “몇 개까지 만들지” 같은 운영 방침이 적혀 있습니다. 아래와 같은 운영 방침들이 적혀있고, Karpenter는 이 규칙에 맞는 노드를 자동으로 만들어 줍니다.
+
+```javascript title="NodePool" showLineNumbers
+# 이 NodePool은 GPU 인스턴스만 사용한다.
+# OS는 Bottlerocket을 쓰고, AI 연산 전용으로 쓴다.
+# 최대 10개까지만 만든다.
+```
+
+그런데 여기서 한 가지 더 필요한 것이 있습니다. 설계도만 있다고 해서 집을 지을 수는 없고, 실제 설계도(어떤 벽, 창문, 문을 쓸지)와 재료 목록이 있어야 합니다. AWS에서는 이 역할을 `EC2NodeClass`가 합니다. ECNodeClass에는 AMI ID, 사용할 보안 그룹, 어떤 서브넷에 연결할지, 태그, 인스턴스 프로파일 같은 AWS 인프라 세부 설정이 들어갑니다.
+
+- **NodePool** - “무슨 용도의 노드를, 어떤 조건에서, 몇 개 만들지”라는 운영 규칙
+- **EC2NodeClass** - “그 노드를 어떤 AWS 자원 설정으로 만들지”라는 구체적인 명세
+
+이렇게 역할을 나누면, 운영자는 규칙과 자원 설정을 각각 관리할 수 있고, 같은 EC2NodeClass를 여러 NodePool에서 재사용해 일관성을 유지할 수 있습니다. NodePool은 아래와 같은 구성 전략을 가질 수 있습니다.
+
+- 단일 구성: 모든 워크로드에 대해 하나의 NodePool 사용
+- 복수 구성: 워크로드 특성에 따라 여러 NodePool 사용 (예: 컴퓨팅 집약적, 메모리 집약적)
+- 가중치 구성: 특정 인스턴스 유형에 가중치를 부여하여 선호도 설정
+
+Karpenter는 버전이 올라가면서 아래와 같은 리소스 이름이 변경되었음을 참고 합시다.
+
+- `Provisioner` → `NodePool`
+- `AWSNodeTemplate` → `EC2 NodeClass`
+- `Machine` → `NodeClaim`
+
+---
+
+## Karpenter 동작 순서
+
+Karpenter가 **노드 프로비저닝** 하는 순서를 알아봅시다.
+
+#### 1. 파드 생성 시도 → 적합한 노드 없음 → 파드 Pending
+
+새로운 파드가 만들어지려고 하지만, 현재 클러스터에는 이 파드의 요구 조건을 만족하는 노드가 없습니다. 예를 들어, GPU가 필요한 파드인데 GPU 노드가 없거나, 특정 가용 영역에 맞는 노드가 없는 경우입니다. 이때 파드는 Pending 상태로 대기하게 됩니다.
+
+#### 2. Karpenter가 파드의 요구 조건 분석
+
+Karpenter는 아래와 같은, 대기 중인 파드의 스펙을 하나하나 살펴봅니다.
+
+- CPU/메모리 요구량
+- 특정 인스턴스 타입 또는 아키텍처 요구
+- 노드 셀렉터, 어피니티(같이 배치), 안티-어피니티(떨어져 배치)
+- 톨러레이션, 토폴로지 스프레드 제약
+
+이런 조건들을 종합해 “어떤 노드를 만들면 이 파드를 바로 실행할 수 있을까?”를 계산합니다.
+
+#### 3. NodePool 정책 확인 후 새 노드 생성
+
+파드 요구 조건이 정리되면, Karpenter는 해당 조건과 일치하는 NodePool을 찾습니다.
+NodePool에는 “인스턴스 타입 범위”, “가용 영역”, “Spot/On-Demand 비율” 같은 운영 규칙이 정의되어 있습니다.
+규칙이 맞는 NodePool을 찾으면, 여기에 연결된 EC2NodeClass 정보를 참고해 AMI, 서브넷, 보안 그룹 등을 지정하고, EC2 API를 호출해 새 노드를 생성합니다.
+
+#### 4. 노드가 클러스터에 합류 → 파드 배치 완료
+
+새로 만든 노드가 부팅되고 kubelet이 실행되면, 해당 노드가 클러스터에 등록됩니다. 파드는 곧바로 이 노드에 스케줄링되어 실행을 시작합니다. 사용자는 거의 실시간으로 새로운 리소스가 추가되는 것을 확인할 수 있습니다.
+
+#### 5. 주기적으로 불필요한 노드 검사
+
+Karpenter는 주기적으로 클러스터 전체를 살펴봅니다. 워크로드가 줄어들거나, 어떤 노드가 정책과 맞지 않게 된 경우를 찾습니다. 예를 들어, 특정 가용 영역에 더 이상 파드가 없거나, AMI 버전이 오래된 노드 등이 여기에 해당합니다.
+
+#### 6. 조건에 맞지 않거나 비어 있는 노드 종료
+
+검사 결과, 필요 없는 노드가 발견되면 안전하게 파드를 다른 곳으로 옮기고, 해당 노드를 종료합니다.
+
+- Empty Node: 실행 중인 파드가 없는 노드
+- Drift: 정책과 설정이 달라진 노드
+- Expiration: 수명 제한에 도달한 노드
+- Consolidation: 더 적은 노드로 같은 파드를 운영 가능할 때 노드를 줄임
+
+이렇게 불필요한 노드를 제거함으로써, 클러스터는 항상 효율적인 상태를 유지하고 비용을 절감합니다.
+
+---
+
+## 정리
+
+Karpenter는 단순히 노드를 늘리고 줄이는 도구가 아니라, **쿠버네티스 클러스터의 노드 라이프사이클을 자동으로 설계하고 실행하는 엔진**입니다. 필요할 때 즉시 노드를 생성해 워크로드를 처리하고, 불필요한 노드는 조건에 맞춰 자동으로 제거하며, NodePool이라는 설계도를 기반으로 다양한 운영 시나리오를 지원합니다. 이 원리를 이해하면, Karpenter를 단순 자동화 도구가 아니라 운영 전략 수단으로 활용할 수 있습니다.
+
+---
+
+## 참고자료
+
+* [Karpenter 공식 문서](https://karpenter.sh/docs/)
+* [AWS Blog - Introducing Karpenter](https://aws.amazon.com/blogs/opensource/introducing-karpenter-an-open-source-high-performance-kubernetes-cluster-autoscaler/)
+* [Kubernetes 공식 문서 - Cluster Autoscaler](https://kubernetes.io/docs/concepts/cluster-administration/cluster-autoscaler/)
+* [Amazon EKS - Karpenter 설치 가이드](https://docs.aws.amazon.com/eks/latest/userguide/karpenter.html)
+* [Karpenter GitHub Repository](https://github.com/aws/karpenter)

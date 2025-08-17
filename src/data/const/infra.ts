@@ -164,7 +164,7 @@ const subCategoryDetail: {
     ],
   },
   kubernetes: {
-    title: ['Beginner', 'Middle', 'Trouble-Shooting'],
+    title: ['Beginner', 'Karpenter', 'Trouble-Shooting'],
     subTitle: [
       [
         {
@@ -207,8 +207,6 @@ const subCategoryDetail: {
           href: '/infra/ko/kubernetes/1-10.plugin',
           title: 'Plugin',
         },
-      ],
-      [
         {
           href: '/infra/ko/kubernetes/2-0.yaml-command',
           title: 'yaml & command',
@@ -237,6 +235,16 @@ const subCategoryDetail: {
           href: '/infra/ko/kubernetes/2-6.pod-scheduling',
           title: 'Pod Scheduling',
         },
+      ],
+      [
+        {
+          href: '/infra/ko/kubernetes/karpenter-1-introduction',
+          title: 'Introduction',
+        },
+        // {
+        //   href: '/infra/ko/kubernetes/karpenter-2-hello-world',
+        //   title: 'Hello World',
+        // },
       ],
       [
         // {
