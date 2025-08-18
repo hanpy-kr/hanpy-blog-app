@@ -245,6 +245,10 @@ const subCategoryDetail: {
           href: '/infra/ko/kubernetes/karpenter-2-hello-world',
           title: 'NodeClass & NodePool',
         },
+        {
+          href: '/infra/ko/kubernetes/karpenter-3-spot_ondemand',
+          title: 'Spot & On-Demand',
+        },
       ],
       [
         // {
