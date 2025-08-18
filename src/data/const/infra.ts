@@ -241,10 +241,10 @@ const subCategoryDetail: {
           href: '/infra/ko/kubernetes/karpenter-1-introduction',
           title: 'Introduction',
         },
-        // {
-        //   href: '/infra/ko/kubernetes/karpenter-2-hello-world',
-        //   title: 'Hello World',
-        // },
+        {
+          href: '/infra/ko/kubernetes/karpenter-2-hello-world',
+          title: 'NodeClass & NodePool',
+        },
       ],
       [
         // {
