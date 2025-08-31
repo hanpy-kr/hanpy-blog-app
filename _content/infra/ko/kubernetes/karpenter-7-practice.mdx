@@ -1,0 +1,460 @@
+---
+deployment: true
+category: Infra
+title: 'Karpenter - All-in-One Practice'
+summary: 'Karpenter 실습을 하나의 번들 YAML로 정리했습니다. NodeClass, Spot/On-Demand 분리, 멀티 아키텍처, GPU 풀, AZ/Family/세대 제약 및 자원 상한까지 한 번에 배포하고 검증할 수 있습니다.'
+pageKey: karpenter_7_practice
+lng: KOR
+publishedAt: 2025-09-14
+tags: [Karpenter, EKS, NodePool, EC2NodeClass, Spot, On-Demand, GPU, AZ제약, 인스턴스제약, 자원상한, 쿠버네티스, AWS]
+---
+
+
+# All-in-One Practice for Karpenter
+
+Karpenter를 단계별로 학습하다 보면, 매번 NodeClass와 NodePool을 따로따로 정의하고 적용하는 과정이 반복됩니다. 실습 목적이라면 이렇게 쪼개진 파일을 관리하는 것이 오히려 번거롭고, 전체 구성을 한눈에 이해하기도 어렵습니다.
+
+그래서 이번에는 모든 예시를 하나로 통합한 올인원 실습 파일을 준비했습니다. 이 파일에는 공통 NodeClass, Spot/On-Demand 분리, 멀티 아키텍처, GPU 전용 풀, AZ/Family 제약과 자원 상한까지 모두 포함되어 있습니다. 즉, 이 YAML 하나만 적용하면 지금까지 배운 모든 기능을 한 번에 테스트할 수 있습니다.
+
+1. 아래 전체를 `karpenter-bundle.yaml`로 저장
+2. `CLUSTER_NAME`, `GPU_AMI_ID`, `ZONES`만 네 환경으로 교체
+3. `kubectl apply -f karpenter-bundle.yaml`
+
+```yaml
+# =========================================================
+# 🚀 Karpenter All-in-One Practice YAML
+#    - 1~5단계 실습을 하나의 파일로 통합
+#    - 아래 값만 환경에 맞게 교체:
+#      * <YOUR-CLUSTER-NAME>  → EKS 클러스터명
+#      * <GPU_AMI_ID>         → 리전별 EKS Optimized GPU AMI ID (Step4용)
+#      * Zone 예시(ap-northeast-2a, 2c) → 사용 중인 리전의 AZ로 교체
+# =========================================================
+
+# ---------- NodeClass (공통) ----------
+# 모든 NodePool이 참조할 기본 NodeClass
+# AL2023 AMI, VPC 서브넷/보안그룹을 discovery 태그로 자동 선택
+apiVersion: karpenter.k8s.aws/v1beta1
+kind: EC2NodeClass
+metadata:
+  name: default
+spec:
+  amiFamily: AL2023
+  role: "KarpenterNodeRole-<YOUR-CLUSTER-NAME>"
+  subnetSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: "<YOUR-CLUSTER-NAME>"
+  securityGroupSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: "<YOUR-CLUSTER-NAME>"
+---
+# ---------- NodeClass (GPU 전용, Step4) ----------
+# GPU 워크로드용 NodeClass
+# EKS Optimized GPU AMI를 지정(권장). 일반 AMI는 GPU 드라이버 수동 설치 필요
+apiVersion: karpenter.k8s.aws/v1beta1
+kind: EC2NodeClass
+metadata:
+  name: gpu-class
+spec:
+  amiFamily: AL2
+  amiSelectorTerms:
+    - id: "<GPU_AMI_ID>"  # 예: ami-0abcd1234...(리전별 상이)
+  role: "KarpenterNodeRole-<YOUR-CLUSTER-NAME>"
+  subnetSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: "<YOUR-CLUSTER-NAME>"
+  securityGroupSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: "<YOUR-CLUSTER-NAME>"
+
+# ========== Step1: Hello World ==========
+# 가장 단순한 NodePool: t 계열, On-Demand, amd64 전용
+---
+apiVersion: karpenter.sh/v1beta1
+kind: NodePool
+metadata:
+  name: hello-world
+spec:
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      nodeClassRef:
+        name: default
+      requirements:
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64"]
+        - key: karpenter.k8s.aws/instance-category
+          operator: In
+          values: ["t"]
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+  disruption:
+    consolidationPolicy: WhenUnderutilized
+    consolidateAfter: 30s
+
+# ========== Step2: Spot / On-Demand 분리 ==========
+# Spot 전용 풀과 On-Demand 전용 풀을 분리하여 비용/안정성 정책을 명확히 구분
+---
+apiVersion: karpenter.sh/v1beta1
+kind: NodePool
+metadata:
+  name: spot-pool
+spec:
+  template:
+    metadata:
+      labels:
+        capacity: spot
+    spec:
+      nodeClassRef:
+        name: default
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot"]
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64"]
+        - key: karpenter.k8s.aws/instance-category
+          operator: In
+          values: ["t", "m", "c"]
+  disruption:
+    consolidationPolicy: WhenUnderutilized
+    consolidateAfter: 30s
+---
+apiVersion: karpenter.sh/v1beta1
+kind: NodePool
+metadata:
+  name: ondemand-pool
+spec:
+  template:
+    metadata:
+      labels:
+        capacity: ondemand
+    spec:
+      nodeClassRef:
+        name: default
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64"]
+        - key: karpenter.k8s.aws/instance-category
+          operator: In
+          values: ["t", "m", "c"]
+  disruption:
+    consolidationPolicy: WhenUnderutilized
+    consolidateAfter: 30s
+
+# ========== Step3: 멀티 아키텍처 + 배치 전용(taint) ==========
+# 멀티 아키텍처 풀(general-multiarch) + 배치 워크로드 전용 풀(batch-spot)
+---
+apiVersion: karpenter.sh/v1beta1
+kind: NodePool
+metadata:
+  name: general-multiarch
+spec:
+  template:
+    metadata:
+      labels:
+        nodeclass: general
+        arch: multi
+    spec:
+      nodeClassRef:
+        name: default
+      requirements:
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64", "arm64"]
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand", "spot"]
+        - key: karpenter.k8s.aws/instance-category
+          operator: In
+          values: ["t","m","c"]
+  disruption:
+    consolidationPolicy: WhenUnderutilized
+    consolidateAfter: 30s
+---
+apiVersion: karpenter.sh/v1beta1
+kind: NodePool
+metadata:
+  name: batch-spot
+spec:
+  template:
+    metadata:
+      labels:
+        nodeclass: batch
+        capacity: spot
+        workload: batch
+    spec:
+      nodeClassRef:
+        name: default
+      taints:
+        - key: workload
+          value: batch
+          effect: NoSchedule   # batch 전용, 일반 워크로드는 스케줄되지 않음
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot"]
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64","arm64"]
+        - key: karpenter.k8s.aws/instance-category
+          operator: In
+          values: ["t","m","c"]
+  disruption:
+    consolidationPolicy: WhenUnderutilized
+    consolidateAfter: 30s
+
+# ========== Step4: GPU 풀 + limits ==========
+# GPU 워크로드 전용 풀. GPU family(p/g), 세대 >4만 허용
+# nvidia.com/gpu, CPU 자원 합계에 상한 설정
+---
+apiVersion: karpenter.sh/v1beta1
+kind: NodePool
+metadata:
+  name: gpu-pool
+spec:
+  template:
+    metadata:
+      labels:
+        nodeclass: gpu
+        workload: ml
+        accelerator: nvidia
+    spec:
+      nodeClassRef:
+        name: gpu-class
+      taints:
+        - key: workload
+          value: ml
+          effect: NoSchedule   # ML/GPU 전용 워크로드만 스케줄 가능
+      requirements:
+        - key: karpenter.k8s.aws/instance-family
+          operator: In
+          values: ["p","g"]
+        - key: karpenter.k8s.aws/instance-generation
+          operator: Gt
+          values: ["4"]
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot","on-demand"]
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64"]
+  disruption:
+    consolidationPolicy: WhenUnderutilized
+    consolidateAfter: 30s
+  limits:
+    resources:
+      nvidia.com/gpu: "8"   # 전체 풀에서 GPU 8개 이상 사용 금지
+      cpu: "256"            # CPU 합계 256 vCPU 제한
+
+# ========== Step5: AZ 분산 + Family/Generation 제약 + 상한 ==========
+# 특정 AZ만 허용(zoned-spot) + 타입 고정 + 자원 상한(family-gen-limit)
+---
+apiVersion: karpenter.sh/v1beta1
+kind: NodePool
+metadata:
+  name: zoned-spot
+spec:
+  template:
+    metadata:
+      labels:
+        nodeclass: zoned
+        capacity: spot
+    spec:
+      nodeClassRef:
+        name: default
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot"]
+        - key: topology.kubernetes.io/zone
+          operator: In
+          values: ["ap-northeast-2a", "ap-northeast-2c"]  # 리전에 맞게 교체
+        - key: karpenter.k8s.aws/instance-category
+          operator: In
+          values: ["t","m","c"]
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64","arm64"]
+  disruption:
+    consolidationPolicy: WhenUnderutilized
+    consolidateAfter: 30s
+---
+apiVersion: karpenter.sh/v1beta1
+kind: NodePool
+metadata:
+  name: family-gen-limit
+spec:
+  template:
+    metadata:
+      labels:
+        nodeclass: family-gen
+        capacity: ondemand
+    spec:
+      nodeClassRef:
+        name: default
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+        - key: karpenter.k8s.aws/instance-type
+          operator: In
+          values: ["m5.large", "m5.xlarge", "c6g.large", "c6g.xlarge"]
+        # (대안) 세대 기준으로만 제한하려면 아래 예시 활용
+        # - key: karpenter.k8s.aws/instance-generation
+        #   operator: Gt
+        #   values: ["4"]
+  disruption:
+    consolidationPolicy: WhenUnderutilized
+    consolidateAfter: 30s
+  limits:
+    resources:
+      cpu: "64"    # 풀 전체 CPU 합계 64 vCPU로 제한
+      # memory: "256Gi"   # 필요 시 메모리 상한도 추가 가능
+
+# ========== 테스트 워크로드 ==========
+# 각 단계별 풀을 검증할 간단한 예제 워크로드
+# Step1: hello-world Deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-nginx
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: hello } }
+  template:
+    metadata: { labels: { app: hello } }
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+
+# Step2: Spot 선호 Pod (preferred affinity)
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: spot-priority-pod
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: capacity
+                operator: In
+                values: ["spot"]
+  containers:
+    - name: nginx
+      image: nginx
+
+# Step3: 배치 전용 Job (batch-spot 풀에만 스케줄됨)
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: batch-job
+spec:
+  template:
+    spec:
+      tolerations:
+        - key: "workload"
+          operator: "Equal"
+          value: "batch"
+          effect: "NoSchedule"
+      containers:
+        - name: busybox
+          image: busybox
+          command: ["sh", "-c", "echo Processing... && sleep 60"]
+      restartPolicy: Never
+
+# Step4: GPU Job (gpu-pool에만 스케줄됨)
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: gpu-render
+spec:
+  template:
+    spec:
+      tolerations:
+        - key: "workload"
+          operator: "Equal"
+          value: "ml"
+          effect: "NoSchedule"
+      containers:
+        - name: nvidia-smi
+          image: nvidia/cuda:12.3.1-base-ubuntu22.04
+          command: ["bash", "-lc", "nvidia-smi && sleep 60"]
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+      restartPolicy: Never
+```
+
+---
+
+## 검증용 커맨드 모음
+
+```bash
+# 1. 생성된 Node 확인
+#    - 노드가 올바른 라벨을 달고 있는지
+#    - 어떤 AZ에 생성되었는지 확인
+kubectl get nodes -o wide
+kubectl get nodes -L topology.kubernetes.io/zone -l nodeclass=zoned
+kubectl get nodes --show-labels | grep karpenter.k8s.aws/instance
+
+# 예상 결과:
+# - zoned-spot 풀은 지정한 AZ(ap-northeast-2a/2c 등)에서만 노드가 떠야 함
+# - family-gen-limit 풀은 지정된 instance-type 라벨(m5.large, c6g.xlarge 등)로만 표시되어야 함
+
+# 2. taint / toleration 확인
+#    - batch-spot, gpu-pool 풀에 정의된 taint가 실제 노드에 붙었는지 확인
+kubectl describe node | grep -i Taints
+
+# 예상 결과:
+# - batch 풀에는 "workload=batch:NoSchedule"
+# - gpu 풀에는 "workload=ml:NoSchedule" taint가 표시되어야 함
+
+# 3. GPU 디바이스 플러그인 확인
+#    - GPU 워크로드 검증에는 nvidia-device-plugin이 필요
+kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.14.5/nvidia-device-plugin.yml
+
+# 노드에 GPU 리소스가 인식되었는지 확인
+kubectl describe node | grep -i 'nvidia.com/gpu'
+
+# GPU Job이 정상 실행되고 nvidia-smi 출력이 로그에 남는지 확인
+kubectl logs job/gpu-render
+
+# 예상 결과:
+# - "nvidia.com/gpu: 1" 과 같은 리소스 용량이 노드에 표시
+# - gpu-render Job 로그에서 GPU 모델 정보(NVIDIA A10G 등)가 출력되어야 함
+
+# 4. Karpenter 컨트롤러 로그 확인
+#    - NodePool 조건 충족 시 노드가 어떻게 프로비저닝 되는지 이벤트 로그로 검증
+kubectl logs -n karpenter -l app.kubernetes.io/name=karpenter
+
+# 확인 포인트:
+# - 특정 NodePool 요구사항에 맞는 인스턴스 타입/용량이 선택되었는지
+# - Consolidation(노드 축소) 이벤트가 정상 동작하는지
+```
+
+## 참고 자료
+
+- [Karpenter 공식 문서 — NodePool](https://karpenter.sh/docs/concepts/nodepools/)
+- [Karpenter 공식 문서 — NodeClass](https://karpenter.sh/docs/concepts/nodeclasses/)
+- [Karpenter 공식 문서 — Scheduling Constraints](https://karpenter.sh/docs/concepts/scheduling/)
+- [Karpenter 공식 문서 — Resource Limits](https://karpenter.sh/docs/concepts/limits/)
+- [AWS EKS Workshop — Karpenter](https://www.eksworkshop.com/karpenter/)
+- [AWS Containers Blog — Managing Karpenter Node Pools](https://aws.amazon.com/blogs/containers/)
+- [NVIDIA Kubernetes Device Plugin](https://github.com/NVIDIA/k8s-device-plugin)

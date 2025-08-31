@@ -249,6 +249,22 @@ const subCategoryDetail: {
           href: '/infra/ko/kubernetes/karpenter-3-spot_ondemand',
           title: 'Spot & On-Demand',
         },
+        {
+          href: '/infra/ko/kubernetes/karpenter-4-multiarch',
+          title: 'Multi-Architecture',
+        },
+        {
+          href: '/infra/ko/kubernetes/karpenter-5-gpu_limits',
+          title: 'GPU',
+        },
+        {
+          href: '/infra/ko/kubernetes/karpenter-6-availability_zone',
+          title: 'Constraints & Limits',
+        },
+        {
+          href: '/infra/ko/kubernetes/karpenter-7-practice',
+          title: 'Practice',
+        },
       ],
       [
         // {
