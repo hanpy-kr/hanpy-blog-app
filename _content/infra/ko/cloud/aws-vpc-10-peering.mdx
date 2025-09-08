@@ -1,0 +1,77 @@
+---
+deployment: true
+category: Infra
+title: AWS - VPC Peering 
+summary: AWS VPC Peering의 정의, 사용 사례, 제약사항을 체계적으로 정리하여 인프라 설계 시 고려할 수 있는 포인트를 제공합니다.
+pageKey: aws_vpc_10_peering
+lng: KOR
+publishedAt: 2025-09-24
+tags: [AWS, VPC, Peering, 네트워크, 클라우드인프라]
+---
+
+# AWS - VPC Peering 
+
+클라우드 환경에서 네트워크를 설계하다 보면, 보안이나 관리 목적에 따라 여러 개의 VPC(Virtual Private Cloud)를 운영하게 됩니다. 이렇게 분리된 VPC는 기본적으로 서로 통신할 수 없습니다. 하지만 서비스 간 연계가 필요하거나, 조직 내 다른 팀·계정에서 운영 중인 VPC와 데이터를 주고받아야 하는 경우가 생깁니다.
+
+이때 사용할 수 있는 기능이 바로 VPC Peering입니다.
+VPC Peering은 네트워크 구성을 단순하게 유지하면서도 비용 효율적인 방법으로 서로 다른 VPC 간 연결을 가능하게 해줍니다.
+
+---
+
+## VPC Peering 이란?
+
+VPC Peering은 두 개의 VPC를 AWS 글로벌 네트워크 상에서 직접 연결하여, 퍼블릭 인터넷을 거치지 않고 프라이빗 IP로 통신할 수 있게 해주는 기능입니다.
+
+- 트래픽 보안성: 데이터는 AWS 네트워크 내부에서만 흐르므로 외부 노출 위험이 줄어듭니다.
+- 간단한 설정: Peering 연결만 맺으면 별도의 NAT 게이트웨이, VPN, Direct Connect가 필요 없습니다.
+- 양방향 통신: 연결이 승인되면 두 VPC 간 라우팅이 쌍방향으로 가능합니다.
+
+즉, Peering은 **“VPC와 VPC를 1:1 전용선으로 연결한다”**고 이해하면 쉽습니다.
+
+---
+
+## VPC Peering 사용
+
+VPC Peering은 주로 다음과 같은 상황에서 사용됩니다:
+
+- **서비스 구분**: 보안·관리 목적(개발, 운영, 테스트)에 따라 VPC를 분리했으나, 특정 서비스(API 서버 ↔ DB 등)만 제한적으로 연결
+- **IP 주소 고갈**: 기존 VPC의 IP 대역이 고갈되었을 때 새로운 VPC를 만들고, 기존 서비스와 연동이 필요한 경우. 단, 이 경우 **CIDR 중복 불가 제약**을 반드시 고려해야 함
+- **조직/계정 간 통합**: 서로 다른 AWS 계정(AWS Organizations 또는 외부 협력사) 간 리소스 통합. VPN/Direct Connect 대비 관리 포인트와 비용이 적음.
+
+정리하자면, VPC Peering은 단순하고 빠르게 VPC 간 네트워크 연동을 구현할 수 있는 솔루션입니다.
+
+---
+
+## VPC Peering의 제약사항
+
+VPC Peering은 몇 가지 중요한 제약을 가지고 있어 설계 단계에서 반드시 고려해야 합니다.
+
+### 1. **CIDR 겹침 불가**
+
+첫 번째로 두 VPC의 CIDR 블록이 겹치면 연결 자체가 불가능합니다. 예를 들어 192.168.10.0/24와 192.168.10.0/16 대역을 동시에 사용하고 있다면 Peering이 허용되지 않습니다. 따라서 네트워크 주소 공간을 미리 충분히 분리해두는 것이 중요합니다.
+
+### 2. **리전 간 Peering 가능**  
+
+또 다른 제약은 Peering이 1:1 연결이라는 점입니다. VPC A가 VPC B와 연결되고, VPC B가 VPC C와 연결되어 있다고 해서 A와 C가 자동으로 통신할 수 있는 것은 아닙니다. 이를 트랜짓 라우팅 불가라고 하며, 여러 VPC가 얽히는 복잡한 환경에서는 관리 포인트가 급격히 늘어납니다. 이런 경우에는 AWS Transit Gateway 같은 대안을 검토하는 것이 일반적입니다.
+
+### 3. **계정 간 Peering 가능**  
+
+리전 및 계정과 관련된 특성도 있습니다. VPC Peering은 같은 리전뿐만 아니라 서로 다른 리전 간에도 설정할 수 있습니다. 다만 리전을 넘나드는 경우 데이터 전송 비용이 증가할 수 있습니다. 또한 동일 계정은 물론 서로 다른 계정 간에도 연결이 가능하지만, 이때는 상대 계정의 승인이 필요합니다.
+
+### 4. **트랜짓 라우팅 불가**  
+
+마지막으로, Peering 연결만 생성한다고 해서 통신이 바로 이루어지는 것은 아닙니다. 각 VPC의 라우팅 테이블(Route Table)에 상대방 CIDR 블록을 추가해야 하고, 보안 그룹(Security Group)이나 네트워크 ACL에서 상대 VPC의 트래픽을 허용하도록 설정해야 합니다. 즉, Peering은 단순해 보이지만 실제 운영 환경에서는 라우팅 및 보안 규칙까지 꼼꼼하게 구성해야 원하는 결과를 얻을 수 있습니다.
+
+---
+
+## 정리
+
+VPC Peering은 AWS 네트워크 설계에서 가장 단순하면서도 자주 쓰이는 기능입니다. 하지만 CIDR 중복 문제, 트랜짓 라우팅의 부재, 라우팅 및 보안 설정과 같은 제약을 간과한다면 운영 중 예상치 못한 문제를 맞닥뜨릴 수 있습니다. 따라서 소규모 환경이나 특정 목적의 단순한 연결에는 VPC Peering이 최적이지만, 수십 개 이상의 VPC를 운영하거나 조직 내 복잡한 네트워크 연계가 필요한 경우에는 Transit Gateway나 PrivateLink 같은 대안을 반드시 고려해야 합니다.
+
+---
+
+## 참고자료
+- [AWS 공식 문서: VPC 피어링 연결](https://docs.aws.amazon.com/ko_kr/vpc/latest/peering/what-is-vpc-peering.html)  
+- [AWS Architecture Blog: Building Multi-VPC Architectures](https://aws.amazon.com/ko/answers/networking/aws-multiple-vpc-peering/)  
+- [AWS Transit Gateway vs. VPC Peering 비교](https://aws.amazon.com/transit-gateway/)  
+

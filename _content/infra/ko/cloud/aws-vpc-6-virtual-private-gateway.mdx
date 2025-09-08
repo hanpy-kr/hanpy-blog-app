@@ -1,0 +1,46 @@
+---
+deployment: true
+category: Infra
+title: AWS - Virtual Private Gateway, VGW
+summary: AWS VPC에서 가상 프라이빗 게이트웨이(VGW)의 개념과 역할을 알아보고, Site-to-Site VPN 및 Direct Connect를 통한 하이브리드 클라우드 아키텍처 구성 방법을 정리합니다.
+pageKey: aws_vpc_6_virtual_private_gateway
+lng: KOR
+publishedAt: 2025-09-20
+tags: [AWS, VPC, Virtual Private Gateway, VGW, Site-to-Site VPN, Direct Connect, 하이브리드 클라우드, 인프라]
+---
+
+# AWS - Virtual Private Gateway(VGW)
+
+클라우드와 온프레미스 환경을 안전하게 연결하기 위해서는 보안적이고 안정적인 네트워크 연결이 필수적입니다. AWS에서는 이를 위해 **가상 프라이빗 게이트웨이(Virtual Private Gateway, VGW)**라는 핵심 컴포넌트를 제공합니다. VGW는 AWS VPC와 외부 네트워크를 잇는 게이트웨이로, 하이브리드 클라우드 환경에서 가장 기본적이면서도 중요한 역할을 합니다.
+
+---
+
+## 가상 프라이빗 게이트웨이(VGW)란?
+
+**가상 프라이빗 게이트웨이(VGW)**는 AWS Virtual Private Cloud(VPC)에 연결되는 VPN 엔드포인트입니다. 온프레미스 데이터센터 또는 지사 네트워크와 AWS VPC를 Site-to-Site VPN으로 연결할 때 반드시 필요하며, 트래픽은 IPsec으로 암호화되어 전송됩니다. VGW는 특정 VPC에 붙는(attach) 리소스이므로, 여러 VPC를 중앙집중형으로 묶고 싶다면 **Transit Gateway(TGW)**를 고려합니다.
+
+연결 방식은 정적 라우팅 또는 **동적 라우팅(BGP)**를 지원합니다. 일반적으로 BGP를 사용하면 프리픽스 광고/회수, 터널 장애 시 경로 전환 등 운영이 수월해집니다. 또한 AWS는 한 개의 VPN 연결에 **이중 터널(2개)**을 제공합니다. 온프레미스 측 장비(Customer Gateway)에서 두 터널을 구성하면, 터널 한쪽 장애 시 자동으로 다른 터널로 전환되어 가용성이 높아집니다.
+
+추가로, AWS Direct Connect와 조합하면 전용 회선의 낮은 지연·안정성과 VPN의 암호화를 동시에 확보할 수 있습니다. 예를 들어 Direct Connect를 주 경로로 사용하고, VGW 기반 VPN을 암호화 백업 경로로 두면 회선 장애나 재난 상황에서도 서비스 연속성을 보장할 수 있습니다. 라우팅은 BGP 로컬프리퍼런스/AS-Path 조정으로 우선순위를 깔끔히 나눌 수 있습니다.
+
+- Site-to-Site VPN 필수 요소 : 온프레미스 ↔ AWS 간 터널 종단점으로 동작하며, 실무에서 가장 단순·표준적인 하이브리드 연결 방식입니다.
+- IPsec 암호화 지원 : 터널 구간 암호화로 데이터 기밀성과 무결성을 확보합니다. 터널은 기본적으로 **이중화(2 터널)**로 제공되어 장애 시 신속히 우회합니다.
+- Direct Connect 연계 : 전용 회선을 주 링크, VPN을 보조(암호화) 링크로 구성해 고가용성과 보안을 동시에 충족합니다. 라우팅 정책으로 경로 우선순위를 명확히 제어할 수 있습니다.
+- 라우팅 통합 : VPC 라우팅 테이블과 연동되어 경로를 전파(Route Propagation)하거나, 필요한 경우 정적 경로를 수동으로 추가해 세밀히 제어할 수 있습니다.
+- VGW는 단일 VPC 연결에 최적화되어 있습니다. 여러 VPC/계정을 허브-스포크로 묶고 중앙 라우팅/보안을 원하면 Transit Gateway가 더 적합합니다.
+
+
+---
+
+## 정리
+
+가상 프라이빗 게이트웨이는 AWS와 온프레미스를 연결하는 보안 채널의 중심입니다. 단순히 VPN 연결을 제공하는 것뿐 아니라, Direct Connect와 함께 쓰이며 안정적이고 유연한 하이브리드 네트워크를 설계할 수 있게 해줍니다. 결국, 온프레미스 자원과 클라우드를 단일 환경처럼 다루려는 모든 시나리오에서 VGW는 빠질 수 없는 구성 요소입니다.
+
+---
+
+## 참고자료
+
+- [AWS 공식 문서 - Virtual Private Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_VPN.html#vpn-gateway)
+- [AWS Direct Connect 소개](https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html)
+- [AWS Architecture Blog - Hybrid Connectivity Patterns](https://aws.amazon.com/blogs/architecture/)
+

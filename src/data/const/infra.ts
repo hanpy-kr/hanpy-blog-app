@@ -26,6 +26,14 @@ const subCategory: Record<
     href: '/infra/ko/docker/docker-1-introduction',
     icon: '/icons/docker.svg',
   },
+  cloud: {
+    id: InfraCategory.CLOUD,
+    name: 'Cloud',
+    description:
+      'Covers foundational and advanced cloud computing concepts, including cloud service models (IaaS, PaaS, SaaS), core infrastructure components, networking fundamentals with AWS VPC, storage and compute services, deployment strategies, scalability and cost optimization techniques, security best practices, and hands-on examples for building and managing applications in cloud environments.',
+    href: '/infra/ko/cloud/aws-vpc-1-introduction',
+    icon: '',
+  },
   kubernetes: {
     id: InfraCategory.KUBERNETES,
     name: 'Kubernetes',
@@ -159,6 +167,57 @@ const subCategoryDetail: {
         {
           href: '/infra/ko/docker/docker-2-privileged',
           title: 'privileged',
+        },
+      ]
+    ],
+  },
+  cloud: {
+    title: ['VPC'],
+    subTitle: [
+      [
+        {
+          href: '/infra/ko/cloud/aws-vpc-1-introduction',
+          title: 'Introduction',
+        },
+        {
+          href: '/infra/ko/cloud/aws-vpc-2-subnet',
+          title: 'Subnet',
+        },
+        {
+          href: '/infra/ko/cloud/aws-vpc-3-routing-table',
+          title: 'Routing Table',
+        },
+        {
+          href: '/infra/ko/cloud/aws-vpc-4-internet-gateway',
+          title: 'Internet Gateway(IGW)',
+        },
+        {
+          href: '/infra/ko/cloud/aws-vpc-5-net-gateway',
+          title: 'NAT Gateway',
+        },
+        {
+          href: '/infra/ko/cloud/aws-vpc-6-virtual-private-gateway',
+          title: 'Virtual Private Gateway(VGW)',
+        },
+        {
+          href: '/infra/ko/cloud/aws-vpc-7-transit-gateway',
+          title: 'Transit Gateway',
+        },
+        {
+          href: '/infra/ko/cloud/aws-vpc-8-direct-connect',
+          title: 'Direct Connect',
+        },
+        {
+          href: '/infra/ko/cloud/aws-vpc-9-site-to-site',
+          title: 'Site-to-Site',
+        },
+        {
+          href: '/infra/ko/cloud/aws-vpc-10-peering',
+          title: 'Peering',
+        },
+        {
+          href: '/infra/ko/cloud/aws-vpc-11-acl',
+          title: 'ACL',
         },
       ]
     ],

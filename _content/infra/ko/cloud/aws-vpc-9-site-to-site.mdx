@@ -1,0 +1,46 @@
+---
+deployment: true
+category: Infra
+title: 'AWS - Site-to-Site VPN'
+summary: 'AWS 공식 문서를 기준으로 Site-to-Site VPN의 정의, 구성 요소, 기능과 제한 사항을 간략히 소개'
+pageKey: aws_vpc_9_site_to_site
+lng: KOR
+publishedAt: 2025-09-23
+tags: ['AWS', 'Site-to-Site VPN', 'IPsec', 'VPC', '네트워크 보안']
+---
+
+# AWS - Site-to-Site VPN
+
+AWS Site-to-Site VPN은 AWS VPC와 온프레미스 네트워크를 연결하는 **IPsec 기반 보안 터널 서비스**입니다. 인터넷을 통해 데이터를 주고받지만, 암호화를 통해 전용선 수준의 안전성을 제공합니다. 따라서 초기 클라우드 도입이나 하이브리드 클라우드 환경 구축 시 가장 많이 활용되는 네트워크 옵션 중 하나입니다.  
+
+실무적으로는 AWS와 사내 IDC(데이터센터) 간 연결뿐만 아니라, 지사 네트워크와 본사 클라우드 간 통신을 위해서도 자주 사용됩니다. **AWS Direct Connect**와 함께 사용하면 보안성과 안정성이 더 강화됩니다.  
+
+## 구성 요소
+
+Site-to-Site VPN은 크게 네 가지 구성 요소로 이뤄집니다.
+
+1. 고객 게이트웨이(Customer Gateway, CGW): 온프레미스 쪽 라우터나 방화벽 장비로, VPN을 연결하는 출발점 역할을 합니다.
+2. 가상 프라이빗 게이트웨이(Virtual Private Gateway, VGW): AWS 측에서 VPC와 연결되는 VPN 엔드포인트입니다. 단일 VPC와 연결할 때 사용됩니다.
+3. 트랜짓 게이트웨이(Transit Gateway, TGW): 여러 개의 VPC나 온프레미스 네트워크를 허브 구조로 연결할 수 있어 확장성이 좋습니다.
+4. VPN 터널: IPsec 기반의 암호화된 경로이며, 항상 두 개가 동시에 제공됩니다. 하나가 문제가 생겨도 다른 하나가 자동으로 트래픽을 처리해 **고가용성(HA)**을 보장합니다.
+
+이 구조 덕분에 AWS 환경과 사내 네트워크가 마치 같은 네트워크처럼 연결되어, 클라우드 리소스를 내부 시스템처럼 활용할 수 있습니다.
+
+## 주요 기능
+
+Site-to-Site VPN은 IKEv2와 NAT-T를 지원하며, AES-256 암호화와 SHA-2 해싱 같은 강력한 보안 알고리즘을 제공합니다. 또한 Amazon CloudWatch를 통해 터널 상태와 성능을 모니터링할 수 있으며, 일부 환경에서는 IPv6도 활용할 수 있습니다. 특히 Transit Gateway나 Cloud WAN을 이용할 경우 터널의 외부 IP에 대해 IPv6 구성이 가능합니다.  
+
+
+## 정리  
+
+AWS Site-to-Site VPN은 클라우드와 온프레미스를 안전하게 연결할 수 있는 빠르고 실용적인 방법입니다. 기본적으로 고가용성과 강력한 보안 기능을 제공하기 때문에 초기 클라우드 도입이나 하이브리드 환경 운영에 적합합니다.  
+
+다만 IPv6, MTU, CIDR 충돌과 같은 제약 사항이 존재하므로 설계 단계에서 이를 충분히 고려해야 합니다. 특히 네트워크 주소 체계 관리와 이중 터널 구성을 철저히 검증하는 것이 안정적인 운영의 핵심이라 할 수 있습니다.
+
+
+## 참고자료  
+- [AWS Site-to-Site VPN 공식 문서](https://docs.aws.amazon.com/ko_kr/vpn/latest/s2svpn/VPC_VPN.html)  
+- [AWS Site-to-Site VPN 작동 방식](https://docs.aws.amazon.com/ko_kr/vpn/latest/s2svpn/how_it_works.html)  
+- [AWS Site-to-Site VPN 제한 사항](https://docs.aws.amazon.com/ko_kr/vpn/latest/s2svpn/vpn-limits.html)  
+- [AWS 보안 모범 사례 백서](https://docs.aws.amazon.com/whitepapers/latest/aws-security-best-practices/aws-security-best-practices.html)  
+- [Wikipedia - Virtual Private Network (VPN)](https://en.wikipedia.org/wiki/Virtual_private_network)  
