@@ -422,6 +422,10 @@ const subCategoryDetail: {
         {
           href: '/infra/ko/git/git-01-introduction',
           title: 'Introduction',
+        },
+        {
+          href: '/infra/ko/git/git-02-install',
+          title: 'Install',
         }
       ],
     ],

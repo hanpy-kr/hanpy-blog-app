@@ -1,0 +1,94 @@
+---
+deployment: true
+category: Infra
+title: 'Git Installation and Development Environment Setup Guide'
+summary: 'Git은 소스 코드의 변경 이력을 체계적으로 관리하는 분산형 버전 관리 시스템(DVCS)이며, GitHub은 이러한 Git 저장소를 클라우드 환경에서 호스팅하고 협업을 지원하는 플랫폼입니다.'
+pageKey: git_2_ko
+lng: KOR
+publishedAt: 2025-11-09
+---
+
+# Git 설치와 개발 환경 설정 가이드
+
+이번 글에서는 Git과 VS Code 설치 방법, 그리고 개발 효율을 높여주는 필수 확장 도구들을 알아봅시다.
+
+---
+
+## Git 설치하기
+
+Git은 오픈소스 버전 관리 도구로, 코드의 변경 이력을 추적하고 협업을 효율적으로 관리할 수 있게 해줍니다. Git 공식 다운로드 페이지에 접속해 OS에 맞는 설치 파일을 내려받습니다.
+
+- [https://git-scm.com/](https://git-scm.com/)
+
+다운로드 후, 설치 과정은 다음과 같습니다.
+
+1. 사이트 접속 후 “Download for Windows/Mac/Linux” 클릭
+2. 설치 파일 실행 후 “Next”를 눌러 기본 옵션으로 진행
+3. 설치 완료 후 터미널(cmd 또는 터미널 앱)을 열고 다음 명령어로 정상 설치 여부 확인
+
+```
+git --version
+```
+
+정상적으로 설치되었다면 아래와 같은 버전 정보가 표시됩니다.
+
+```
+git version 2.x.x
+```
+
+---
+
+## VS Code 설치하기
+
+코드를 작성하고 Git을 손쉽게 다루기 위해서는 좋은 **에디터(IDE)** 가 필요합니다. 가장 많이 사용되는 무료 개발툴인 **Visual Studio Code(VS Code)** 를 설치해봅시다.
+
+- [https://code.visualstudio.com/download](https://code.visualstudio.com/download)
+
+설치 후 VS Code를 실행하면 다양한 언어 지원과 Git 통합 기능이 기본 탑재되어 있습니다.
+
+---
+
+## VS Code 확장 도구 설치
+
+VS Code의 강점은 확장성에 있습니다. 특히 Git 관련 확장 기능을 설치하면 버전 관리가 훨씬 직관적이고 편리해집니다. Git 사용자라면 반드시 알아두어야 할 필수 도구 3가지를 공유합니다.
+
+---
+
+### 1. **Git Graph**
+
+Git Graph는 커밋 이력을 **시각적인 그래프 형태**로 보여줍니다. 복잡한 브랜치 구조나 머지 히스토리를 한눈에 파악할 수 있어, GitHub을 열지 않아도 로컬에서 작업 흐름을 쉽게 이해할 수 있습니다.
+
+#### **설치 방법:**
+> VS Code → Extensions(좌측 메뉴) → “Git Graph” 검색 → Install 클릭
+
+---
+
+### 2. **Git Lens**
+
+Git Lens는 코드의 각 라인에 **누가, 언제, 어떤 메시지로 커밋했는지**를 표시해주는 강력한 확장 기능입니다. 코드에 회색으로 표시되는 커밋 정보 덕분에, 어떤 부분이 언제 수정되었는지를 즉시 파악할 수 있습니다. 협업 시 누가 작성했는지 확인할 때 매우 유용합니다.
+
+---
+
+### 3. **Git History**
+
+Git History는 **특정 파일의 커밋 이력**을 자세히 보고 싶을 때 유용합니다.
+예를 들어 한 파일이 어떤 과정으로 수정되어 왔는지를 시각적으로 확인할 수 있습니다.
+
+#### **사용 방법:**
+- 파일을 연 뒤 → 오른쪽 파일 이름을 **오른쪽 클릭** → `Open File History` 선택 
+- 상단 사이드바에서 파일 이름을 우클릭해 동일 메뉴를 선택
+
+---
+
+## 정리
+
+Git은 코드 변경 이력을 효율적으로 관리하고 협업을 가능하게 하는 핵심 도구입니다. `git-scm.com` 에서 Git을 설치하고, Visual Studio Code를 함께 사용하면 버전 관리와 코드 편집을 통합적으로 수행할 수 있습니다.
+
+또한 VS Code의 Git Graph, Git Lens, Git History 같은 확장 기능을 활용하면 커밋 이력을 시각적으로 확인하고, 코드 변경 내역을 추적하며, 파일별 수정 히스토리를 손쉽게 파악할 수 있습니다. 이러한 환경 구성을 통해 보다 직관적이고 체계적인 개발 워크플로우를 구축할 수 있습니다.
+
+---
+
+## reference
+
+- https://git-scm.com
+- https://code.visualstudio.com/download
