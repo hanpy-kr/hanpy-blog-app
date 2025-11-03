@@ -223,7 +223,7 @@ const subCategoryDetail: {
     ],
   },
   kubernetes: {
-    title: ['Beginner', 'Karpenter', 'Trouble-Shooting'],
+    title: ['Beginner', 'Middle', 'Karpenter', 'Trouble-Shooting'],
     subTitle: [
       [
         {
@@ -293,6 +293,16 @@ const subCategoryDetail: {
         {
           href: '/infra/ko/kubernetes/2-6.pod-scheduling',
           title: 'Pod Scheduling',
+        },
+      ],
+      [
+        {
+          href: '/infra/ko/kubernetes/3-01-core-dns',
+          title: 'CoreDNS',
+        },
+        {
+          href: '/infra/ko/kubernetes/kube-ts-1-kubectl-exec',
+          title: 'exec',
         },
       ],
       [

@@ -1,0 +1,75 @@
+---
+deployment: true
+category: Infra
+title: 'Kubernetes - CoreDNS란 무엇인가?'
+summary: 'CoreDNS는 쿠버네티스 클러스터 내부에서 서비스 이름을 IP 주소로 변환해주는 DNS 서버로, 서비스 디스커버리와 네트워크 통신의 핵심 역할을 담당합니다.'
+pageKey: k8s_coredns
+lng: KOR
+publishedAt: 2025-11-05
+tags: [Kubernetes, CoreDNS, ServiceDiscovery, Networking, DNS, 인프라, 운영]
+---
+
+# Kubernetes - CoreDNS란 무엇인가?
+
+## CoreDNS 개요
+
+쿠버네티스 클러스터에서 파드와 서비스가 서로 통신하기 위해서는 IP 주소 대신 **서비스 이름**을 사용합니다. 이때 서비스 이름을 IP 주소로 변환해주는 핵심 컴포넌트가 바로 **CoreDNS**입니다. CoreDNS는 클러스터 내부 DNS 서버 역할을 하며, 파드 간 통신이나 외부 네트워크 접근 시에도 중요한 기반을 제공합니다. 즉, 쿠버네티스 환경에서 서비스 디스커버리(Service Discovery)를 가능하게 하는 핵심 요소라고 할 수 있습니다.
+
+---
+
+## CoreDNS 동작 방식
+
+1. **서비스 이름 해석**
+쿠버네티스에서 서비스 간 통신은 보통 서비스이름.네임스페이스.svc.cluster.local 형태로 이뤄집니다.
+CoreDNS는 이러한 서비스 도메인 이름을 클러스터 IP로 변환하여 파드들이 안정적으로 서로 통신할 수 있도록 합니다.
+
+2. **ConfigMap을 통한 설정 관리**
+CoreDNS는 kube-system 네임스페이스의 coredns ConfigMap 설정을 기반으로 동작합니다. 여기서 도메인 검색 경로, 캐싱, 외부 DNS 포워딩 등의 옵션을 정의할 수 있습니다. 운영자가 DNS 이슈를 해결할 때 반드시 확인해야 하는 핵심 지점입니다.
+
+3. **플러그인 구조**
+CoreDNS는 모듈형 플러그인 구조로, 필요한 기능만 조합해서 사용합니다. 주요 플러그인은 다음과 같습니다.
+
+- kubernetes: 클러스터 내부 서비스/파드 이름 해석
+- forward: 내부에서 해석 불가능한 요청을 외부 DNS 서버로 전달
+- cache: 반복되는 쿼리를 캐싱해 성능 최적화
+
+---
+
+## CoreDNS 구성 확인
+
+CoreDNS는 보통 `kube-system` 네임스페이스에 **Deployment** 형태로 배포됩니다. 다음 명령어로 확인할 수 있습니다.
+
+```bash
+kubectl get pods -n kube-system -l k8s-app=kube-dns
+```
+
+설정은 ConfigMap으로 관리됩니다.
+
+```bash
+kubectl -n kube-system get configmap coredns -o yaml
+```
+
+---
+
+## CoreDNS와 서비스 디스커버리
+
+쿠버네티스에서 서비스 간 통신은 보통 `서비스 이름` 기반으로 이뤄집니다. 예를 들어, `backend`라는 서비스가 있으면 `backend.default.svc.cluster.local` 형태로 접근 가능합니다. 이때 CoreDNS가 이름을 IP 주소로 변환해주기 때문에, IP가 변경되더라도 서비스 이름만으로 안정적인 통신이 가능합니다.
+
+---
+
+## 문제 해결(Troubleshooting)
+
+CoreDNS 문제는 곧 서비스 간 통신 장애로 이어집니다.
+주요 확인 포인트는 다음과 같습니다:
+
+* CoreDNS 파드 상태 확인
+* ConfigMap 설정 오류 여부
+* `kubectl exec`로 파드 내부에서 `nslookup` 또는 `dig` 실행
+* 네트워크 정책(NetworkPolicy)나 CNI 플러그인 문제 여부
+
+---
+
+## 정리
+
+CoreDNS는 쿠버네티스 클러스터 내부 DNS 서버로서, **서비스 디스커버리와 네트워크 통신의 핵심 역할**을 담당합니다.
+ConfigMap을 통한 설정 관리와 플러그인 구조 덕분에 유연하게 확장할 수 있으며, 문제 발생 시 클러스터 전반의 서비스 연결에 영향을 줄 수 있기 때문에 운영자가 반드시 이해하고 관리해야 할 요소입니다.

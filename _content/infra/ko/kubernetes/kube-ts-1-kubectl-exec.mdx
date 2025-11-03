@@ -1,0 +1,66 @@
+---
+deployment: true
+category: Infra
+title: 'Kubernetes - kubectl exec로 파드 내부 접속하기'
+summary: 'kubectl exec 명령어를 활용하면 쿠버네티스 파드 내부에 직접 접속하여 디버깅, 환경 확인, 간단한 테스트를 수행할 수 있습니다.'
+pageKey: k8s_kubectl_exec
+lng: KOR
+publishedAt: 2025-11-03
+tags: [Kubernetes, kubectl, Pod, Debugging, Container, CLI, 인프라, 운영]
+---
+
+# Kubernetes - kubectl exec로 파드 내부 접속하기
+
+## kubectl exec란?
+
+쿠버네티스 환경에서 애플리케이션을 운영하다 보면, 파드(Pod) 내부로 직접 들어가서 로그를 확인하거나 환경 변수를 확인하고, 간단한 테스트를 해야 할 때가 있습니다. 이럴 때 사용하는 대표적인 명령어가 바로 **`kubectl exec`**입니다. `kubectl exec`는 지정한 파드 내에서 명령어를 실행할 수 있게 해주며, `-it` 옵션을 활용하면 마치 SSH로 접속한 것처럼 파드 내부의 쉘에 들어갈 수 있습니다.
+
+---
+
+## 기본 사용법
+
+파드 내부에 접속하는 가장 기본적인 명령어는 다음과 같습니다:
+
+```bash
+kubectl exec -it 파드이름 -- /bin/bash
+```
+
+#### 옵션 설명
+
+- -i : interactive 모드 (입력을 받을 수 있도록 설정)
+- -t : 터미널 모드 (TTY 환경 제공)
+- \<파드이름\> : 접속할 대상 파드 이름
+- -- /bin/bash : 파드 내부에서 실행할 쉘 지정 (bash, sh 등)
+
+#### 예시
+
+```bash
+kubectl exec -it hanpy-mid-dd6f6c95f-579q7 -- /bin/bash
+```
+
+위 명령어를 실행하면 hanpy-mid-dd6f6c95f-579q7라는 파드의 bash 환경으로 바로 들어갈 수 있습니다.
+
+## Bash가 없을 경우
+
+일부 컨테이너에는 bash가 설치되어 있지 않고, sh만 있는 경우도 있습니다. 이럴 땐 다음과 같이 접속하면 됩니다.
+
+```bash
+kubectl exec -it <파드이름> -- sh
+```
+
+## 여러 컨테이너가 있는 경우
+
+하나의 파드에 여러 개의 컨테이너가 존재한다면, -c 옵션으로 특정 컨테이너를 지정할 수 있습니다.
+
+```bash
+kubectl exec -it <파드이름> -c <컨테이너이름> -- /bin/bash
+```
+
+## 활용 사례
+간단한 파일 확인 : 설정 파일, 로그 파일 직접 확인
+환경 변수 점검 : env 명령어로 실행 환경 확인
+애플리케이션 디버깅 : 네트워크 연결 테스트, 프로세스 확인 등
+
+## 정리
+
+`kubectl exec`는 쿠버네티스 운영에서 필수적인 명령어로, 파드 내부에 직접 들어가 간단한 진단이나 테스트를 수행할 수 있게 해줍니다. 만약 컨테이너에 `bash`가 설치되어 있지 않다면 `sh`를 이용해 접속할 수 있으며, 하나의 파드에 여러 컨테이너가 존재할 경우에는 `-c` 옵션을 사용해 원하는 컨테이너를 지정할 수 있습니다.
