@@ -58,6 +58,14 @@ const subCategory: Record<
     href: '/infra/ko/tools/packer-1-introduction',
     icon: '/icons/tools.png',
   },
+  [InfraCategory.GIT]: {
+    id: InfraCategory.GIT,
+    name: 'Git',
+    description:
+      'Focuses on version control fundamentals and collaborative development workflows using Git. Understand how to track code changes, manage branches, resolve conflicts, and maintain a clean commit history. Learn best practices for integrating Git with remote repositories such as GitHub or GitLab to enable efficient, distributed, and reliable software development.',
+    href: '/infra/ko/git/git-01-introduction',
+    icon: '/icons/git.png',
+  },
 }
 
 const subCategoryDetail: {
@@ -404,6 +412,17 @@ const subCategoryDetail: {
           href: '/infra/ko/tools/packer-6-advanced_ecr_tags',
           title: 'AMI Build',
         },
+      ],
+    ],
+  },
+  [InfraCategory.GIT]: {
+    title: ['Github'],
+    subTitle: [
+      [
+        {
+          href: '/infra/ko/git/git-01-introduction',
+          title: 'Introduction',
+        }
       ],
     ],
   },

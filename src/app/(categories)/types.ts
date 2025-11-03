@@ -45,5 +45,6 @@ export enum InfraCategory {
   DOCKER = 'docker',
   CLOUD = 'cloud',
   TOOLS = 'tools',
+  GIT = 'git',
   COMPUTE_INFRASTRUCTURE = 'compute-infrastructure',
 }
