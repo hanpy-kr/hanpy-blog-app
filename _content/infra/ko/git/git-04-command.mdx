@@ -1,0 +1,150 @@
+---
+deployment: true
+category: Infra
+title: 'Understanding Git Commands: Commit, Snapshot, Head, Branch, and Merge'
+summary: 'Git의 주요 명령어(commit, snapshot, head, branch, merge)와 개념을 알아봅시다.'
+pageKey: git_4_ko
+lng: KOR
+publishedAt: 2025-11-13
+---
+
+# Understanding Git Commands: Commit, Snapshot, Head, Branch, and Merge
+
+Git은 버전 관리 시스템으로서 소스 코드의 변경 이력을 추적하고, 협업을 가능하게 하는 핵심 도구입니다. 이번 글에서는 Git의 주요 명령어와 함께 commit, snapshot, head, branch, merge 개념을 중심으로 알아봅시다.
+
+---
+
+## git commit
+
+commit은 Git에서 변경 사항을 기록하는 핵심 단위입니다. 작업 영역(working directory)에서 변경된 파일을 staging area에 올린 뒤, 이 변경 사항을 최종적으로 .git 디렉터리에 저장하는 과정이 바로 커밋입니다.
+
+커밋은 고유한 SHA-1 해시(Hash) 값을 통해 식별됩니다. 이 값은 숫자와 영문이 조합된 암호화된 형태이며, 보통 앞 5~7자리만 축약해서 사용합니다. Git의 모든 버전 이력은 이 해시 값을 기준으로 추적할 수 있습니다.
+
+커밋이 존재하지 않으면 원격 저장소(origin)로 코드를 푸시할 수 없습니다. 즉, commit은 로컬에서의 변경 내용을 공식적으로 버전 이력에 반영하는 작업입니다.
+
+---
+
+## Snapshot 
+
+Git은 변경점을 "차이(diff)"로 저장하는 것이 아니라, 각 커밋 시점의 파일 전체를 스냅샷(snapshot) 형태로 저장합니다.
+이는 “해당 시점의 프로젝트 전체 상태를 그대로 복제한 이미지”라고 볼 수 있습니다.
+
+이 덕분에 특정 커밋 시점으로 돌아가는 것이 매우 간단합니다. 문제가 발생했을 때, 이전 커밋의 Hash를 기준으로 프로젝트 상태를 복원할 수 있습니다.
+
+```git
+git checkout <commit_hash>
+```
+
+이 명령어를 통해 해당 스냅샷 시점의 코드 상태로 작업 디렉토리를 되돌리는 것이 가능합니다.
+
+---
+
+## HEAD
+
+HEAD는 Git에서 현재 사용자가 작업 중인 커밋의 위치를 나타내는 포인터(pointer) 입니다.
+즉, 현재 어떤 브랜치에 있으며, 그 브랜치의 어떤 커밋을 기준으로 작업 중인지 알려줍니다.
+
+일반적으로 HEAD는 현재 체크아웃된 브랜치를 가리키고 있으며, 새로운 커밋이 생성되면 자동으로 최신 커밋으로 이동합니다.
+
+```
+HEAD -> main
+```
+
+이런 형태로 표시될 경우, HEAD는 main 브랜치의 최신 커밋을 참조하고 있습니다. `Detached HEAD` 상태란 HEAD가 브랜치를 가리키지 않고 특정 커밋 자체를 가리키는 상태로, 임시 수정이나 이전 버전 분석 시 자주 사용됩니다.
+
+---
+
+## Branch
+
+브랜치는 서로 다른 기능이나 버전을 독립적으로 개발하기 위한 공간입니다. 예를 들어 여러 명의 개발자가 동시에 같은 프로젝트를 진행할 경우, 각자의 작업을 분리하여 충돌을 최소화합니다. 예시를 들어, 전자상거래 서비스에서 다음과 같이 작업을 분리할 수 있습니다.
+
+- feature/signup: 회원가입
+- feature/cart: 장바구니
+- feature/payment: 결제
+
+이처럼 브랜치를 이용해서 기능별 개발, 버그 수정, 테스트 환경 분리(dev/stage/prod) 등 다양한 목적에 맞춰 유연한 워크플로우를 구성할 수 있습니다. 새로운 브랜치를 생성하고 이동하는 명령어는 다음과 같습니다.
+
+```git
+git branch feature/login     # 브랜치 생성
+git checkout feature/login   # 해당 브랜치로 이동
+```
+
+---
+
+## Merge
+
+여러 브랜치에서 각각 작업한 내용을 하나로 통합할 때 사용하는 명령어가 merge입니다. 일반적으로 기능 개발이 완료되면, feature 브랜치를 main이나 develop 브랜치로 병합합니다. 아래는 main 브랜치로 feature/login 브랜치를 통합하는 명령어 입니다.
+
+```git
+git checkout main
+git merge feature/login
+```
+
+이 과정에서 서로 다른 브랜치에서 동일한 부분을 수정한 경우 충돌(conflict) 이 발생할 수 있습니다. 충돌이 생기면 Git은 수동으로 어떤 변경 사항을 유지할지 결정하도록 요청합니다. **충돌을 해결하고 다시 커밋하면 병합이 완료**됩니다.
+
+---
+
+## git --help
+
+Git은 수많은 옵션과 하위 명령어를 제공합니다. 각 명령어의 상세 설명과 사용법을 확인하려면 다음 명령어을 사용합니다.
+
+```git
+git --help
+```
+
+특정 명령어에 대한 도움말이 필요할 경우 다음과 같이 입력합니다.
+
+```git
+git commit --help
+```
+
+이 명령어(`--help`)을 실행하면 터미널에서 직접 Git 매뉴얼 페이지를 확인할 수 있습니다.
+
+---
+
+## git log
+
+git log 명령어는 현재 브랜치의 커밋 내역을 시간 순으로 출력합니다. 각 커밋의 해시, 작성자, 날짜, 커밋 메시지를 확인할 수 있습니다.
+
+```
+git log
+```
+
+보다 가독성 있는 형태로 로그를 출력하려면 --pretty 옵션을 사용할 수 있습니다.
+
+```
+git log --pretty=format:"%h - %an, %ar : %s"
+```
+
+출력 예시는 다음과 같습니다.
+
+```
+a1b2c - Kang, 12 hours ago : Add login validation
+d3e4f - Lee, 1 day ago : Fix cart update bug
+```
+
+VS Code의 Git Lens 확장 기능 또한 내부적으로 이 git log 정보를 기반으로 동작합니다.
+
+---
+
+## 정리
+
+| 개념         | 설명                    |
+| ---------- | --------------------- |
+| commit     | 변경 사항을 버전 이력으로 기록     |
+| snapshot   | 특정 시점의 프로젝트 상태를 보존    |
+| HEAD       | 현재 작업 중인 커밋을 가리키는 포인터 |
+| branch     | 독립된 개발 공간             |
+| merge      | 브랜치 간 코드 통합           |
+| git log    | 커밋 내역 조회              |
+| git --help | 명령어 도움말 확인            |
+
+
+---
+
+## reference
+
+- [Pro Git Book (by Scott Chacon and Ben Straub)](https://git-scm.com/book/en/v2)
+- [Git Documentation - Git Basics](https://git-scm.com/docs/gittutorial)
+- [Atlassian Git Tutorial: Inside Git](https://www.atlassian.com/git/tutorials/inside-git)
+- [GitHub Docs - About Git](https://docs.github.com/en/get-started/using-git/about-git)

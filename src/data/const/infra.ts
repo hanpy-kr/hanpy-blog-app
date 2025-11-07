@@ -430,6 +430,10 @@ const subCategoryDetail: {
         {
           href: '/infra/ko/git/git-03-structure',
           title: 'Structure',
+        },
+        {
+          href: '/infra/ko/git/git-04-command',
+          title: 'Command',
         }
       ],
     ],
