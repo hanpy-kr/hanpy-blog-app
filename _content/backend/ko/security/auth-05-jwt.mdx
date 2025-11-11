@@ -1,0 +1,121 @@
+---
+deployment: true
+category: Infra
+title: 'JWT 기반 로그인 구현 흐름'
+summary: 'JWT(Json Web Token)를 활용한 로그인 구조와 Access/Refresh Token 발급 및 보관 전략, 그리고 실무에서 고려해야 하는 보안 포인트를 정리합니다.'
+pageKey: security_5_jwt
+lng: KOR
+publishedAt: 2025-11-23
+tags: ['JWT', 'AccessToken', 'RefreshToken', '토큰 기반 인증', '백엔드 보안', '세션 vs JWT', '웹 인증']
+---
+
+# JWT 기반 로그인 구현 흐름: Access Token, Refresh Token
+
+앞서 살펴본 OAuth 기반 소셜 로그인처럼, 웹 서비스에서는 사용자 인증 후 토큰(Token) 을 사용해 로그인 상태를 유지하는 방식이 널리 사용됩니다. 그중 가장 대표적인 방식이 **JWT(Json Web Token)** 기반 인증입니다. 이번 글에서는 JWT 로그인 방식이 어떻게 동작하는지 알아봅시다.
+
+---
+
+## JWT란 무엇인가
+
+JWT(Json Web Token) 은 사용자 인증 상태와 관련된 정보를 서명된 토큰 형태로 서버가 발급하는 형식입니다. 서버는 JWT 안에 사용자 식별 정보(subject), 만료 시각(exp), 발급자(iss) 등을 담습니다. JWT는 다음과 같이 `.`을 기준으로 3개 구역으로 구성됩니다.
+
+```
+Header.Payload.Signature
+```
+
+- Header: 토큰 정보 (알고리즘 등)
+- Payload: 실제 데이터 (사용자 ID, 역할 등)
+- Signature: 데이터 위변조 방지를 위한 서버 서명
+
+이 구조 덕분에 서버는 JWT가 **변조되지 않았는지** 빠르게 검증할 수 있습니다.
+
+---
+
+## JWT 기반 로그인 기본 흐름
+
+1. 사용자가 로그인 요청을 보냅니다.
+2. 서버는 아이디/비밀번호를 검증합니다.
+3. 검증이 성공하면 서버는 **Access Token** 과 **Refresh Token** 을 발급합니다.
+4. 클라이언트는 Access Token을 포함하여 API 요청을 보냅니다.
+5. 서버는 Access Token의 유효성을 검사하고 요청을 처리합니다.
+6. Access Token이 만료되면 Refresh Token으로 새 토큰을 발급받습니다.
+
+이러한 흐름에서 중요한점은 서버는 사용자 상태(Session)를 유지하지 않고 토큰 자체가 인증 상태를 증명한다는 것 입니다.
+
+---
+
+## Access Token vs Refresh Token
+
+| 토큰                | 역할                | 유효 기간      | 사용 위치                                   |
+| ----------------- | ----------------- | ---------- | --------------------------------------- |
+| **Access Token**  | API 요청 시 인증 수단    | 짧음 (분 단위)  | 요청 헤더에 포함 (`Authorization: Bearer ...`) |
+| **Refresh Token** | Access Token 재발급용 | 김 (일/주 단위) | 서버에만 저장 및 사용 (클라이언트 JS에서 직접 접근 금지)      |
+
+만료 시간을 다르게하는 이유는 보안 사고(예: 토큰 탈취)가 발생했을 때의 피해를 최소화하기 위해서입니다. Access Token은 유효 기간이 짧아, 탈취되더라도 곧 만료되어 피해를 제한할 수 있습니다. Refresh Token은 장기적으로 로그인 상태를 유지하기 위해 필요하지만, 재발급 시 서버에서 추가 검증 절차(IP, 기기, 서명 등) 를 거칠 수 있어 더 안전하게 관리됩니다. 결국, 짧은 Access Token + 검증된 Refresh Token 구조를 통해 보안성과 지속적인 로그인 경험(UX) 을 모두 만족시킬 수 있습니다.
+
+---
+
+## 토큰 저장 위치: 쿠키 vs 로컬스토리지
+
+
+```
+Access Token을 localStorage에 저장 → 위험
+```
+
+localStorage나 sessionStorage는 브라우저의 JavaScript 코드로 직접 접근이 가능합니다. 따라서 XSS(Cross-Site Scripting) 공격이 발생할 경우, 악성 스크립트가 토큰을 탈취할 수 있는 매우 취약한 지점이 됩니다.
+
+### 권장 방식
+
+| 토큰                | 저장 위치                                      | 이유                                        |
+| ----------------- | ------------------------------------------ | ----------------------------------------- |
+| **Access Token**  | 메모리(in-memory) 또는 **HttpOnly 쿠키**          | JavaScript 접근 차단 → XSS 공격 방어              |
+| **Refresh Token** | **HttpOnly + Secure + SameSite=strict 쿠키** | JS 접근 차단 + HTTPS 통신 보장 + CSRF 및 중간자 공격 방지 |
+
+
+- HttpOnly: 브라우저의 JS 코드에서 접근할 수 없게 하여 XSS 공격으로부터 보호
+- Secure: HTTPS 연결에서만 전송되어 네트워크 구간 탈취 방지
+- SameSite=strict: 외부 사이트에서 쿠키가 전송되지 않아 CSRF 공격 방어
+
+토큰을 브라우저 저장소에 노출시키지 말고, 가능하면 httpOnly 쿠키를 활용해 서버 중심으로 관리하는 것이 가장 안전한 방법입니다.
+
+---
+
+## Refresh Token 재발급 흐름 예시
+
+1. Access Token 만료 → API 요청 시 401 반환
+2. 클라이언트는 자동으로 Refresh Token을 포함한 재발급 요청 전송
+3. 서버는 Refresh Token의 유효성 & 사용자 상태를 검증
+4. 새로운 Access Token 재발급
+5. 필요 시 Refresh Token도 재발급하여 쿠키 갱신
+
+이 과정은 백엔드와 프론트엔드 모두 공통 모듈로 구현하여야 합니다.
+
+---
+
+## 주의사항
+
+| 항목          | 설명                                   |
+| ----------- | ------------------------------------ |
+| 로그아웃 처리     | Refresh Token을 서버 DB/Redis에서 무효화해야 함 |
+| 디바이스별 토큰 관리 | 한 사용자의 여러 기기에서 발급되는 토큰 구분 필요         |
+| 만료 정책       | 너무 길면 보안 위험, 너무 짧으면 UX 불편            |
+| HTTPS 필수    | httpOnly 쿠키 방식을 쓰면 HTTPS는 사실상 기본값    |
+
+JWT는 편리하지만, 설계가 제대로 안 되어 있으면 보안 구멍이 생길 수 있으니 주의해서 사용해야합니다.
+
+---
+
+## 정리
+
+- JWT는 인증 상태를 서버가 아닌 토큰 그 자체로 관리하는 방식입니다.
+- Access Token과 Refresh Token은 유효 시간과 역할이 다릅니다.
+- 토큰 저장 방식 과 재발급 전략 설계가 핵심이라고 할 수 있습니다.
+- Refresh Token은 httpOnly 쿠키에 저장하는 것이 가장 안전합니다.
+
+---
+
+## 참고자료
+
+* JWT 공식 사이트: [https://jwt.io](https://jwt.io)
+* OWASP Token Best Practices: [https://cheatsheetseries.owasp.org/](https://cheatsheetseries.owasp.org/)
+* RFC 7519 JSON Web Token Spec: [https://datatracker.ietf.org/doc/html/rfc7519](https://datatracker.ietf.org/doc/html/rfc7519)

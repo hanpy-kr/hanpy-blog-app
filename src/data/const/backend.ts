@@ -35,6 +35,14 @@ const subCategory: Record<
     href: '/backend/ko/nestjs/nestjs-overview',
     icon: '/icons/nestjs.svg',
   },
+  security: {
+    id: BackendCategory.SECURITY,
+    name: 'Security',
+    description:
+      'Covers essential backend security concepts including authentication, authorization, encryption, and identity federation standards like OAuth, OIDC, and SAML. Learn how to design secure APIs and implement robust enterprise-grade access control systems.',
+    href: '/backend/ko/security/auth-01-authentication',
+    icon: '/icons/security.svg',
+  },
   grpc: {
     id: BackendCategory.GRPC,
     name: 'gRPC',
@@ -288,6 +296,43 @@ const subCategoryDetail: {
       ],
       [],
     ],
+  },
+  security: {
+    title: ['Auth'],
+    subTitle: [[
+      {
+        href: '/backend/ko/security/auth-01-authentication',
+        title: 'Authentication',
+      },
+      {
+        href: '/backend/ko/security/auth-02-authorization',
+        title: 'Authorization',
+      },
+      {
+        href: '/backend/ko/security/auth-03-sso',
+        title: 'Single-Sign-On',
+      },
+      {
+        href: '/backend/ko/security/auth-04-oauth',
+        title: 'Oauth',
+      },
+      {
+        href: '/backend/ko/security/auth-05-jwt',
+        title: 'JWT',
+      },
+      {
+        href: '/backend/ko/security/auth-06-idp-sp',
+        title: 'IdP-SP',
+      },
+      {
+        href: '/backend/ko/security/auth-07-saml',
+        title: 'SAML',
+      },
+      {
+        href: '/backend/ko/security/auth-08-oidc',
+        title: 'OIDC',
+      },
+    ]],
   },
   utils: {
     title: ['Beginner', 'Middle', 'Trouble-Shooting'],

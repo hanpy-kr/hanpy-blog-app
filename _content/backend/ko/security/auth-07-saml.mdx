@@ -1,0 +1,113 @@
+---
+deployment: true
+category: Infra
+title: "SAML 쉽게 이해하기: 기업에서 아직도 SAML을 쓰는 이유"
+summary: "SAML이 무엇인지, 어떤 방식으로 SSO를 가능하게 하는지, 그리고 OIDC와 어떤 차이가 있는지 알아봅시다."
+pageKey: security_7_saml
+lng: KOR
+publishedAt: 2025-11-27
+tags: ['SAML', 'SSO', 'IdP', 'SP', 'SAML Assertion', 'SAML Response', '인증', '엔터프라이즈 보안', 'SAML vs OIDC']
+---
+
+# SAML 쉽게 이해하기: 기업에서 아직도 SAML을 쓰는 이유
+
+회사에서 Slack, Jira, Notion, Confluence, 사내 ERP 등 여러 시스템을 함께 사용할 때, 로그인을 매번 반복하면 불편합니다. 그래서 회사들은 보통 SSO(Single Sign-On) 을 도입합니다. 그리고 이 SSO를 만들 때 많이 사용되는 방식 중 하나가 SAML입니다. 그런데 요즘은 OAuth, OIDC도 많이 이야기하고 있어서 "요즘 시대에 SAML은 이제 구식 기술 아닌가?"라고 생각할 수 있습니다. 하지만 결론부터 말하면, SAML은 지금도 기업 환경에서는 매우 많이 쓰는 표준입니다.
+
+---
+
+## SAML이란
+
+SAML(Security Assertion Markup Language)은 IdP(Identity Provider)와 SP(Service Provider)가 서로 “이 사용자가 인증되었음”을 안전하게 확인할 수 있도록 해주는 방식입니다.
+
+- **IdP**: 로그인 담당 (예: 회사 인증 서버, Azure AD, Okta)
+- **SP**: 실제 서비스 (예: Jira, Slack, 노션)
+
+SAML이 하는 일은 딱 하나입니다. 로그인을 IdP에서 했다는 사실을 SP에게 안전하게 전달합니다.
+
+---
+
+## 인증 정보는 어떻게 전달될까?
+
+우리가 로그인할 때, SAML은 SAML Assertion 이라는 서명된 XML 문서를 사용합니다. 이 안에는 다음 정보가 담깁니다.
+
+- 누가 로그인했는지 (사용자 ID)
+- 언제 인증되었는지
+- 어떤 서비스에서 사용할 수 있는지
+
+이걸 SP가 받아서 검증하고 로그인 처리를 합니다.
+
+### SAML 프로세스
+
+1. 사용자가 서비스(SP)에 접속
+2. SP는 “로그인 안 했네?” → IdP로 이동
+3. IdP에서 로그인 성공
+4. IdP가 **SAML Assertion**(인증 증명서)을 SP에게 전달
+5. SP는 이것을 확인 → 사용자 로그인 완료
+
+---
+
+## 실무 예시 : SAML 설정에서 꼭 필요한 부분
+
+실제 기업 환경에서는 IdP(예: Google Workspace, Okta)와 SP(예: MongoDB, Jira, Slack)를 연결할 때 서로가 신뢰할 수 있도록 몇 가지 필수 정보를 교환해야 합니다. 아래는 Google Workspace에서 MongoDB와 SAML 연동을 설정할 때 볼 수 있는 항목들입니다.
+
+| 항목                 | 설명                                      |
+| ------------------------- | ------------------------------------ |
+| **ACS URL (Assertion Consumer Service URL)** | SP가 SAML 응답을 받을 엔드포인트입니다. IdP는 사용자가 로그인에 성공하면 이 URL로 SAML Assertion(XML)을 전송합니다.  |
+| **엔티티 ID(Entity ID)**                        | IdP가 누구에게 토큰을 보낼지 식별하기 위한 고유 식별자입니다. 보통 SP의 메타데이터에 정의되어 있습니다.                     |
+| **인증서(Certificate)**                         | IdP가 서명한 SAML Assertion의 무결성을 검증하기 위해 사용됩니다. SP는 이 인증서를 통해 서명을 검증하여 위조 여부를 판단합니다. |
+| **이름 ID(Name ID)**                           | 로그인한 사용자를 식별하기 위한 값입니다. 일반적으로 이메일 주소나 사번 같은 고유 ID가 사용됩니다.                         |
+
+이 값들이 IdP와 SP 양쪽 설정에 정확히 일치해야만, SAML 기반 SSO가 정상적으로 동작합니다.
+
+---
+
+## SAML 사용 이유
+
+| 이유                 | 설명                              |
+| ------------------ | ------------------------------- |
+| 오래되고 안정된 표준        | 20년 가까이 엔터프라이즈 인증 표준으로 자리 잡음    |
+| 대부분의 회사 솔루션이 지원    | Jira, SAP, AD 계열, 레거시 시스템 호환 유리 |
+| 웹 브라우저 중심 환경에 최적화  | 사내 포털/업무 시스템에 자연스럽게 적용          |
+| 그룹/조직 정보를 함께 전달 용이 | “이 사람은 영업팀” 같은 정보 매핑 쉬움         |
+
+기업 내부 시스템을 쓰는 환경이라면 거의 기본값이 SAML입니다.
+
+---
+
+## SAML vs OIDC (이해하기 쉽게 비교)
+
+| 항목     | SAML             | OIDC             |
+| ------ | ---------------- | ---------------- |
+| 형태     | XML 기반           | JSON 기반          |
+| 메인 사용처 | 기업 내부 시스템, 사내 포털 | 일반 웹/모바일, 소셜 로그인 |
+| 토큰 형태  | SAML Assertion   | ID Token (JWT)   |
+| 요약     | 안정적이고 오래됨        | 가볍고 현대적임         |
+
+보통 사내 환경에서는 SAML을 사용하고 모바일/웹 서비스에서는 OICD를 사용합니다.
+
+---
+
+## SAML 주의사항
+
+| 항목           | 이유                             |
+| ------------ | ------------------------------ |
+| 사용자 ID 매칭 방식 | 이메일이 바뀌면 안 됨 → UUID 같은 고정 값 권장 |
+| 그룹/역할 매핑     | 로그인 이후 권한 처리가 중요               |
+| 로그아웃 방식      | 모든 서비스에서 함께 로그아웃할지 결정 필요       |
+| 시간 동기화       | SAML 토큰은 유효시간이 있어 서버 시간 차이가 중요 |
+
+---
+
+## 정리
+
+- SAML은 IdP에서 인증된 결과를 SP가 신뢰하도록 만드는 방식
+- 기업 환경에서는 지금도 가장 많이 쓰는 SSO 표준
+- SSO의 핵심은 “로그인은 한 번, 결과는 여러 서비스에서 공유된다”
+- 모바일/웹 위주라면 OIDC, 기업 포털 중심이면 SAML이 자연스러운 선택
+
+---
+
+## 참고자료
+
+* Auth0 SAML Overview: [https://auth0.com/docs/authenticate/protocols/saml](https://auth0.com/docs/authenticate/protocols/saml)
+* OASIS SAML 공식 문서: [https://docs.oasis-open.org/security/saml/](https://docs.oasis-open.org/security/saml/)

@@ -35,6 +35,7 @@ export enum BackendCategory {
   BASE = 'base',
   DATABASE = 'database',
   NESTJS = 'nestjs',
+  SECURITY = 'security',
   GRPC = 'grpc',
   UTILS = 'utils',
 }
