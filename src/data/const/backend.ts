@@ -43,6 +43,14 @@ const subCategory: Record<
     href: '/backend/ko/security/auth-01-authentication',
     icon: '/icons/security.svg',
   },
+  test: {
+    id: BackendCategory.TEST,
+    name: 'Test',
+    description:
+      'Explains the core types of testing in backend and frontend development, including static, unit, integration, and end-to-end (E2E) testing. Learn how to design efficient test strategies to ensure code quality, maintainability, and system reliability.',
+    href: '/backend/ko/test/tdd-01-introduction',
+    icon: '/icons/security.svg',
+  },
   grpc: {
     id: BackendCategory.GRPC,
     name: 'gRPC',
@@ -332,6 +340,31 @@ const subCategoryDetail: {
         href: '/backend/ko/security/auth-08-oidc',
         title: 'OIDC',
       },
+    ]],
+  },
+  test: {
+    title: ['TDD'],
+    subTitle: [[
+      {
+        href: '/backend/ko/test/tdd-01-introduction',
+        title: 'Introduction',
+      },
+      {
+        href: '/backend/ko/test/tdd-02-what-is',
+        title: 'What is TDD',
+      },
+      {
+        href: '/backend/ko/test/tdd-03-red-green-refactor-example',
+        title: 'Red Green Refactor',
+      },
+      {
+        href: '/backend/ko/test/tdd-04-test-double',
+        title: 'Test Double',
+      },
+      {
+        href: '/backend/ko/test/tdd-05-test-types',
+        title: 'Test Type',
+      }
     ]],
   },
   utils: {
