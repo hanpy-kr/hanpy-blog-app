@@ -309,7 +309,7 @@ const subCategoryDetail: {
           title: 'CoreDNS',
         },
         {
-          href: '/infra/ko/kubernetes/kube-ts-1-kubectl-exec',
+          href: '/infra/ko/kubernetes/kube-md-01-kubectl-exec',
           title: 'exec',
         },
       ],
@@ -344,14 +344,14 @@ const subCategoryDetail: {
         },
       ],
       [
-        // {
-        //   href: '/infra/ko/kubernetes/01.Introduction',
-        //   title: 'Introduction',
-        // },
-        // {
-        //   href: '/infra/ko/kubernetes/01.Introduction',
-        //   title: 'Introduction',
-        // },
+        {
+          href: '/infra/ko/kubernetes/kube-ts-01-x509.mdx',
+          title: 'Introduction',
+        },
+        {
+          href: '/infra/ko/kubernetes/kube-ts-02-132-version',
+          title: 'Introduction',
+        },
       ],
     ],
   },

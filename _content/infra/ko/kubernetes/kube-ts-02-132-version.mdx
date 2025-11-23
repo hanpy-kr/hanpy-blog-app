@@ -1,0 +1,49 @@
+---
+deployment: true
+category: Infra
+title: 'Amazon EKS Kubernetes 버전 정책과 1.32 업그레이드 체크포인트'
+summary: 'Amazon EKS에서 Kubernetes 마이너 버전이 어떻게 릴리스·지원되는지, 표준 지원과 추가 지원(Extended Support) 기간, 자동 업그레이드 정책을 정리합니다. 특히 Kubernetes 1.31 → 1.32 업그레이드 시 주의해야 할 API 제거, ServiceAccount 변경, Amazon Linux 2 AMI 지원 종료 이슈와 EKS Auto Mode·AL2023·Bottlerocket 전환 전략까지 함께 다룹니다.'
+pageKey: infra_eks_kubernetes_132_upgrade
+lng: KOR
+publishedAt: 2025-12-13
+tags: [EKS, Kubernetes, 쿠버네티스, 버전 정책, Kubernetes 1.32, Extended Support, Amazon Linux 2, AL2023, Bottlerocket, Auto Mode, 인프라, 클러스터 운영]
+---
+
+
+
+# EKS Kubernetes
+
+쿠버네티스는 4개월에 한번씩 Kubernetes 마이너 버전을 릴리스 합니다. 보통 릴리즈 이후 처음 14개월 동안은 Amazon EKS에서 표준지원을 받습니다. 그 후에 12 개월 동안은 추가 비용이 부과 되며 확장지원을 받게 됩니다. 확장지원이 종료 시, 업데이트를 하지 않으면 현재 지원되는 가장 오래된 추가 버전으로 자동 업그레이드 됩니다. 따라서 초기 생성 시 가장 최신의 Kubernetes 버전으로 클러스터를 생성하는 것이 좋습니다.
+
+
+| Kubernetes 버전 | 업스트림 릴리스      | Amazon EKS 릴리스 | 표준 지원 종료일     | 추가 지원 종료일     |
+| ------------- | ------------- | -------------- | ------------- | ------------- |
+| **1.33**      | 2025년 4월 23일  | 2025년 5월 29일   | 2026년 7월 29일  | 2027년 7월 29일  |
+| **1.32**      | 2024년 12월 11일 | 2025년 1월 23일   | 2026년 3월 23일  | 2027년 3월 23일  |
+| **1.31**      | 2024년 8월 13일  | 2024년 9월 26일   | 2025년 11월 26일 | 2026년 11월 26일 |
+| **1.30**      | 2024년 4월 17일  | 2024년 5월 23일   | 2025년 7월 23일  | 2026년 7월 23일  |
+| **1.29**      | 2023년 12월 13일 | 2024년 1월 23일   | 2025년 3월 23일  | 2026년 3월 23일  |
+| **1.28**      | 2023년 8월 15일  | 2023년 9월 26일   | 2024년 11월 26일 | 2025년 11월 26일 |
+
+
+EKS에서 쿠버네티스 버전은 주기적으로 업데이트가 필요합니다. 보통 아래와 같이 지원종료가 되면 추가 비용이 부과되기 때문에 늦지않게 업데이트를 확인하는게 중요합니다. 
+
+## kubernetes 1.32 
+
+> 1.31 버전을 사용중이라면, 표준지원이 종료되는 시점에 아래와 같은 메시지가 alert으로 보이게 됩니다. 업그레이드 시 문제가 될만한 부분이 존재한다면, AWS에서는 오류로 알려줍니다. 보통 경고의 경우 N+2 버전에 영향을 받는 항목이고, 오류인 경우는 N+1에서 영향을 받는 항목입니다. 따라서 오류가 발생한다면, 해결 후에 업그레이드를 하는 것이 중요합니다.
+
+```
+On November 26, 2025, your cluster will enter the extended support period with additional fees. For more information, see the pricing page . If you do not want to use extended support, we recommend you update the cluster to version 1.32 or opt-out of extended support by managing your Kubernetes version policy. To learn more about our version policy, see our documentation .
+```
+
+Kubernetes 1.32로 업데이트 시 주의 사항은 아래와 같습니다.
+
+
+- 버전 1.32에서 FlowSchema 및 PriorityLevelConfiguration의 flowcontrol.apiserver.k8s.io/v1beta3 API 버전이 제거되었습니다. 이 API를 사용하는 경우 업그레이드하기 전에 지원되는 최신 버전을 사용하도록 구성을 업데이트해야 합니다.
+- ServiceAccount metadata.annotations[kubernetes.io/enforce-mountable-secrets]는 버전 1.32에서 더 이상 사용되지 않으며 향후 Kubernetes 마이너 버전 릴리스에서 제거될 예정입니다. 탑재된 보안 암호에 대한 액세스를 격리하려면 별도의 네임스페이스를 사용하는 것이 좋습니다.
+- Kubernetes 버전 1.32는 Amazon EKS가 Amazon Linux 2(AL2) AMI를 출시하는 마지막 버전입니다. 버전 1.33부터 Amazon EKS는 Amazon Linux 2023(AL2023) 및 Bottlerocket 기반 AMI를 계속 출시합니다.
+
+### Amazon Linux 2 AMI 지원 종료 예정
+
+Kubernetes 1.32는 Amazon Linux 2(AL2) 기반 AMI가 제공되는 마지막 버전입니다. 1.33부터는 AL2023과 Bottlerocket 기반 AMI만 제공됩니다. 앞으로는 EKS Auto Mode 사용, AL2023 또는 Bottlerocket 마이그레이션, Managed Node Group → Auto Mode 전환이 권장됩니다.
+

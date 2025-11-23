@@ -1,0 +1,153 @@
+---
+deployment: true
+category: Infra
+title: 'x509 인증서 오류 — certificate has expired / not yet valid 원인과 해결 방법'
+summary: 'HTTPS·TLS 통신 중 발생하는 x509 인증서 오류: "certificate has expired or is not yet valid" 문제의 주요 원인(만료, 시간 불일치, 체인 오류)과 해결 방법을 단계별로 설명합니다. Kubernetes, Nginx, 백엔드 서버에서 자주 발생하는 인증서 오류 트러블슈팅 가이드입니다.'
+pageKey: infra_x509_troubleshoot
+lng: KOR
+publishedAt: 2025-12-11
+tags: [SSL 인증서, x509, certificate has expired, TLS 오류, HTTPS 오류, 인증서 만료, Kubernetes, 인프라, 서버 운영]
+---
+
+# x509 인증서 오류 - failed to verify certificate: x509: certificate has expired or is not yet valid”
+
+HTTPS, TLS, gRPC 등 암호화된 통신을 사용할 때 가장 자주 발생하는 오류 중 하나가 바로 x509 인증서 문제입니다. 특히 다음 메시지는 많은 개발자와 운영자가 경험하는 대표적인 에러입니다.
+
+```
+failed to verify certificate: x509: certificate has expired or is not yet valid
+```
+
+---
+
+## x509: certificate has expired or is not yet valid 오류란?
+
+이 오류는 HTTPS/TLS 인증서 검증 과정에서 다음 두 가지 중 하나가 실패했음을 의미합니다.
+
+1. 인증서가 만료된 상태 (expired)  
+2. 인증서의 NotBefore 시간이 아직 오지 않음 (not yet valid)  
+
+즉, 인증서의 유효 기간이 현재 서버 시간과 맞지 않아 검증이 실패하는 것입니다.
+
+---
+
+# 원인 분석
+
+```bash
+x509: certificate has expired or is not yet valid
+failed to verify certificate
+Unable to connect to the server: x509...
+```
+
+MicroK8s 환경에서 다음 오류가 발생할 경우 원인은 크게 두 가지입니다.
+
+1. 시스템 시간 문제(NTP 불일치)
+2. MicroK8s 인증서(server.crt 등) 유효기간 만료
+
+위 문제를 최소 조치 → 원인 확인 → 복구 순서로 해결하도록 작성되었습니다.
+
+## 1. 시간(NTP) 동기화 확인
+
+ 서버 시간이 현재보다 뒤로 밀리거나, 앞으로 가 있을 때 인증서의 “NotBefore” 시간보다 시스템 시간이 과거로 인식되어 인증서가 “아직 유효하지 않다(not yet valid)”로 판단합니다.
+
+### 확인 방법
+```bash
+$ timedatectl status
+$ date
+```
+
+MicroK8s는 시간 민감도가 높아 1~2분만 시계가 어긋나도 x509 오류가 발생합니다. 특이사항이 없으면, 인증서 확인/재발급으로 넘어가면 됩니다.
+
+- System clock synchronized: yes (동기화 확인)
+- NTP service: active (NTP 동기화 확인)
+- 출력 시간이 실제 시간과 동일한지
+
+맞지 않는 부분이 있다면 아래 명령어를 실행하여 확인 합니다.
+
+### 적용 방법
+
+```bash
+$ sudo systemctl restart systemd-timesyncd
+$ timedatectl status
+```
+
+### 수동설정이 필요한 경우
+
+```
+sudo timedatectl set-ntp false
+sudo date -s "2025-11-20 14:20:00"
+```
+
+---
+
+## 2. MicroK8s 인증서 유효기간 확인
+
+온프라 환경에서는 snap 자동 업데이트 시 인증서가 재생성되거나 시간 오차로 인해 유효기간이 깨질 수 있습니다.
+
+### 인증서 위치확인
+
+```bash
+ls /var/snap/microk8s/current/certs
+```
+- server.crt
+- ca.crt
+- apiserver-kubelet-client.crt
+- front-proxy-client.crt
+- etcd/server.crt
+
+### 인증서 확인방법
+
+```bash
+sudo openssl x509 -in /var/snap/microk8s/current/certs/server.crt -noout -dates
+sudo openssl x509 -in /var/snap/microk8s/current/certs/front-proxy-client.crt -noout -dates
+
+```
+
+### 문제가 되는 경우
+
+1. notBefore > 현재시간 : 현재시간 보다 notBefore이 작은 경우에는 시스템 시간이 미래로 튀게 됩니다.
+2. notAfter < 현재시간 : 현재시간이 만료시간보다 큰 경우에는 인증서가 만료됩니다.
+
+```bash
+# Sample
+$ sudo openssl x509 -in /var/snap/microk8s/current/certs/server.crt -noout -dates
+
+notBefore=Nov  5 03:49:22 2025 GMT
+notAfter=Nov  5 03:49:22 2026 GMT
+```
+
+---
+
+## 3. MicroK8s 인증서 재발급
+
+반드시 1단계 시간 점검 및 조치 후에 시도해야합니다. 문제가 되는 인증서를 재발급 합니다.
+
+```bash
+sudo microk8s.refresh-certs --cert server.crt
+sudo microk8s.stop
+sudo microk8s.start
+```
+
+---
+
+## 4. kubeconfig 갱신
+
+엣지 케이스로 kubeconfig가 오래된 cert를 들고 있을 수 있기 때문에 갱신해 줍니다.
+
+```
+sudo microk8s.config > ~/.kube/config
+```
+
+이 작업은 단순히, MicroK8s의 kubeconfig를 사용자 홈 디렉토리에 복사해서 kubectl이 해당 파일을 참조하도록 하는 것이기 때문에 `~/.kube/` 폴더나 `~/.kube/config` 파일이 없을 수도 있습니다. 복사본을 만들어 주는 것도 공식 가이드에서 권장하는 방식이기 때문에, 시스템이나 클러스터에 영향이 없어도 만들어 두는 것이 좋습니다. 다만, 기존에 파일이 있다면, 다른 설정들이 사라질 수 도 있기 때문에 백업 후에 확인해보는 것이 좋습니다.
+
+
+
+---
+
+## 5. 시스템 상태 진단
+
+문제 지속 시, 아래의 명령어를 통해 추가 원인 분석이 필요합니다.
+
+```
+$ microk8s.inspect
+```
+
