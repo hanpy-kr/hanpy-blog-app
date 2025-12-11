@@ -227,6 +227,10 @@ const subCategoryDetail: {
           href: '/infra/ko/cloud/aws-vpc-11-acl',
           title: 'ACL',
         },
+        {
+          href: '/infra/ko/cloud/aws-vpc-12-sg',
+          title: 'Security Group',
+        },
       ]
     ],
   },
