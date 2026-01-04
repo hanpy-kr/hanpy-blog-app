@@ -203,6 +203,14 @@ const subCategoryDetail: {
           href: '/infra/ko/cloud/aws-efs-4-transfer',
           title: 'EFS - transfer',
         },
+        {
+          href: '/infra/ko/cloud/aws-iam-1-identity-provider',
+          title: 'IdP(Identity Provider)',
+        },
+        {
+          href: '/infra/ko/cloud/aws-efs-4-transfer',
+          title: 'EFS - transfer',
+        },
       ],
       [
         {
