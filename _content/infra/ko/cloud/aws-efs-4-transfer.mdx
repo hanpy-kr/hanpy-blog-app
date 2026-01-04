@@ -1,0 +1,80 @@
+---
+deployment: true
+category: Infra
+title: 'AWS EFS - transfer'
+summary: 'AWS Transfer Family로 EFS에 SFTP/FTPS/FTP 파일 전송을 제공하는 방법과 DataSync/Backup과의 차이, 비용 관점으로 알아봅시다'
+pageKey: aws_efs_transfer_family_intro
+lng: KOR
+publishedAt: 2026-01-17
+tags: [AWS, EFS, AWS Transfer Family, SFTP, FTPS, FTP, File Transfer, Cloud Storage, Infra]
+---
+
+# AWS EFS - transfer
+
+AWS EFS(Elastic File System)는 완전관리형 파일 시스템으로 NFS 기반의 마운트를 통해 접근하는 것이 일반적입니다. 하지만 외부 파트너/고객/협력사 등에게는 NFS 접근을 열어주기 어렵거나, 기존 업무 프로세스가 SFTP/FTPS/FTP 기반으로 구성된 경우가 많습니다. 이런 상황에서 AWS Transfer Family를 사용하면 EFS를 백엔드 스토리지로 두고 표준 파일 전송 프로토콜(SFTP/FTPS/FTP)로 안전하게 파일을 업로드/다운로드할 수 있습니다.
+
+---
+
+## AWS Transfer Family를 사용하는 방식
+
+AWS Transfer Family는 **SFTP/FTPS/FTP(및 AS2 등) 기반의 관리형 파일 전송 엔드포인트를 제공**하는 서비스입니다.
+EFS와 연동하면, 사용자는 익숙한 파일 전송 클라이언트(SFTP/FTPS/FTP 클라이언트)로 접속해 EFS에 파일을 업로드/다운로드할 수 있습니다. 
+
+* EFS를 백엔드 스토리지로 사용 가능
+* SFTP/FTPS/FTP 프로토콜로 파일 전송 지원
+* 완전관리형(서버/패치/확장 운영 부담 감소)
+* 외부 사용자에게 NFS 대신 파일 전송 방식 제공 가능
+* 파트너 파일 수신/배포, 공급망, 콘텐츠 관리 등 “파일 교환” 케이스에 적합 
+
+---
+
+## AWS Backup · DataSync · Transfer Family 차이
+
+같은 “데이터를 옮긴다/보관한다” 맥락이라도 목적이 다릅니다.
+
+* **AWS Backup**
+
+  * 관리형 백업 서비스(정책 기반 보존/복구)
+  * 백업 데이터(복구 지점) 관리가 핵심
+
+* **AWS DataSync**
+
+  * 대용량 데이터 복사/동기화(마이그레이션/주기적 복사)
+  * EFS ↔ S3 / 온프레미스 등 “데이터 이동”이 핵심
+
+* **AWS Transfer Family**
+
+  * SFTP/FTPS/FTP로 파일 업/다운로드하는 “전송 채널” 제공
+  * 파트너/고객/외부 시스템과의 파일 교환(MFT)이 핵심 
+
+결론적으로 Transfer Family는 **백업 대체재가 아니며**, “외부/레거시 프로토콜 기반 파일 교환”을 AWS 관리형으로 제공하는 쪽에 가깝습니다. 
+
+---
+
+## 비용 관점에서 최소한 알아야 할 점
+
+### AWS Transfer Family 비용
+
+Transfer Family는 **프로토콜을 통해 업로드/다운로드한 데이터 양(GB)** 또는 **AS2 메시지 수**, 그리고 기능(예: 워크플로, 커넥터 등)에 따라 과금됩니다. (실제 과금 항목과 단가는 리전/구성에 따라 달라질 수 있으니 요금 페이지를 기준으로 확인하는 것이 안전합니다.)
+
+### 추가로 함께 발생할 수 있는 비용(최소 관점)
+
+* EFS 스토리지 사용 비용(데이터가 늘면 EFS 비용 증가)
+* 네트워크/데이터 전송 비용(환경/경로에 따라 발생 가능)
+
+결국 비용은 “전송되는 데이터 양”과 “운영 형태(사용 패턴)”에 크게 좌우되므로, 외부 업로드/다운로드 트래픽 규모를 먼저 가늠하는 것이 중요합니다. 
+
+---
+
+## 정리
+
+AWS Transfer Family는 EFS를 백엔드로 두고 SFTP/FTPS/FTP 같은 표준 파일 전송 프로토콜로 파일을 업로드/다운로드할 수 있게 해주는 관리형 서비스입니다. 관리형 백업이 목적이면 AWS Backup이 적합하고, 대규모 데이터 이동/동기화가 목적이면 DataSync가 적합합니다. 반면 Transfer Family는 백업을 대체하는 것이 아니라 외부 파트너/고객/레거시 시스템과의 파일 교환(MFT)을 AWS에서 운영 부담 없이 제공하는 데 초점을 둔다는 점을 이해하고 사용하는 것이 중요합니다. 
+
+---
+
+## 참고 자료
+
+* AWS Transfer Family란 무엇인가요? 
+* Amazon EFS에서 AWS Transfer Family 사용(통합 가이드) 
+* AWS Transfer Family 요금 
+* AWS Transfer Family 문서 개요 

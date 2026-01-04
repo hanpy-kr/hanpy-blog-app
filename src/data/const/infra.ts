@@ -140,10 +140,6 @@ const subCategoryDetail: {
       ],
       [
         {
-          href: '/infra/ko/base/aws-efs',
-          title: 'AWS - EFS',
-        },
-        {
           href: '/infra/ko/base/internal-network-to-saas-communication',
           title: 'Internal Network to SaaS',
         },
@@ -180,8 +176,34 @@ const subCategoryDetail: {
     ],
   },
   cloud: {
-    title: ['VPC'],
+    title: ['AWS', 'VPC'],
     subTitle: [
+      [
+        {
+          href: '/infra/ko/cloud/aws-ec2-eip',
+          title: 'Elastic IP',
+        },
+        {
+          href: '/infra/ko/cloud/aws-ec2-lb',
+          title: 'Elastic Load Balancer',
+        },
+        {
+          href: '/infra/ko/cloud/aws-efs-1-introduction',
+          title: 'EFS',
+        },
+        {
+          href: '/infra/ko/cloud/aws-efs-2-backup',
+          title: 'EFS - backup',
+        },
+        {
+          href: '/infra/ko/cloud/aws-efs-3-datasync',
+          title: 'EFS - dayasync',
+        },
+        {
+          href: '/infra/ko/cloud/aws-efs-4-transfer',
+          title: 'EFS - transfer',
+        },
+      ],
       [
         {
           href: '/infra/ko/cloud/aws-vpc-1-introduction',

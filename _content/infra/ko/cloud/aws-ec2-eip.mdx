@@ -1,0 +1,73 @@
+---
+deployment: true
+category: Infra
+title: 'AWS - Elastic IP(EIP)'
+summary: 'AWS에서 Elastic IP(EIP)를 활용해 EC2 인스턴스에 고정 Public IP를 할당하고, 장애 대응 및 네트워크 설계를 안정적으로 구성하는 방법을 알아봅시다.'
+pageKey: aws_ec2_elastic_ip
+lng: KOR
+publishedAt: 2026-01-05
+tags: [AWS, VPC, Elastic IP, EIP, EC2, Public IP, 네트워킹]
+---
+
+# AWS - Elastic IP(EIP)
+
+AWS에서 EC2 인스턴스를 생성하면 기본적으로 Public IP가 자동 할당될 수 있습니다. 하지만 이 Public IP는 **인스턴스를 중지(stop)하거나 재시작**하면 변경되는 임시 주소라는 한계가 있습니다. 이러한 특성은 고정 IP를 요구하는 서비스 환경(웹 서버, API 서버, 외부 연동 시스템 등)에서는 큰 제약이 됩니다.
+
+이 문제를 해결하기 위해 AWS에서는 **Elastic IP(EIP)** 라는 정적 Public IPv4 주소를 제공합니다. Elastic IP는 사용자가 직접 소유하고 관리하는 고정 IP 주소로, EC2 인스턴스나 네트워크 인터페이스(ENI)에 자유롭게 연결 및 분리할 수 있습니다. 이를 통해 인스턴스 장애 발생 시에도 IP 주소를 유지한 채 빠른 복구가 가능해집니다.
+
+Elastic IP는 단순한 고정 IP를 넘어, **고가용성(High Availability)** 과 **장애 대응(Failover)** 을 위한 핵심 네트워크 구성 요소로 활용됩니다. 예를 들어, 장애가 발생한 인스턴스에서 Elastic IP를 분리한 뒤 새로운 인스턴스에 재할당함으로써, 외부 사용자나 클라이언트는 IP 변경 없이 서비스를 계속 이용할 수 있습니다.
+
+## Elastic IP의 주요 특징
+
+Elastic IP는 AWS 계정 단위로 할당되며, 특정 리전에 종속됩니다. 한 번 할당된 Elastic IP는 사용자가 명시적으로 해제(release)하지 않는 한 유지되며, 인스턴스 상태와 무관하게 계속 보존됩니다.
+
+또한 Elastic IP는 다음과 같은 특징을 가집니다.
+
+- 고정 Public IPv4 주소 제공
+- EC2 인스턴스 또는 ENI에 자유롭게 연결/해제 가능
+- 장애 발생 시 빠른 IP 재할당으로 서비스 연속성 보장
+- Internet Gateway(IGW) 와 함께 사용 시 인터넷 통신 가능
+- Route 53, ALB 이전의 단순한 고정 IP 기반 아키텍처에 활용 가능
+
+단, Elastic IP는 IPv4 주소 자원 고갈 문제로 인해 **사용하지 않을 경우 비용이 발생**합니다. 즉, 인스턴스에 연결되지 않은 Elastic IP나, 하나의 인스턴스에 여러 개의 EIP를 사용하는 경우 추가 요금이 부과됩니다.
+
+## Public IP와 Elastic IP의 차이점
+
+EC2에서 자동 할당되는 Public IP는 인스턴스 생명주기에 종속되는 반면, Elastic IP는 AWS 계정에 종속됩니다. 이 차이로 인해 두 IP는 사용 목적이 명확히 구분됩니다.
+
+* **Public IP**
+
+  * 인스턴스 시작 시 자동 할당
+  * 인스턴스 중지/재시작 시 변경
+  * 테스트, 임시 환경에 적합
+
+* **Elastic IP**
+
+  * 고정 IP 주소
+  * 인스턴스 교체 및 장애 상황에서도 유지
+  * 운영 환경, 외부 연동 서비스에 적합
+
+따라서 실제 운영 환경에서는 Public IP 대신 Elastic IP를 사용해 네트워크 안정성과 예측 가능성을 확보하는 것이 일반적인 베스트 프랙티스입니다.
+
+## Elastic IP 사용 시 주의사항
+
+Elastic IP는 편리하지만, 무분별한 사용은 비용 증가로 이어질 수 있습니다. 특히 다음 사항을 반드시 고려해야 합니다.
+
+* 사용하지 않는 Elastic IP는 즉시 해제
+* 고가용성이 필요하다면 ALB/NLB와 같은 로드 밸런서 사용 고려
+* IPv6 환경에서는 Elastic IP가 아닌 글로벌 IPv6 주소 활용 가능
+* 보안 그룹 및 네트워크 ACL 설정을 함께 점검
+
+AWS에서는 Elastic IP의 남용을 방지하기 위해 계정별 할당 개수 제한을 두고 있으며, 필요 시 서비스 할당량 증가 요청을 통해 확장할 수 있습니다.
+
+## 정리
+
+AWS Elastic IP(EIP)는 EC2 인스턴스에 **변하지 않는 고정 Public IP**를 제공하는 핵심 네트워크 기능입니다. 이를 통해 장애 대응, 인스턴스 교체, 외부 시스템 연동 시에도 안정적인 서비스 운영이 가능합니다.
+
+다만 Elastic IP는 제한된 IPv4 자원이기 때문에, 반드시 필요한 경우에만 사용하고, 로드 밸런서나 DNS 기반 아키텍처와 병행하여 설계하는 것이 비용과 확장성 측면에서 바람직합니다. IGW, 라우팅 테이블, 보안 그룹과 함께 올바르게 구성할 때 Elastic IP의 진정한 가치를 발휘할 수 있습니다.
+
+## 참고자료
+
+* [AWS 공식 문서: Elastic IP 주소](https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html)
+* [AWS 공식 문서: Public IPv4 주소 요금 정책](https://aws.amazon.com/ko/blogs/korea/new-aws-public-ipv4-address-charge/)
+* [관련 학습 자료 - Tistory 블로그](https://martinkim1954.tistory.com/entry/AWS-Elastic-IP-EIP-%EC%A0%95%EB%A6%AC)
