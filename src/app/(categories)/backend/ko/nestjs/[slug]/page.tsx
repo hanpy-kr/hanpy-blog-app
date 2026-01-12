@@ -25,7 +25,7 @@ export async function generateMetadata(
   const slug = (await params).slug
 
   const post = allBackendForKORs.find((p) => {
-    console.log(p.summary)
+    // console.log(p.summary)
     return p._raw.flattenedPath === `${PREFIX_PATH}/${slug}`
   })
  
