@@ -468,6 +468,14 @@ const subCategoryDetail: {
         {
           href: '/infra/ko/git/git-04-command',
           title: 'Command',
+        },
+        {
+          href: '/infra/ko/git/git-05-pull-request',
+          title: 'Pull Request',
+        },
+        {
+          href: '/infra/ko/git/git-06-review',
+          title: 'Code Review',
         }
       ],
     ],
