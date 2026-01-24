@@ -1,0 +1,100 @@
+---
+deployment: true
+category: Infra
+title: 'AWS S3 and CloudFront Integration Guide'
+summary: 'S3에 정적 리소스를 저장하고 CloudFront와 Route53을 연동하여 배포하는 방법을 알아봅시다.'
+pageKey: aws_s3_2_cf_integration
+lng: KOR
+publishedAt: 2026-01-28
+tags: [AWS, S3, CloudFront, Route53, CDN, StaticWebsite]
+---
+
+# AWS S3 and CloudFront Integration Guide
+
+정적 웹사이트나 리소스를 **전 세계 사용자에게 빠르고 안정적으로 제공**하기 위해 AWS에서는 `S3 + CloudFront + Route53` 조합을 가장 많이 사용합니다.
+
+* **S3**: 정적 파일 저장소 (HTML, CSS, JS, 이미지 등)
+* **CloudFront**: 글로벌 CDN(Content Delivery Network)
+* **Route53**: 도메인 DNS 관리 서비스
+
+S3를 생성하고 S3 저장된 정적 리소스를 CloudFront로 배포하고, Route53을 통해 사용자 도메인으로 연결하는 방법을 알아봅시다.
+
+---
+
+## 1. S3 버킷 생성
+
+S3 생성 설정은, 특이사항 없으면 default로 해도 됩니다. 단, 구축하려는 서버와 같은 리전으로 만들어야 비용을 줄일 수 있습니다.
+
+1. AWS 콘솔 → S3 → `Create bucket`
+2. 버킷 이름 설정
+3. 리전 선택 (CloudFront 사용 시 리전 영향 적음)
+4. **Block Public Access**
+   * CloudFront를 사용할 경우: 퍼블릭 액세스는 차단 유지 권장
+5. 파일 업로드
+
+생성 시 중요한 점은 퍼블릭 엑세스를 차단으로 해야합니다. 파일에 대한 외부 접근은 CloudFront에서만 진행합니다.
+
+---
+
+### 정리
+
+* S3는 **오리진(origin)** 역할만 수행
+* 퍼블릭 오픈 없이도 CloudFront를 통해 접근 가능
+
+---
+
+## 2. CloudFront 배포 생성
+
+1. AWS 콘솔 → **CloudFront** → `Create distribution`
+2. **Origin 설정**
+   * Origin domain: 생성한 **S3 버킷 선택**
+3. **Default cache behavior**
+   * Viewer protocol policy: `Redirect HTTP to HTTPS`
+4. **Domain Info (Alternate domain name, CNAME)**
+   * 보유 도메인 입력
+     예: `test.hanpy.com`
+5. **SSL 인증서**
+   * ACM에서 발급된 인증서 선택
+6. 배포 생성 후 상태가 `Deployed` 될 때까지 대기
+
+여기서 중요한 것은 도메인을 입력했다고, s3파일을 바로 접근 할 수 없습니다. Route53에서 DNS 설정이 추가적으로 필요합니다.
+
+---
+
+### 정리
+
+* CloudFront는 전 세계 엣지 로케이션에 캐싱
+* 사용자 요청은 가장 가까운 엣지에서 처리
+* HTTPS 적용을 위해 **ACM 인증서 필수**
+
+---
+
+### 참고자료
+
+* Amazon CloudFront Developer Guide
+* AWS Certificate Manager Documentation
+
+---
+
+## 3. Route53 도메인 연결
+
+CloudFront에서 도메인을 등록했다고 즉시 서비스되는 것은 아닙니다. DNS 설정이 반드시 필요합니다.
+
+1. **Route53 → Hosted Zone 선택**
+2. `Create record`
+3. 레코드 설정
+   * **Record name**: `test`
+   * **Record type**: `A`
+   * **Alias**: `On`
+   * **Route traffic to**: `Alias to CloudFront distribution`
+   * 대상: `xxxxx.cloudfront.net`
+4. 저장 후 DNS 전파 대기 (수 분 ~ 수십 분)
+
+---
+
+### 정리
+
+* Route53은 사용자 도메인 → CloudFront 연결 담당
+* Alias A 레코드는 IP 대신 CloudFront 배포를 직접 가리킴
+* DNS 전파 시간 고려 필요
+

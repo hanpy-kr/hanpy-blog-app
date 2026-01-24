@@ -215,6 +215,10 @@ const subCategoryDetail: {
           href: '/infra/ko/cloud/aws-s3-1-file-download',
           title: 'S3 - Download',
         },
+        {
+          href: '/infra/ko/cloud/aws-s3-2-connect-cloudfront',
+          title: 'S3 - CF Integration',
+        },
       ],
       [
         {
@@ -480,6 +484,10 @@ const subCategoryDetail: {
         {
           href: '/infra/ko/git/git-06-review',
           title: 'Code Review',
+        },
+        {
+          href: '/infra/ko/git/git-07-ssh-key',
+          title: 'SSH Key',
         }
       ],
     ],
