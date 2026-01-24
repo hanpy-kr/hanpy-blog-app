@@ -211,6 +211,10 @@ const subCategoryDetail: {
           href: '/infra/ko/cloud/aws-efs-4-transfer',
           title: 'EFS - transfer',
         },
+        {
+          href: '/infra/ko/cloud/aws-s3-1-file-download',
+          title: 'S3 - Download',
+        },
       ],
       [
         {

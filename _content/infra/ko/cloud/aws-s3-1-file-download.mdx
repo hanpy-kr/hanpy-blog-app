@@ -1,0 +1,215 @@
+---
+deployment: true
+category: Infra
+title: AWS S3 - Download (Profile-Based)
+summary: AWS 자격 증명 파일에 프로필을 구성한 뒤, AWS CLI를 활용하여 S3에 저장된 파일과 폴더를 로컬 환경으로 다운로드하는 방법을 정리한다.
+pageKey: aws_s3_1_aws_filedownload
+lng: KOR
+publishedAt: 2026-01-25
+tags: [AWS, S3, AWS CLI, IAM, Infra, Cloud, File Download]
+---
+
+# AWS S3 - Download (Profile-Based)
+
+## 인트로 및 정의
+
+AWS S3(Simple Storage Service)는 대규모 데이터를 안정적으로 저장하고 제공하기 위해 가장 널리 사용되는 객체 스토리지 서비스 중 하나입니다. 로그 보관, 미디어 자산 관리, 데이터 분석을 위한 원천 데이터 저장 등 다양한 용도로 활용되고 있으며, 운영 환경에서는 사실상 기본 스토리지 계층으로 자리 잡았습니다.
+
+실무에서는 하나의 AWS 계정만 사용하는 경우보다, 운영(prod)·스테이징(stg)·개발(dev) 환경을 분리하거나 개인 계정과 회사 계정을 함께 사용하는 경우가 일반적입니다. 이러한 환경에서 자격 증명을 안전하게 관리하기 위해 AWS CLI는 **프로필(Profile)** 기반 인증 방식을 제공합니다.
+
+이 글에서는 AWS CLI를 기준으로 다음 내용을 다룹니다.
+
+1. AWS 자격 증명 파일에 프로필을 추가하는 방법
+2. S3에 저장된 단일 파일을 로컬로 다운로드하는 방법
+3. S3 폴더(prefix)를 로컬 디렉터리로 다운로드하는 방법
+
+---
+
+## 1. AWS 자격 증명 파일에 프로필 추가
+
+### 1-1. AWS 자격 증명 파일 위치
+
+AWS CLI는 로컬 환경에 저장된 자격 증명 파일을 통해 인증 정보를 로드합니다. 운영체제별 기본 경로는 다음과 같습니다.
+
+* **macOS / Linux**
+
+```bash
+~/.aws/credentials
+```
+
+* **Windows**
+
+```text
+C:\Users\{USERNAME}\.aws\credentials
+```
+
+해당 파일이 존재하지 않는 경우, 동일한 경로에 직접 생성해도 문제 없습니다.
+
+---
+
+### 1-2. 프로필 추가 예시
+
+다음은 하나의 로컬 환경에서 여러 AWS 계정을 관리하는 일반적인 예시입니다.
+
+```ini
+[default]
+aws_access_key_id = DEFAULT_ACCESS_KEY
+aws_secret_access_key = DEFAULT_SECRET_KEY
+
+[stg]
+aws_access_key_id = STG_ACCESS_KEY
+aws_secret_access_key = STG_SECRET_KEY
+
+[prod]
+aws_access_key_id = PROD_ACCESS_KEY
+aws_secret_access_key = PROD_SECRET_KEY
+```
+
+프로필 이름(`[stg]`, `[prod]`)은 CLI 실행 시 명시적으로 선택할 수 있으며, 이를 통해 환경 간 자격 증명을 명확히 분리할 수 있습니다. 특히 운영 계정 접근 사고를 방지하기 위해 `default` 프로필에 모든 권한을 몰아두는 방식은 피하는 것이 좋습니다.
+
+---
+
+### 1-3. 리전 설정 (`~/.aws/config`)
+
+리전 설정은 `config` 파일에서 관리합니다. S3 단독 사용 시에는 필수가 아니지만, 다른 AWS 서비스와 함께 사용하는 경우 명시적으로 설정해 두는 편이 안전합니다.
+
+```ini
+[profile stg]
+region = ap-northeast-2
+output = json
+```
+
+> `credentials` 파일은 인증 정보 관리,
+> `config` 파일은 실행 환경 설정(리전, 출력 포맷)을 담당합니다.
+
+---
+
+### 소제목 정리
+
+AWS CLI는 프로필 기반 인증을 기본으로 제공하며, 여러 AWS 계정을 사용하는 환경에서는 `default` 프로필 대신 용도별 프로필을 명시적으로 분리해 사용하는 것이 바람직합니다.
+
+---
+
+### 참고 자료
+
+* [AWS CLI Configuration 공식 문서](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
+
+* [AWS IAM Access Key 관리 가이드](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
+
+---
+
+## 2. S3 파일 다운로드 방법
+
+### 2-1. 단일 파일 다운로드
+
+S3에 저장된 특정 파일 하나를 다운로드할 경우 `aws s3 cp` 명령을 사용합니다.
+
+```bash
+aws s3 cp s3://버킷명/경로/파일명 로컬경로 --profile stg
+```
+
+#### 예시
+
+```bash
+aws s3 cp s3://lipzero-stg/data/sample.json ./sample.json --profile stg
+```
+
+해당 명령은 지정한 S3 객체를 로컬 파일 시스템으로 그대로 복사합니다.
+
+---
+
+### 2-2. 다운로드 전 파일 목록 확인
+
+실제 작업에서는 다운로드 대상이 파일인지, 폴더(prefix)인지 먼저 확인하는 것이 중요합니다.
+
+```bash
+aws s3 ls s3://lipzero-stg/data/ --profile stg
+```
+
+이 과정을 생략하면 이후 단계에서 폴더를 파일처럼 처리하여 오류가 발생하는 경우가 많습니다.
+
+---
+
+### 소제목 정리
+
+S3의 단일 파일은 `aws s3 cp` 명령으로 다운로드하며, 파일 전체 경로와 사용할 프로필을 명시적으로 지정하는 것이 안전합니다.
+
+---
+
+### 참고 자료
+
+* AWS CLI `cp` 명령어 레퍼런스
+  [https://docs.aws.amazon.com/cli/latest/reference/s3/cp.html](https://docs.aws.amazon.com/cli/latest/reference/s3/cp.html)
+
+---
+
+## 3. S3 폴더 다운로드 방법
+
+S3에는 일반적인 파일 시스템과 같은 물리적 디렉터리가 존재하지 않으며, 객체 키의 접두어(prefix)를 통해 폴더처럼 표현합니다. 이로 인해 폴더 단위 다운로드 시에는 재귀 옵션을 반드시 사용해야 합니다.
+
+---
+
+### 3-1. 폴더 전체 다운로드
+
+```bash
+aws s3 cp s3://버킷명/폴더경로 로컬경로 --recursive --profile stg
+```
+
+#### 예시
+
+```bash
+aws s3 cp s3://lipzero-stg/ai_generated_avatar ./ai_generated_avatar --recursive --profile stg
+```
+
+해당 명령은 지정된 prefix 하위의 모든 객체를 로컬 디렉터리로 다운로드합니다.
+
+---
+
+### 3-2. 자주 발생하는 에러 사례
+
+다음과 같은 명령은 오류를 발생시킵니다.
+
+```bash
+aws s3 cp s3://lipzero-stg/ai_generated_avatar ./ --profile stg
+```
+
+에러 메시지:
+
+```
+Is a directory
+```
+
+이는 폴더(prefix)를 단일 파일처럼 다운로드하려고 시도했기 때문입니다.
+
+---
+
+### 3-3. 대안: `sync` 명령어
+
+반복적인 다운로드나 대용량 데이터 처리 시에는 `sync` 명령이 더 적합합니다.
+
+```bash
+aws s3 sync s3://lipzero-stg/ai_generated_avatar ./ai_generated_avatar --profile stg
+```
+
+`sync`는 변경된 파일만 다운로드하며, 중단 후 재실행에도 비교적 안정적으로 동작합니다.
+
+---
+
+### 소제목 정리
+
+S3 폴더 다운로드에는 `--recursive` 옵션이 필요하며, 지속적인 동기화나 대용량 데이터 처리에는 `sync` 명령이 더 적합합니다.
+
+---
+
+### 참고 자료
+
+* [AWS CLI `sync` 명령어 문서](https://docs.aws.amazon.com/cli/latest/reference/s3/sync.html)
+
+* [Amazon S3 Object 및 Prefix 개념](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html)
+
+---
+
+## 마무리
+
+AWS S3에서 파일을 로컬로 다운로드하는 작업은 단순해 보이지만, 인증 방식과 S3의 객체 구조를 정확히 이해하지 않으면 예상치 못한 오류가 발생할 수 있습니다. 프로필 기반 인증을 명확히 구성하고, 다운로드 대상에 맞는 명령어를 선택하는 것만으로도 운영 안정성과 작업 효율을 크게 높일 수 있습니다.
+
