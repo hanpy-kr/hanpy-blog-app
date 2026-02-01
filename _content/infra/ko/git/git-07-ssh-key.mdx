@@ -78,7 +78,7 @@ ssh-add -l
 
 정상적으로 등록되었다면 아래와 같이 각 키의 해시 값과 코멘트가 출력됩니다.
 
-```text
+```bash
 256 SHA256:lc... github@example.com (ED25519)
 256 SHA256:bq... gitlab@example.com (ED25519)
 256 SHA256:CI... company@example.com (ED25519)
@@ -167,7 +167,7 @@ ssh -T git@company-git
 
 설정이 정상적으로 되어 있다면 아래와 같은 메시지가 출력됩니다.
 
-```text
+```bash
 Hi <GitHub 계정명>! You've successfully authenticated, but GitHub does not provide shell access.
 ```
 
@@ -179,7 +179,7 @@ Hi <GitHub 계정명>! You've successfully authenticated, but GitHub does not pr
 
 GitHub 저장소의 기본 SSH 주소는 일반적으로 다음과 같은 형태입니다.
 
-```text
+```bash
 # GitHub 개인 계정
 git@github.com:organization/repository.git
 

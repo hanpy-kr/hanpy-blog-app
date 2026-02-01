@@ -106,6 +106,10 @@ const subCategoryDetail: {
           title: 'DNS',
         },
         {
+          href: '/infra/ko/base/dns-host_based_dns_resolution',
+          title: 'Host-based DNS Resolution',
+        },
+        {
           href: '/infra/ko/base/tls',
           title: 'TLS',
         },
