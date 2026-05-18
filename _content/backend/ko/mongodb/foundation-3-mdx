@@ -1,0 +1,159 @@
+---
+deployment: false
+category: Infra
+title: 'Karpenter — Spot & On-Demand'
+summary: 'Kubernetes 환경에서 Karpenter를 활용하여 Spot과 On-Demand 노드를 함께 운영하고, 비용 절감과 안정성을 동시에 확보하는 방법을 단계별로 알아봅시다.'
+pageKey: karpenter_3_spot_ondemand
+lng: KOR
+publishedAt: 2025-09-10
+tags: [Karpenter, Kubernetes, EKS, AWS, Spot, On-Demand, NodePool, NodeClass, 비용최적화]
+---
+
+# MongoDB Indexes: 성능 최적화를 위한 핵심 가이드
+
+MongoDB에서 인덱스(Index)는 애플리케이션 성능을 크게 좌우하는 중요한 기능입니다.
+인덱스를 올바르게 설계하고 사용하는 것은 데이터를 빠르게 검색하고 효율적으로 다루는 데 필수적입니다.
+
+이 글에서는 **단일 필드 인덱스, 복합 인덱스, 멀티키 인덱스**를 비롯한 주요 인덱스 개념을 정리하고, 실제 명령어와 함께 사용법을 설명합니다.
+
+---
+
+## 1. 인덱스란 무엇인가?
+
+* **정의**: 인덱스는 데이터를 빠르게 찾을 수 있도록 해주는 특별한 자료 구조입니다.
+* **효과**: 쿼리 속도를 개선하고, 불필요하게 많은 문서를 스캔하는 일을 줄여줍니다.
+* **비유**: 책의 목차(Index)와 같은 역할 → 원하는 내용을 바로 찾을 수 있음.
+
+> 📌 참고: [MongoDB Docs: Indexes](https://www.mongodb.com/docs/manual/indexes/)
+
+---
+
+## 2. 단일 필드 인덱스 (Single-field Index)
+
+* 한 필드에 대해 인덱스를 생성하는 가장 기본적인 형태
+* 예: 사용자의 `username` 필드에 인덱스 추가
+
+```js
+db.users.createIndex({ username: 1 });
+```
+
+* `1`: 오름차순, `-1`: 내림차순
+* 문자열/숫자/날짜 등 단일 필드에서 자주 쓰임
+
+> 📌 참고: [MongoDB Docs: createIndex()](https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/)
+
+---
+
+## 3. 복합 인덱스 (Compound Index)
+
+* 두 개 이상(최대 32개)의 필드를 묶어서 인덱스 생성
+* 예: `lastName`과 `firstName`을 함께 검색할 때
+
+```js
+db.users.createIndex({ lastName: 1, firstName: 1 });
+```
+
+* **주의**: 인덱스는 \*\*선두 필드(prefix rule)\*\*부터 순서대로 활용 가능
+
+  * 위 인덱스는 `lastName` 단독 검색, `lastName + firstName` 검색에 유용
+  * 단 `firstName` 단독 검색에는 사용되지 않음
+
+> 📌 참고: [MongoDB Docs: Compound Indexes](https://www.mongodb.com/docs/manual/core/index-compound/)
+
+---
+
+## 4. 멀티키 인덱스 (Multikey Index)
+
+* 배열 필드에 인덱스를 생성하면 자동으로 멀티키 인덱스가 됨
+* 배열의 각 요소가 인덱스에 저장되어, 배열 안 값 검색 가능
+
+```js
+db.books.createIndex({ tags: 1 });
+```
+
+* `tags: ["mongodb", "database", "nosql"]` → 각각 인덱스에 저장됨
+* 배열이 커지면 인덱스 크기도 커질 수 있어 주의
+
+> 📌 참고: [MongoDB Docs: Multikey Indexes](https://www.mongodb.com/docs/manual/core/index-multikey/)
+
+---
+
+## 5. 인덱스 속성 (Properties)
+
+* **Unique Index**: 중복 값 허용하지 않음
+
+  ```js
+  db.users.createIndex({ email: 1 }, { unique: true });
+  ```
+* **Sparse / Partial Indexes**: 조건부 인덱스 생성 가능
+* **TTL Index**: 특정 시간이 지나면 자동으로 문서 삭제
+
+---
+
+## 6. 인덱스 관리
+
+### 6.1 인덱스 조회
+
+```js
+db.users.getIndexes();
+```
+
+* 현재 컬렉션에 어떤 인덱스가 있는지 확인 가능
+
+> 📌 참고: [MongoDB Docs: getIndexes()](https://www.mongodb.com/docs/manual/reference/method/db.collection.getIndexes/)
+
+### 6.2 인덱스 사용 여부 확인
+
+```js
+db.users.find({ username: "hanpy" }).explain("executionStats");
+```
+
+* 해당 쿼리가 인덱스를 사용했는지 확인 가능
+
+> 📌 참고: [MongoDB Docs: Measure Index Use](https://www.mongodb.com/docs/manual/tutorial/analyze-query-plan/)
+
+### 6.3 인덱스 삭제
+
+* 특정 인덱스 삭제
+
+```js
+db.users.dropIndex("username_1");
+```
+
+* 모든 인덱스 삭제(기본 `_id` 제외)
+
+```js
+db.users.dropIndexes();
+```
+
+> 📌 참고: [MongoDB Docs: dropIndex()](https://www.mongodb.com/docs/manual/reference/method/db.collection.dropIndex/)
+
+---
+
+## 7. 인덱스 전략 (Indexing Strategies)
+
+* **자주 사용하는 쿼리 필드**에 인덱스 추가
+* **읽기/쓰기 밸런스** 고려 → 인덱스는 읽기를 빠르게 하지만, 쓰기(insert/update)는 느려질 수 있음
+* **쿼리 패턴 기반 설계**: 실제 애플리케이션 워크로드에 맞춘 인덱스 생성
+
+> 📌 참고: [MongoDB Docs: Indexing Strategies](https://www.mongodb.com/docs/manual/indexes/#indexing-strategies)
+
+---
+
+## 8. 결론
+
+MongoDB 인덱스는 단순히 “검색을 빠르게 해주는 도구”가 아니라, **성능 최적화의 핵심 수단**입니다.
+
+* **단일 인덱스**: 가장 기본적인 형태, 특정 필드 검색에 적합
+* **복합 인덱스**: 여러 필드 검색 최적화, 순서 중요
+* **멀티키 인덱스**: 배열 데이터 검색 최적화
+* **인덱스 관리**: `createIndex()`, `dropIndex()`, `getIndexes()`, `explain()` 활용
+
+👉 올바른 인덱스 전략을 세우면 쿼리 성능은 크게 향상되지만, 잘못된 인덱스는 오히려 쓰기 성능을 저하시킬 수 있습니다.
+따라서 **쿼리 패턴 분석 → 필요한 인덱스만 적용 → 성능 모니터링**이 가장 중요한 원칙입니다.
+
+---
+
+✅ 이 글은 **MongoDB 공식 문서**와 학습 리소스를 기반으로 작성되었습니다.
+
+👉 원하시면 제가 이 블로그 글에 \*\*실제 성능 비교 예시(인덱스 없는 경우 vs 있는 경우 실행 시간)\*\*를 추가해서 더 실감 나게 만들어드릴 수도 있습니다. 해드릴까요?

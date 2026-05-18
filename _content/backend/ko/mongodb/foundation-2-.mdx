@@ -1,0 +1,244 @@
+---
+deployment: false
+category: Infra
+title: 'Karpenter — Spot & On-Demand'
+summary: 'Kubernetes 환경에서 Karpenter를 활용하여 Spot과 On-Demand 노드를 함께 운영하고, 비용 절감과 안정성을 동시에 확보하는 방법을 단계별로 알아봅시다.'
+pageKey: karpenter_3_spot_ondemand
+lng: KOR
+publishedAt: 2025-09-10
+tags: [Karpenter, Kubernetes, EKS, AWS, Spot, On-Demand, NodePool, NodeClass, 비용최적화]
+---
+
+# Schema Design Patterns and Anti-patterns
+
+MongoDB에서 스키마 설계는 단순히 데이터를 저장하는 것 이상의 의미를 가집니다.
+어떤 구조로 데이터를 담느냐에 따라 **성능, 확장성, 유지보수성**이 크게 달라지기 때문입니다.
+
+이 글에서는 **MongoDB 스키마 설계 패턴**과 **피해야 할 안티패턴**을 다루며, 각 패턴의 개념과 코드 예시, 실무 적용 포인트 및 주의사항까지 함께 정리합니다.
+
+---
+
+## 1. 서론
+
+MongoDB는 **문서(document) 기반 데이터베이스**이기 때문에, 전통적인 관계형 모델과 다른 설계 접근법이 필요합니다.
+
+* RDBMS에서는 정규화를 통해 데이터 중복을 최소화하지만,
+* MongoDB에서는 \*\*실제 애플리케이션 워크로드(Read/Write 패턴)\*\*에 맞춰 데이터를 최적화하는 것이 핵심입니다.
+
+따라서, 올바른 **패턴을 적용**하고, 흔히 발생하는 **안티패턴을 피하는 것**이 중요합니다.
+
+---
+
+## 2. Schema Design Patterns
+
+### 2.1 Inheritance Pattern (상속 패턴)
+
+#### 개념
+
+* 서로 다른 타입의 데이터를 하나의 컬렉션에 저장하면서, 공통 속성과 개별 속성을 함께 관리하는 패턴입니다.
+* 예: `ebook`, `printed book`, `audiobook`을 모두 `books` 컬렉션에 저장
+
+#### 코드 예시
+
+```js
+var apply_inheritance_pattern_to_books_pipeline = [
+  {
+    $project: {
+      _id: "$_id",
+      product_id: "$product_id",
+      product_type: { $ifNull: ["$product_type", "Unspecified"] },
+      description: { $ifNull: ["$desc", "$description", "$details", "Unspecified"] },
+      authors: { $ifNull: ["$authors", ["$author"], "Unspecified"] },
+      publisher: "$publisher",
+      language: "$language",
+      pages: "$pages",
+      catalogues: "$catalogues",
+      eformats: "$eformats",
+      isbn10: "$isbn10",
+      isbn13: "$isbn13",
+      narrator: "$narrator",
+      length_minutes: "$length_minutes",
+    },
+  },
+  {
+    $merge: { into: "books", on: "_id", whenMatched: "replace", whenNotMatched: "discard" },
+  },
+];
+db.books.aggregate(apply_inheritance_pattern_to_books_pipeline);
+```
+
+#### 활용 포인트
+
+* 다양한 타입의 문서를 한 컬렉션에서 관리 가능
+* 쿼리 단순화, 데이터 일관성 유지에 유리
+
+#### 주의할 점
+
+* 문서 구조가 지나치게 달라지면 쿼리가 복잡해지고 인덱스 최적화가 어려워질 수 있음
+* **추천 상황**: 상품 유형, 미디어 형식처럼 유사하지만 차이가 있는 데이터를 하나의 컬렉션에서 관리할 때
+
+---
+
+### 2.2 Computed Pattern (계산된 필드 패턴)
+
+#### 개념
+
+* 문서에서 \*\*파생된 요약 정보(aggregated data)\*\*를 미리 계산해 저장하는 패턴입니다.
+* 읽기 성능을 최적화하는 데 유용
+
+#### 코드 예시
+
+```js
+var roll_up_product_type_and_number_of_authors_pipeline = [
+  {
+    $group: {
+      _id: "$product_type",
+      count: { $sum: 1 },
+      averageNumberOfAuthors: { $avg: { $size: "$authors" } },
+    },
+  },
+];
+db.books.aggregate(roll_up_product_type_and_number_of_authors_pipeline);
+```
+
+#### 활용 포인트
+
+* 매번 집계 연산을 수행하지 않고, 요약 데이터를 미리 저장해 빠르게 조회 가능
+* 리포트, 대시보드, 통계용 데이터 처리에 적합
+
+#### 주의할 점
+
+* **읽기-쓰기 트레이드오프** 존재
+* 데이터를 미리 계산해 저장하면 읽기는 빨라지지만, 업데이트가 발생할 때마다 계산된 필드도 갱신해야 함
+
+---
+
+### 2.3 Extended Reference Pattern (확장 참조 패턴)
+
+#### 개념
+
+* \*\*조인(\$lookup)\*\*을 활용해 다른 컬렉션의 데이터를 문서에 포함시키는 패턴
+* 자주 함께 조회되는 데이터를 미리 결합
+
+#### 코드 예시
+
+```js
+var reshape_review_docs_pipeline = [
+  {
+    $lookup: {
+      from: "books",
+      localField: "product_id",
+      foreignField: "product_id",
+      as: "product_info",
+    },
+  },
+  { $unwind: "$product_info" },
+  {
+    $project: {
+      _id: "$_id",
+      "product.product_id": "$product_id",
+      "product.product_type": "$product_info.product_type",
+      "product.title": "$product_info.title",
+      "review.user_id": "$user_id",
+      "review.reviewTitle": "$reviewTitle",
+      "review.reviewBody": "$reviewBody",
+      "review.date": "$date",
+      "review.stars": "$stars",
+    },
+  },
+  { $merge: { into: "reviews", on: "_id", whenMatched: "replace" } },
+];
+db.reviews.aggregate(reshape_review_docs_pipeline);
+```
+
+#### 활용 포인트
+
+* 한 번의 쿼리로 관련 데이터를 조회할 수 있어 애플리케이션 단에서 추가 조인 필요 없음
+
+#### 주의할 점
+
+* `$lookup`은 사실상 조인 연산 → 컬렉션이 커지면 성능에 부담
+* 자주 사용하는 경우라면 **denormalization(중복 저장)** 전략도 고려해야 함
+
+---
+
+## 3. Schema Anti-patterns
+
+### 3.1 Unbounded Arrays (무제한 배열)
+
+#### 개념
+
+* 배열 크기에 제한을 두지 않고 데이터를 계속 추가하는 경우
+* 예: 사용자 활동 로그를 무제한 배열에 쌓는 경우
+
+#### 문제점
+
+* MongoDB는 \*\*문서 크기 제한(16MB)\*\*이 있음 → 배열이 커지면 문서 크기 한도 초과 위험
+* 배열이 커질수록 읽기·쓰기 성능이 급격히 저하
+
+#### 해결 방법
+
+* **별도 컬렉션으로 분리**: 예를 들어 `user_logs` 컬렉션을 따로 만들고 사용자 ID로 참조
+* **capped collection** 사용: 일정 크기 이상 되면 오래된 데이터 자동 삭제
+
+---
+
+### 3.2 Bloated Documents (비대한 문서)
+
+#### 개념
+
+* 한 문서에 지나치게 많은 데이터가 들어가는 경우
+* 예: 하나의 문서에 수천 개 필드나 거대한 중첩 구조 포함
+
+#### 문제점
+
+* 메모리 사용량 증가
+* 네트워크 전송 비용 커짐
+* MongoDB는 문서 전체를 불러오는 경우가 많아 성능 저하 발생
+
+#### 코드 예시
+
+```js
+// 문서 개수 확인
+db.collection.stats().count
+
+// 평균 문서 크기 확인
+db.collection.stats().avgObjSize
+```
+
+#### 해결 방법
+
+* 불필요한 데이터 제거
+* 관련 데이터를 다른 컬렉션으로 분리 (정규화와 denormalization 균형 유지)
+
+---
+
+## 4. Best Practices
+
+* **패턴 활용**
+
+  * Inheritance: 유사 타입 데이터를 한 컬렉션에서 관리
+  * Computed: 읽기 성능 최적화
+  * Extended Reference: 자주 함께 조회되는 데이터 결합
+* **안티패턴 회피**
+
+  * 무제한 배열과 비대한 문서는 반드시 피할 것
+* **도구 활용**
+
+  * Atlas Performance Advisor, Schema Advisor로 자동 최적화 제안 확인
+
+---
+
+## 5. 결론
+
+MongoDB 스키마 설계는 단순히 데이터 저장 형식이 아니라, **성능과 확장성을 좌우하는 핵심 요소**입니다.
+
+* **올바른 패턴 적용** → 효율적이고 직관적인 데이터 모델링
+* **안티패턴 회피** → 성능 저하 및 유지보수 비용 최소화
+
+MongoDB의 특성을 이해하고 설계 원칙을 지키면, 더 빠르고 안정적인 애플리케이션을 구축할 수 있습니다.
+
+---
+
+✅ 이 최종본은 **MongoDB 공식 문서 기준**, **실무 베스트 프랙티스**, **검수 체크리스트**를 모두 반영했습니다.
+👉 원하시면 이 최종본을 **Medium 스타일 블로그**처럼 인트로/아웃트로 문구를 조금 더 스토리텔링 형식으로 바꿔드릴 수도 있어요. 해드릴까요?
