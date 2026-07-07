@@ -1,57 +1,51 @@
 import { MetadataRoute } from 'next'
-import contentlayer from '@/services-client/contentlayer'
+import { resolveBlogRouteRule } from '@/lib/blog-route-rules'
+import { isReleasedPost, queryPostsMeta } from '@/lib/posts-query'
 
 const BASE_URL = 'https://hanpy-blog.com'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const postsQuery = {
+  const koDatas = queryPostsMeta({
     category: 'All',
-    type: 'meta',
     currentLng: 'ko',
     orderBy: 'publishedAt',
-  }
-  const datas = contentlayer.query(postsQuery as any)
+  })
 
-  const sitmapDatas = datas
-    .filter((item) => {
-      if (
-        item &&
-        item?.deployment &&
-        new Date(item['publishedAt']).getTime() < new Date().getTime()
-      ) {
-        return true
-      } else {
-        return false
-      }
-    })
-    .map((data) => {
-      return {
-        url: `${BASE_URL}/${data['_raw']['flattenedPath']}`,
-        lastModified: new Date(data['publishedAt']),
-      }
-    })
+  const enDatas = queryPostsMeta({
+    category: 'All',
+    currentLng: 'en',
+    orderBy: 'publishedAt',
+  })
+
+  const sitemapDatas = [...koDatas, ...enDatas]
+    .filter(isReleasedPost)
+    .filter((data) => resolveBlogRouteRule(data._raw.flattenedPath) !== null)
+    .map((data) => ({
+      url: `${BASE_URL}/${data._raw.flattenedPath}`,
+      lastModified: new Date(data.publishedAt),
+    }))
 
   return [
     {
       url: BASE_URL,
-      // lastModified: new Date().toISOString(),
       lastModified: new Date(),
-      // changeFrequency: 'yearly',
       priority: 1,
     },
-    ...sitmapDatas,
+    ...sitemapDatas,
     {
       url: `${BASE_URL}/spin`,
-      // lastModified: new Date().toISOString(),
       lastModified: new Date('2025-08-10'),
-      // changeFrequency: 'yearly',
       priority: 1,
+    },
+    {
+      url: `${BASE_URL}/posts`,
+      lastModified: new Date(),
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/rss.xml`,
+      lastModified: new Date(),
+      priority: 0.5,
     },
   ]
 }
-// {
-//   url: 'https://hanpy-blog.com',
-//   lastModified: new Date(),
-//   changeFrequency: 'yearly',
-//   priority: 1,
-// },

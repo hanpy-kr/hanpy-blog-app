@@ -75,8 +75,6 @@ const BlogLNBTitle = ({
     router.push(item.href)
   }
 
-  console.log(path)
-
   return (
     <nav aria-label="블로그 탐색 사이드바" className="LNB">
       <Menu>

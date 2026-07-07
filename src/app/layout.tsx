@@ -30,6 +30,11 @@ export const metadata: Metadata = {
   description:
     "Welcome to my web development blog! Dive into expert tips on frontend frameworks, backend technologies, and cutting-edge infrastructure. Whether you're a seasoned developer or a newbie, explore tutorials and insights to enhance your coding skills and optimize your projects. Stay updated with the latest trends in web development, DevOps, and more. Join our community of developers to learn, grow, and innovate together.",
   metadataBase: new URL('https://hanpy-blog.com'),
+  verification: {
+    other: {
+      'naver-site-verification': '9cd2d8ecd2c271066df07e901055b7f7736a7061',
+    },
+  },
   openGraph: {
     title: 'Hanpy Blog',
     description: 'Welcome to my web development blog',
@@ -48,7 +53,7 @@ export const metadata: Metadata = {
         alt: 'Hanpy Logo',
       },
     ],
-    type: 'article',
+    type: 'website',
   },
   manifest: getManifestForMetadata('blog'),
 }
@@ -65,9 +70,6 @@ export default function RootLayout({
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8185415229814052"
         crossOrigin="anonymous"
       />
-
-      {/* Naver Search Advisor */}
-      <meta name="naver-site-verification" content="9cd2d8ecd2c271066df07e901055b7f7736a7061" />
 
       {/* <body> */}
       <body className={roboto.className}>

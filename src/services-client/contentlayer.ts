@@ -1,24 +1,13 @@
-import { CategoryType } from '@/app/(home)/types'
 import {
-  allFrontendForKORs,
-  allFrontendForENGs,
-  allBackendForKORs,
-  allBackendForENGs,
-  allInfraForKORs,
-  allInfraForENGs,
-  allDesignForKORs,
-  allDesignForENGs,
-  allLanguageForKORs,
-  allLanguageForENGs,
-} from 'contentlayer/generated'
+  queryPostsMeta,
+  serializePostListItem,
+  type PostListItemSerialized,
+} from '@/lib/posts-query'
+import type { CategoryType } from '@/app/(home)/types'
 
-/**
- * blog
- */
 class ContentlayerService {
   query({
     category,
-    type,
     currentLng,
     orderBy,
   }: {
@@ -27,93 +16,17 @@ class ContentlayerService {
     currentLng: string
     orderBy: 'publishedAt'
   }) {
-    // en-US
-    if (currentLng?.includes('en')) {
-      switch (category) {
-        case 'Frontend':
-          return [...allFrontendForENGs].sort((a, b) => {
-            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-            return 1
-          })
-        case 'Backend':
-          return [...allBackendForENGs].sort((a, b) => {
-            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-            return 1
-          })
-        case 'Infra':
-          return [...allInfraForENGs].sort((a, b) => {
-            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-            return 1
-          })
-        case 'Design':
-          return [...allDesignForENGs].sort((a, b) => {
-            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-            return 1
-          })
-        case 'Language':
-          return [...allLanguageForENGs].sort((a, b) => {
-            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-            return 1
-          })
-        case 'All':
-        default:
-          return [
-            ...allDesignForENGs,
-            ...allFrontendForENGs,
-            ...allBackendForENGs,
-            ...allInfraForENGs,
-            ...allLanguageForENGs,
-          ].sort((a, b) => {
-            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-            return 1
-          })
-      }
-    } else {
-      // (currentLng.includes('ko'))
-      switch (category) {
-        case 'Frontend':
-          return [...allFrontendForKORs].sort((a, b) => {
-            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-            return 1
-          })
-        case 'Backend':
-          return [...allBackendForKORs].sort((a, b) => {
-            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-            return 1
-          })
-        case 'Infra':
-          return [...allInfraForKORs].sort((a, b) => {
-            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-            return 1
-          })
-        case 'Design':
-          return [...allDesignForKORs].sort((a, b) => {
-            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-            return 1
-          })
-        case 'Language':
-          return [...allLanguageForKORs].sort((a, b) => {
-            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-            return 1
-          })
-        case 'All':
-        default:
-          return [
-            ...allDesignForKORs,
-            ...allFrontendForKORs,
-            ...allBackendForKORs,
-            ...allInfraForKORs,
-            ...allLanguageForKORs,
-          ].sort((a, b) => {
-            if (new Date(a[orderBy]) > new Date(b[orderBy])) return -1
-            return 1
-          })
-      }
-    }
+    return queryPostsMeta({ category, currentLng, orderBy })
   }
 }
 
 export default new ContentlayerService()
+
+export function serializePostsForClient(
+  docs: ReturnType<typeof queryPostsMeta>,
+): PostListItemSerialized[] {
+  return docs.map(serializePostListItem)
+}
 
 // reference
 // // app/page.tsx

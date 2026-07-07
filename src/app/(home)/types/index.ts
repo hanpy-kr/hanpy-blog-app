@@ -1,6 +1,9 @@
+import type { PostListItemSerialized } from '@/lib/posts-query'
+
 export interface PostListProps {
   hasNavigation?: boolean
   defaultTab?: CategoryType
+  initialPosts?: PostListItemSerialized[]
 }
 
 export interface PostProps {
