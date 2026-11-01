@@ -1,0 +1,25 @@
+# Amplify Hosting 빌드 설정 (저장소 파일이 콘솔 설정보다 우선)
+# PoC(세션 2): Next 16.4 + pnpm + Node 22 가 Amplify에서 빌드·배포되는지 확인
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - nvm install 22 && nvm use 22
+        - node -v
+        - npm install -g pnpm@10.28.0
+        - pnpm config set store-dir .pnpm-store
+        - pnpm install --frozen-lockfile
+    build:
+      commands:
+        - pnpm run build
+        # 결과물 크기 기록 (Amplify 230MB 제한 확인용)
+        - du -sh .next node_modules || true
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - .pnpm-store/**/*
+      - .next/cache/**/*
