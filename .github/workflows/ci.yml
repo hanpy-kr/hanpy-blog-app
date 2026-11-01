@@ -1,0 +1,84 @@
+# 개편 안전장치: 빌드 + URL 비교
+# refactor/v2·main 으로 가는 모든 PR과 refactor/v2 push에서 실행한다.
+# 빌드한 앱을 띄우고 scripts/check-urls.ts 로 urls.before.txt 의 주소를 모두 요청한다.
+name: CI
+
+on:
+  pull_request:
+    branches: [refactor/v2, main]
+  push:
+    branches: [refactor/v2]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-check-urls:
+    name: Build + URL check
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      PORT: '3000'
+    steps:
+      - uses: actions/checkout@v4
+
+      # 세션 3에서 pnpm으로 바꾸면 pnpm-lock.yaml 이 생겨 자동으로 pnpm을 쓴다
+      - name: Detect package manager
+        id: pm
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "name=pnpm" >> "$GITHUB_OUTPUT"
+            echo "install=pnpm install --frozen-lockfile" >> "$GITHUB_OUTPUT"
+            echo "build=pnpm run build" >> "$GITHUB_OUTPUT"
+            echo "start=pnpm exec next start" >> "$GITHUB_OUTPUT"
+          elif [ -f package-lock.json ]; then
+            echo "name=npm" >> "$GITHUB_OUTPUT"
+            # 현재 lockfile의 resolved 주소가 사내 미러(npm.deepbrainai.io)라 공개 레지스트리로 바꿔 받음.
+            # integrity 해시는 그대로 검사됨. pnpm 전환(세션 3) 후 이 줄은 사라짐
+            echo "install=npm ci --no-audit --no-fund --registry=https://registry.npmjs.org/ --replace-registry-host=always" >> "$GITHUB_OUTPUT"
+            echo "build=npm run build" >> "$GITHUB_OUTPUT"
+            echo "start=npx next start" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=yarn" >> "$GITHUB_OUTPUT"
+            echo "install=yarn install --frozen-lockfile" >> "$GITHUB_OUTPUT"
+            echo "build=yarn build" >> "$GITHUB_OUTPUT"
+            echo "start=yarn next start" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.pm.outputs.name == 'pnpm'
+        uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x' # check-urls.ts 는 Node 22.18+ 의 타입 제거로 실행
+          cache: ${{ steps.pm.outputs.name }}
+
+      - name: Install
+        run: ${{ steps.pm.outputs.install }}
+
+      - name: Build
+        run: ${{ steps.pm.outputs.build }}
+
+      - name: Start server
+        run: |
+          nohup ${{ steps.pm.outputs.start }} -p "$PORT" > server.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -s -o /dev/null "http://127.0.0.1:$PORT/"; then
+              echo "server up after ${i}s"; exit 0
+            fi
+            sleep 1
+          done
+          echo "server did not start"; cat server.log; exit 1
+
+      - name: Check URLs
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-urls.ts --base "http://127.0.0.1:$PORT"
+
+      - name: Server log
+        if: failure()
+        run: tail -n 200 server.log || true

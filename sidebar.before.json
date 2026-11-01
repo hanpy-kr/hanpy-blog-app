@@ -1,0 +1,1591 @@
+{
+  "source": "main@2e301e3 2026-02-01 src/data/const/*.ts",
+  "note": "배열 순서 = 화면 순서. state: ok(기준선 200) · draft(미정 주소) · missing(기준선에 없는 주소, main에서도 깨진 링크)",
+  "counts": {
+    "subCategories": 24,
+    "groups": 55,
+    "links": 214,
+    "missing": 1,
+    "draft": 0
+  },
+  "categories": {
+    "backend": {
+      "subCategories": [
+        {
+          "id": "base",
+          "name": "Core Concepts",
+          "href": "/backend/ko/base/architecture-basics-solid-01-srp",
+          "icon": "https://resource.han-py.com/blog/logs/hash.svg",
+          "state": "ok"
+        },
+        {
+          "id": "database",
+          "name": "Database",
+          "href": "/backend/ko/database/concurrency-optimistic-lock",
+          "icon": "/icons/database.svg",
+          "state": "ok"
+        },
+        {
+          "id": "nestjs",
+          "name": "NestJS",
+          "href": "/backend/ko/nestjs/nestjs-overview",
+          "icon": "/icons/nestjs.svg",
+          "state": "ok"
+        },
+        {
+          "id": "security",
+          "name": "Security",
+          "href": "/backend/ko/security/auth-01-authentication",
+          "icon": "/icons/security.svg",
+          "state": "ok"
+        },
+        {
+          "id": "test",
+          "name": "Test",
+          "href": "/backend/ko/test/tdd-01-introduction",
+          "icon": "/icons/security.svg",
+          "state": "ok"
+        },
+        {
+          "id": "grpc",
+          "name": "gRPC",
+          "href": "/backend/ko/grpc/01-grpc-introduction",
+          "icon": "/icons/grpc.svg",
+          "state": "ok"
+        },
+        {
+          "id": "utils",
+          "name": "Utils",
+          "href": "/",
+          "icon": "/icons/utils.svg",
+          "state": "ok"
+        }
+      ],
+      "sidebars": {
+        "base": [
+          {
+            "group": "Beginner",
+            "links": [
+              {
+                "title": "[solid] Single Responsibility",
+                "href": "/backend/ko/base/architecture-basics-solid-01-srp",
+                "state": "ok"
+              },
+              {
+                "title": "[solid] Open Closed",
+                "href": "/backend/ko/base/architecture-basics-solid-02-ocp",
+                "state": "ok"
+              },
+              {
+                "title": "[solid] Liskov Substitution",
+                "href": "/backend/ko/base/architecture-basics-solid-03-lsp",
+                "state": "ok"
+              },
+              {
+                "title": "[solid] Interface Segregation",
+                "href": "/backend/ko/base/architecture-basics-solid-04-isp",
+                "state": "ok"
+              },
+              {
+                "title": "[solid] Dependency Inversion",
+                "href": "/backend/ko/base/architecture-basics-solid-05-dip",
+                "state": "ok"
+              },
+              {
+                "title": "Message Queue",
+                "href": "/backend/ko/base/message-queue",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Middle",
+            "links": [
+              {
+                "title": "API Rate Limiting",
+                "href": "/backend/ko/base/api-management-api-rate-limiting",
+                "state": "ok"
+              },
+              {
+                "title": "K6",
+                "href": "/backend/ko/base/performance-measurement-performance_k6",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Trouble-Shooting",
+            "links": []
+          }
+        ],
+        "grpc": [
+          {
+            "group": "Beginner",
+            "links": [
+              {
+                "title": "Overview",
+                "href": "/backend/ko/grpc/01-grpc-introduction",
+                "state": "ok"
+              },
+              {
+                "title": "Architecture",
+                "href": "/backend/ko/grpc/02-grpc-architecture",
+                "state": "ok"
+              },
+              {
+                "title": "Definition",
+                "href": "/backend/ko/grpc/03-grpc-service-definition",
+                "state": "ok"
+              },
+              {
+                "title": "Communication Type",
+                "href": "/backend/ko/grpc/04-grpc-communication-types",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Middle",
+            "links": [
+              {
+                "title": "Performance",
+                "href": "/backend/ko/grpc/05-grpc-performance-and-security",
+                "state": "ok"
+              },
+              {
+                "title": "Microservices",
+                "href": "/backend/ko/grpc/06-grpc-and-microservices",
+                "state": "ok"
+              },
+              {
+                "title": "Kubernetes",
+                "href": "/backend/ko/grpc/07-grpc-scaling-and-architecture",
+                "state": "ok"
+              },
+              {
+                "title": "vs. Other Protocols",
+                "href": "/backend/ko/grpc/08-grpc-vs-other-protocols",
+                "state": "ok"
+              },
+              {
+                "title": "usecase",
+                "href": "/backend/ko/grpc/09-grpc-real-world-use-cases",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Trouble-Shooting",
+            "links": []
+          }
+        ],
+        "database": [
+          {
+            "group": "MongoDB",
+            "links": [
+              {
+                "title": "Data Modeling",
+                "href": "/backend/ko/database/mongodb-modeling-pattern",
+                "state": "ok"
+              },
+              {
+                "title": "B-tree",
+                "href": "/backend/ko/database/mongodb-b-tree",
+                "state": "ok"
+              },
+              {
+                "title": "Indexes",
+                "href": "/backend/ko/database/mongodb-indexes",
+                "state": "ok"
+              },
+              {
+                "title": "Compound Indexes",
+                "href": "/backend/ko/database/mongodb-compound-indexes",
+                "state": "ok"
+              },
+              {
+                "title": "Concurrency Control",
+                "href": "/backend/ko/database/mongodb-concurrency-control-1",
+                "state": "ok"
+              },
+              {
+                "title": "Lock Granularity",
+                "href": "/backend/ko/database/mongodb-concurrency-control-2-Lock-Granularity",
+                "state": "ok"
+              },
+              {
+                "title": "Transaction",
+                "href": "/backend/ko/database/mongodb-concurrency-control-3-transaction",
+                "state": "ok"
+              },
+              {
+                "title": "Sharding",
+                "href": "/backend/ko/database/mongodb-concurrency-control-4-sharding",
+                "state": "ok"
+              },
+              {
+                "title": "Aggregation Match",
+                "href": "/backend/ko/database/mongodb-aggregation-match",
+                "state": "ok"
+              },
+              {
+                "title": "Aggregation Count",
+                "href": "/backend/ko/database/mongodb-aggregation-count",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Database",
+            "links": [
+              {
+                "title": "Concurrency Control",
+                "href": "/backend/ko/database/concurrency-control",
+                "state": "ok"
+              },
+              {
+                "title": "Transaction",
+                "href": "/backend/ko/database/basebase-transaction",
+                "state": "ok"
+              },
+              {
+                "title": "Shared Lock",
+                "href": "/backend/ko/database/concurrency-shared-lock",
+                "state": "ok"
+              },
+              {
+                "title": "Exclusive Lock",
+                "href": "/backend/ko/database/concurrency-exclusive-lock",
+                "state": "ok"
+              },
+              {
+                "title": "Optimistic Lock",
+                "href": "/backend/ko/database/concurrency-optimistic-lock",
+                "state": "ok"
+              },
+              {
+                "title": "Pessimistic Lock",
+                "href": "/backend/ko/database/concurrency-pessimistic-lock",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Redis",
+            "links": [
+              {
+                "title": "Redis CLI",
+                "href": "/backend/ko/database/redis-cli",
+                "state": "ok"
+              },
+              {
+                "title": "BullMQ Overview",
+                "href": "/backend/ko/database/redis-BullMQ-01-overview",
+                "state": "ok"
+              },
+              {
+                "title": "BullMQ Queue",
+                "href": "/backend/ko/database/redis-BullMQ-02-queue",
+                "state": "ok"
+              },
+              {
+                "title": "Atomic Lock (SET NX)",
+                "href": "/backend/ko/database/redis-atomic-lock",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Trouble-Shooting",
+            "links": [
+              {
+                "title": "Redis Trouble-Shooting 1",
+                "href": "/backend/ko/database/redis-troubleshooting-1",
+                "state": "ok"
+              },
+              {
+                "title": "MongoDB Trouble-Shooting 1",
+                "href": "/backend/ko/database/mongodb-troubleshooting-1-nfc-nfd",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "nestjs": [
+          {
+            "group": "Beginner",
+            "links": [
+              {
+                "title": "Overview",
+                "href": "/backend/ko/nestjs/nestjs-overview",
+                "state": "ok"
+              },
+              {
+                "title": "QuickStart",
+                "href": "/backend/ko/nestjs/nestjs-quick-start",
+                "state": "ok"
+              },
+              {
+                "title": "Dynamic Module",
+                "href": "/backend/ko/nestjs/nestjs-dynamic-modules",
+                "state": "ok"
+              },
+              {
+                "title": "ConfigService",
+                "href": "/backend/ko/nestjs/nestjs-config-service",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Middle",
+            "links": [
+              {
+                "title": "Authentication",
+                "href": "/backend/ko/nestjs/nestjs-security-01-authentication",
+                "state": "ok"
+              },
+              {
+                "title": "VSCode Debugging",
+                "href": "/backend/ko/nestjs/nestjs-config-service",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Trouble-Shooting",
+            "links": []
+          }
+        ],
+        "security": [
+          {
+            "group": "Auth",
+            "links": [
+              {
+                "title": "Authentication",
+                "href": "/backend/ko/security/auth-01-authentication",
+                "state": "ok"
+              },
+              {
+                "title": "Authorization",
+                "href": "/backend/ko/security/auth-02-authorization",
+                "state": "ok"
+              },
+              {
+                "title": "Single-Sign-On",
+                "href": "/backend/ko/security/auth-03-sso",
+                "state": "ok"
+              },
+              {
+                "title": "Oauth",
+                "href": "/backend/ko/security/auth-04-oauth",
+                "state": "ok"
+              },
+              {
+                "title": "JWT",
+                "href": "/backend/ko/security/auth-05-jwt",
+                "state": "ok"
+              },
+              {
+                "title": "IdP-SP",
+                "href": "/backend/ko/security/auth-06-idp-sp",
+                "state": "ok"
+              },
+              {
+                "title": "SAML",
+                "href": "/backend/ko/security/auth-07-saml",
+                "state": "ok"
+              },
+              {
+                "title": "OIDC",
+                "href": "/backend/ko/security/auth-08-oidc",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "test": [
+          {
+            "group": "TDD",
+            "links": [
+              {
+                "title": "Introduction",
+                "href": "/backend/ko/test/tdd-01-introduction",
+                "state": "ok"
+              },
+              {
+                "title": "What is TDD",
+                "href": "/backend/ko/test/tdd-02-what-is",
+                "state": "ok"
+              },
+              {
+                "title": "Red Green Refactor",
+                "href": "/backend/ko/test/tdd-03-red-green-refactor-example",
+                "state": "ok"
+              },
+              {
+                "title": "Test Double",
+                "href": "/backend/ko/test/tdd-04-test-double",
+                "state": "ok"
+              },
+              {
+                "title": "Test Type",
+                "href": "/backend/ko/test/tdd-05-test-types",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "utils": [
+          {
+            "group": "Beginner",
+            "links": []
+          },
+          {
+            "group": "Middle",
+            "links": []
+          },
+          {
+            "group": "Trouble-Shooting",
+            "links": []
+          }
+        ]
+      }
+    },
+    "frontend": {
+      "subCategories": [
+        {
+          "id": "web",
+          "name": "Web",
+          "href": "/frontend/ko/web/worker",
+          "icon": "/icons/web.svg",
+          "state": "ok"
+        },
+        {
+          "id": "react",
+          "name": "React",
+          "href": "/frontend/ko/react/react-data-crud",
+          "icon": "/icons/react.svg",
+          "state": "ok"
+        },
+        {
+          "id": "nextjs",
+          "name": "Nextjs",
+          "href": "/frontend/ko/nextjs/seo/next-sitemap",
+          "icon": "/icons/nextjs.svg",
+          "state": "ok"
+        },
+        {
+          "id": "utils",
+          "name": "Utils",
+          "href": "/frontend/ko/utils/Monorepo",
+          "icon": "/icons/utils.svg",
+          "state": "ok"
+        }
+      ],
+      "sidebars": {
+        "react": [
+          {
+            "group": "react",
+            "links": [
+              {
+                "title": "Environment Variables Settings",
+                "href": "/frontend/ko/react/env-setup",
+                "state": "ok"
+              },
+              {
+                "title": "React Data Management",
+                "href": "/frontend/ko/react/react-data-crud",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "nextjs": [
+          {
+            "group": "nextjs",
+            "links": [
+              {
+                "title": "sitemap",
+                "href": "/frontend/ko/nextjs/seo/next-sitemap",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "utils": [
+          {
+            "group": "Administration",
+            "links": [
+              {
+                "title": "Monorepo",
+                "href": "/frontend/ko/utils/Monorepo",
+                "state": "ok"
+              },
+              {
+                "title": "Package Manager",
+                "href": "/frontend/ko/utils/monorepo-pm",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "library",
+            "links": [
+              {
+                "title": "Axios",
+                "href": "/frontend/ko/utils/axios",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "web": [
+          {
+            "group": "Core",
+            "links": [
+              {
+                "title": "Browser",
+                "href": "/frontend/ko/web/web-browser-definition-and-features",
+                "state": "ok"
+              },
+              {
+                "title": "Network",
+                "href": "/frontend/ko/web/web-browser-network",
+                "state": "ok"
+              },
+              {
+                "title": "Worker API",
+                "href": "/frontend/ko/web/worker",
+                "state": "ok"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "infra": {
+      "subCategories": [
+        {
+          "id": "base",
+          "name": "Core Concepts",
+          "href": "/infra/ko/base/tls",
+          "icon": "https://resource.han-py.com/blog/logs/hash.svg",
+          "state": "ok"
+        },
+        {
+          "id": "docker",
+          "name": "Docker",
+          "href": "/infra/ko/docker/docker-1-introduction",
+          "icon": "/icons/docker.svg",
+          "state": "ok"
+        },
+        {
+          "id": "cloud",
+          "name": "Cloud",
+          "href": "/infra/ko/cloud/aws-vpc-1-introduction",
+          "icon": "",
+          "state": "ok"
+        },
+        {
+          "id": "kubernetes",
+          "name": "Kubernetes",
+          "href": "/infra/ko/kubernetes/1-1.Introduction",
+          "icon": "/icons/kubernetes.svg",
+          "state": "ok"
+        },
+        {
+          "id": "compute-infrastructure",
+          "name": "Compute Infra",
+          "href": "/infra/ko/compute-infrastructure/serverless-1-intro",
+          "icon": "/icons/utils.svg",
+          "state": "ok"
+        },
+        {
+          "id": "tools",
+          "name": "Tools",
+          "href": "/infra/ko/tools/packer-1-introduction",
+          "icon": "/icons/tools.png",
+          "state": "ok"
+        },
+        {
+          "id": "git",
+          "name": "Git",
+          "href": "/infra/ko/git/git-01-introduction",
+          "icon": "/icons/git.png",
+          "state": "ok"
+        }
+      ],
+      "sidebars": {
+        "base": [
+          {
+            "group": "Beginner",
+            "links": [
+              {
+                "title": "Introduction",
+                "href": "/infra/ko/base/network-1-introduction",
+                "state": "ok"
+              },
+              {
+                "title": "Performance",
+                "href": "/infra/ko/base/network-2-performance-command",
+                "state": "ok"
+              },
+              {
+                "title": "OSI 7 Layer",
+                "href": "/infra/ko/base/open-systems-interconnection",
+                "state": "ok"
+              },
+              {
+                "title": "TCP/IP",
+                "href": "/infra/ko/base/tcp-ip-protocol",
+                "state": "ok"
+              },
+              {
+                "title": "TCP TIME_WAIT",
+                "href": "/infra/ko/base/tcp-time-wait",
+                "state": "ok"
+              },
+              {
+                "title": "DNS",
+                "href": "/infra/ko/base/dns",
+                "state": "ok"
+              },
+              {
+                "title": "Host-based DNS Resolution",
+                "href": "/infra/ko/base/dns-host_based_dns_resolution",
+                "state": "ok"
+              },
+              {
+                "title": "TLS",
+                "href": "/infra/ko/base/tls",
+                "state": "ok"
+              },
+              {
+                "title": "TLS Handshake",
+                "href": "/infra/ko/base/tls-handshake",
+                "state": "ok"
+              },
+              {
+                "title": "CSRF",
+                "href": "/infra/ko/base/csrf",
+                "state": "ok"
+              },
+              {
+                "title": "How The Web Works",
+                "href": "/infra/ko/base/how-the-web-works-in-one-line",
+                "state": "ok"
+              },
+              {
+                "title": "TCP 3-Way Handshake",
+                "href": "/infra/ko/base/tcp-3way-handshake",
+                "state": "ok"
+              },
+              {
+                "title": "TCP 4-Way Handshake",
+                "href": "/infra/ko/base/tcp-4way-handshake",
+                "state": "ok"
+              },
+              {
+                "title": "QUIC",
+                "href": "/infra/ko/base/quic-handshake",
+                "state": "ok"
+              },
+              {
+                "title": "Switch",
+                "href": "/infra/ko/base/network-switch",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Middle",
+            "links": [
+              {
+                "title": "Internal Network to SaaS",
+                "href": "/infra/ko/base/internal-network-to-saas-communication",
+                "state": "ok"
+              },
+              {
+                "title": "firewall & Network Policy",
+                "href": "/infra/ko/base/firewall-network-policy-management",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Trouble-Shooting",
+            "links": [
+              {
+                "title": "[git] Not possible to fast-forward",
+                "href": "/infra/ko/base/git-trouble-shoot-not_fast_forward_abort_fix",
+                "state": "ok"
+              },
+              {
+                "title": "[git] could not detach HEAD",
+                "href": "/infra/ko/base/git-trouble-shoot-could_not_detach_head",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "docker": [
+          {
+            "group": "Beginner",
+            "links": [
+              {
+                "title": "Introduction",
+                "href": "/infra/ko/docker/docker-1-introduction",
+                "state": "ok"
+              },
+              {
+                "title": "privileged",
+                "href": "/infra/ko/docker/docker-2-privileged",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "cloud": [
+          {
+            "group": "AWS",
+            "links": [
+              {
+                "title": "Elastic IP",
+                "href": "/infra/ko/cloud/aws-ec2-eip",
+                "state": "ok"
+              },
+              {
+                "title": "Elastic Load Balancer",
+                "href": "/infra/ko/cloud/aws-ec2-lb",
+                "state": "ok"
+              },
+              {
+                "title": "EFS",
+                "href": "/infra/ko/cloud/aws-efs-1-introduction",
+                "state": "ok"
+              },
+              {
+                "title": "EFS - backup",
+                "href": "/infra/ko/cloud/aws-efs-2-backup",
+                "state": "ok"
+              },
+              {
+                "title": "EFS - dayasync",
+                "href": "/infra/ko/cloud/aws-efs-3-datasync",
+                "state": "ok"
+              },
+              {
+                "title": "EFS - transfer",
+                "href": "/infra/ko/cloud/aws-efs-4-transfer",
+                "state": "ok"
+              },
+              {
+                "title": "IdP(Identity Provider)",
+                "href": "/infra/ko/cloud/aws-iam-1-identity-provider",
+                "state": "ok"
+              },
+              {
+                "title": "EFS - transfer",
+                "href": "/infra/ko/cloud/aws-efs-4-transfer",
+                "state": "ok"
+              },
+              {
+                "title": "S3 - Download",
+                "href": "/infra/ko/cloud/aws-s3-1-file-download",
+                "state": "ok"
+              },
+              {
+                "title": "S3 - CF Integration",
+                "href": "/infra/ko/cloud/aws-s3-2-connect-cloudfront",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "VPC",
+            "links": [
+              {
+                "title": "Introduction",
+                "href": "/infra/ko/cloud/aws-vpc-1-introduction",
+                "state": "ok"
+              },
+              {
+                "title": "Subnet",
+                "href": "/infra/ko/cloud/aws-vpc-2-subnet",
+                "state": "ok"
+              },
+              {
+                "title": "Routing Table",
+                "href": "/infra/ko/cloud/aws-vpc-3-routing-table",
+                "state": "ok"
+              },
+              {
+                "title": "Internet Gateway(IGW)",
+                "href": "/infra/ko/cloud/aws-vpc-4-internet-gateway",
+                "state": "ok"
+              },
+              {
+                "title": "NAT Gateway",
+                "href": "/infra/ko/cloud/aws-vpc-5-net-gateway",
+                "state": "ok"
+              },
+              {
+                "title": "Virtual Private Gateway(VGW)",
+                "href": "/infra/ko/cloud/aws-vpc-6-virtual-private-gateway",
+                "state": "ok"
+              },
+              {
+                "title": "Transit Gateway",
+                "href": "/infra/ko/cloud/aws-vpc-7-transit-gateway",
+                "state": "ok"
+              },
+              {
+                "title": "Direct Connect",
+                "href": "/infra/ko/cloud/aws-vpc-8-direct-connect",
+                "state": "ok"
+              },
+              {
+                "title": "Site-to-Site",
+                "href": "/infra/ko/cloud/aws-vpc-9-site-to-site",
+                "state": "ok"
+              },
+              {
+                "title": "Peering",
+                "href": "/infra/ko/cloud/aws-vpc-10-peering",
+                "state": "ok"
+              },
+              {
+                "title": "ACL",
+                "href": "/infra/ko/cloud/aws-vpc-11-acl",
+                "state": "ok"
+              },
+              {
+                "title": "Security Group",
+                "href": "/infra/ko/cloud/aws-vpc-12-sg",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "kubernetes": [
+          {
+            "group": "Beginner",
+            "links": [
+              {
+                "title": "Introduction",
+                "href": "/infra/ko/kubernetes/1-1.Introduction",
+                "state": "ok"
+              },
+              {
+                "title": "Container",
+                "href": "/infra/ko/kubernetes/1-2.container",
+                "state": "ok"
+              },
+              {
+                "title": "Orchestration",
+                "href": "/infra/ko/kubernetes/1-3.container-orchestration",
+                "state": "ok"
+              },
+              {
+                "title": "Components",
+                "href": "/infra/ko/kubernetes/1-4.kubernetes-components",
+                "state": "ok"
+              },
+              {
+                "title": "Reconciliation",
+                "href": "/infra/ko/kubernetes/1-5.reconciliation",
+                "state": "ok"
+              },
+              {
+                "title": "Selector and Label",
+                "href": "/infra/ko/kubernetes/1-6.selector-and-label",
+                "state": "ok"
+              },
+              {
+                "title": "Network",
+                "href": "/infra/ko/kubernetes/1-7.network",
+                "state": "ok"
+              },
+              {
+                "title": "Storage",
+                "href": "/infra/ko/kubernetes/1-8.storage-volume",
+                "state": "ok"
+              },
+              {
+                "title": "Custom Resource",
+                "href": "/infra/ko/kubernetes/1-9.custom-resource-and-api-aggregation",
+                "state": "ok"
+              },
+              {
+                "title": "Plugin",
+                "href": "/infra/ko/kubernetes/1-10.plugin",
+                "state": "ok"
+              },
+              {
+                "title": "yaml & command",
+                "href": "/infra/ko/kubernetes/2-0.yaml-command",
+                "state": "ok"
+              },
+              {
+                "title": "Pod",
+                "href": "/infra/ko/kubernetes/2-1.pod",
+                "state": "ok"
+              },
+              {
+                "title": "Multi Container Pod",
+                "href": "/infra/ko/kubernetes/2-2.multi-container-pod",
+                "state": "ok"
+              },
+              {
+                "title": "Init Container",
+                "href": "/infra/ko/kubernetes/2-3.init-container",
+                "state": "ok"
+              },
+              {
+                "title": "Probe",
+                "href": "/infra/ko/kubernetes/2-4.probe",
+                "state": "ok"
+              },
+              {
+                "title": "Gracefull Shutdown",
+                "href": "/infra/ko/kubernetes/2-5.gracefull-shutdown",
+                "state": "ok"
+              },
+              {
+                "title": "Pod Scheduling",
+                "href": "/infra/ko/kubernetes/2-6.pod-scheduling",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Middle",
+            "links": [
+              {
+                "title": "CoreDNS",
+                "href": "/infra/ko/kubernetes/3-01-core-dns",
+                "state": "ok"
+              },
+              {
+                "title": "exec",
+                "href": "/infra/ko/kubernetes/kube-md-01-kubectl-exec",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Karpenter",
+            "links": [
+              {
+                "title": "Introduction",
+                "href": "/infra/ko/kubernetes/karpenter-1-introduction",
+                "state": "ok"
+              },
+              {
+                "title": "NodeClass & NodePool",
+                "href": "/infra/ko/kubernetes/karpenter-2-hello-world",
+                "state": "ok"
+              },
+              {
+                "title": "Spot & On-Demand",
+                "href": "/infra/ko/kubernetes/karpenter-3-spot_ondemand",
+                "state": "ok"
+              },
+              {
+                "title": "Multi-Architecture",
+                "href": "/infra/ko/kubernetes/karpenter-4-multiarch",
+                "state": "ok"
+              },
+              {
+                "title": "GPU",
+                "href": "/infra/ko/kubernetes/karpenter-5-gpu_limits",
+                "state": "ok"
+              },
+              {
+                "title": "Constraints & Limits",
+                "href": "/infra/ko/kubernetes/karpenter-6-availability_zone",
+                "state": "ok"
+              },
+              {
+                "title": "Practice",
+                "href": "/infra/ko/kubernetes/karpenter-7-practice",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Trouble-Shooting",
+            "links": [
+              {
+                "title": "Introduction",
+                "href": "/infra/ko/kubernetes/kube-ts-01-x509.mdx",
+                "state": "missing"
+              },
+              {
+                "title": "Introduction",
+                "href": "/infra/ko/kubernetes/kube-ts-02-132-version",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "compute-infrastructure": [
+          {
+            "group": "Serverless",
+            "links": [
+              {
+                "title": "Introduction",
+                "href": "/infra/ko/compute-infrastructure/serverless-1-intro",
+                "state": "ok"
+              },
+              {
+                "title": "Services",
+                "href": "/infra/ko/compute-infrastructure/serverless-2-compare",
+                "state": "ok"
+              },
+              {
+                "title": "Architecture",
+                "href": "/infra/ko/compute-infrastructure/serverless-3-architecture",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "GPU",
+            "links": [
+              {
+                "title": "Models",
+                "href": "/infra/ko/compute-infrastructure/gpu-1-gpu_models",
+                "state": "ok"
+              },
+              {
+                "title": "Sever Guide",
+                "href": "/infra/ko/compute-infrastructure/gpu-2-gpu_server_vs_consumer_server",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "tools": [
+          {
+            "group": "Packer",
+            "links": [
+              {
+                "title": "Introduction",
+                "href": "/infra/ko/tools/packer-1-introduction",
+                "state": "ok"
+              },
+              {
+                "title": "Hello World",
+                "href": "/infra/ko/tools/packer-2-hello-world",
+                "state": "ok"
+              },
+              {
+                "title": "Variable",
+                "href": "/infra/ko/tools/packer-3-variable",
+                "state": "ok"
+              },
+              {
+                "title": "Multi Cloud",
+                "href": "/infra/ko/tools/packer-4-multi-cloud",
+                "state": "ok"
+              },
+              {
+                "title": "EKS Node AMI",
+                "href": "/infra/ko/tools/packer-5-eks-node",
+                "state": "ok"
+              },
+              {
+                "title": "AMI Build",
+                "href": "/infra/ko/tools/packer-6-advanced_ecr_tags",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "git": [
+          {
+            "group": "Github",
+            "links": [
+              {
+                "title": "Introduction",
+                "href": "/infra/ko/git/git-01-introduction",
+                "state": "ok"
+              },
+              {
+                "title": "Install",
+                "href": "/infra/ko/git/git-02-install",
+                "state": "ok"
+              },
+              {
+                "title": "Structure",
+                "href": "/infra/ko/git/git-03-structure",
+                "state": "ok"
+              },
+              {
+                "title": "Command",
+                "href": "/infra/ko/git/git-04-command",
+                "state": "ok"
+              },
+              {
+                "title": "Pull Request",
+                "href": "/infra/ko/git/git-05-pull-request",
+                "state": "ok"
+              },
+              {
+                "title": "Code Review",
+                "href": "/infra/ko/git/git-06-review",
+                "state": "ok"
+              },
+              {
+                "title": "SSH Key",
+                "href": "/infra/ko/git/git-07-ssh-key",
+                "state": "ok"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "design": {
+      "subCategories": [
+        {
+          "id": "pattern",
+          "name": "Design Pattern",
+          "href": "/design/ko/pattern/01.Introduction",
+          "icon": "",
+          "state": "ok"
+        },
+        {
+          "id": "software-design",
+          "name": "Software Design",
+          "href": "/design/ko/software-design/req-1-base",
+          "icon": "",
+          "state": "ok"
+        },
+        {
+          "id": "software-development",
+          "name": "Software Development",
+          "href": "/design/ko/software-design/req-1-base",
+          "icon": "",
+          "state": "ok"
+        }
+      ],
+      "sidebars": {
+        "pattern": [
+          {
+            "group": "Beginner",
+            "links": [
+              {
+                "title": "Introduction",
+                "href": "/design/ko/pattern/01.Introduction",
+                "state": "ok"
+              },
+              {
+                "title": "polymorphism",
+                "href": "/design/ko/pattern/polymorphism",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Middle",
+            "links": [
+              {
+                "title": "Builder Pattern",
+                "href": "/design/ko/pattern/builder-pattern",
+                "state": "ok"
+              },
+              {
+                "title": "Observer Pattern",
+                "href": "/design/ko/pattern/observer-pattern",
+                "state": "ok"
+              },
+              {
+                "title": "Strategy Pattern",
+                "href": "/design/ko/pattern/strategy-pattern",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Trouble-Shooting",
+            "links": []
+          }
+        ],
+        "software-design": [
+          {
+            "group": "Beginner",
+            "links": [
+              {
+                "title": "Requirement",
+                "href": "/design/ko/software-design/req-1-base",
+                "state": "ok"
+              },
+              {
+                "title": "Agile",
+                "href": "/design/ko/software-design/req-2-agile",
+                "state": "ok"
+              },
+              {
+                "title": "XP(Extreme Programming)",
+                "href": "/design/ko/software-design/req-3-xp",
+                "state": "ok"
+              },
+              {
+                "title": "UI",
+                "href": "/design/ko/software-design/req-4-ui",
+                "state": "ok"
+              },
+              {
+                "title": "CASE",
+                "href": "/design/ko/software-design/req-5-computer-aided-software-engineering",
+                "state": "ok"
+              },
+              {
+                "title": "DFD",
+                "href": "/design/ko/software-design/req-7-data-flow-diagram",
+                "state": "ok"
+              },
+              {
+                "title": "Software Lifecycle",
+                "href": "/design/ko/software-design/req-8-software-lifecycle",
+                "state": "ok"
+              },
+              {
+                "title": "Software Diagram",
+                "href": "/design/ko/software-design/req-9-software-diagram",
+                "state": "ok"
+              },
+              {
+                "title": "Topdown/Bottomup Design",
+                "href": "/design/ko/software-design/req-10-topdown-bottomup-design",
+                "state": "ok"
+              },
+              {
+                "title": "OOP",
+                "href": "/design/ko/software-design/100-oop",
+                "state": "ok"
+              },
+              {
+                "title": "Rumbaugh",
+                "href": "/design/ko/software-design/101-rumbaugh",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Architecture Pattern",
+            "links": [
+              {
+                "title": "Introduction",
+                "href": "/design/ko/software-design/architecture-basics-00-introduction",
+                "state": "ok"
+              },
+              {
+                "title": "Layered",
+                "href": "/design/ko/software-design/architecture-basics-01-layered-architecture",
+                "state": "ok"
+              },
+              {
+                "title": "Client-Server",
+                "href": "/design/ko/software-design/architecture-basics-02-client-server-pattern",
+                "state": "ok"
+              },
+              {
+                "title": "Pipe-Filter",
+                "href": "/design/ko/software-design/architecture-basics-03-pipe-filter-pattern",
+                "state": "ok"
+              },
+              {
+                "title": "MVC",
+                "href": "/design/ko/software-design/architecture-basics-04-model-view-controller-pattern",
+                "state": "ok"
+              },
+              {
+                "title": "MVVM",
+                "href": "/design/ko/software-design/architecture-basics-05-model-view-viewmodel-pattern",
+                "state": "ok"
+              },
+              {
+                "title": "MVP",
+                "href": "/design/ko/software-design/architecture-basics-06-model-view-presenter-pattern",
+                "state": "ok"
+              },
+              {
+                "title": "Peer-to-Peer",
+                "href": "/design/ko/software-design/architecture-basics-07-peer-to-peer-pattern",
+                "state": "ok"
+              },
+              {
+                "title": "Event-Bus",
+                "href": "/design/ko/software-design/architecture-basics-08-event-bus-pattern",
+                "state": "ok"
+              },
+              {
+                "title": "Blackboard",
+                "href": "/design/ko/software-design/architecture-basics-09-blackboard-pattern",
+                "state": "ok"
+              },
+              {
+                "title": "Master-Slave",
+                "href": "/design/ko/software-design/architecture-basics-10-master-slave-pattern",
+                "state": "ok"
+              },
+              {
+                "title": "Broker",
+                "href": "/design/ko/software-design/architecture-basics-11-broker-pattern",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Trouble-Shooting",
+            "links": []
+          }
+        ],
+        "software-development": [
+          {
+            "group": "Beginner",
+            "links": []
+          },
+          {
+            "group": "Middle",
+            "links": []
+          },
+          {
+            "group": "Trouble-Shooting",
+            "links": []
+          }
+        ]
+      }
+    },
+    "language": {
+      "subCategories": [
+        {
+          "id": "typescript",
+          "name": "TypeScript",
+          "href": "/language/ko/typescript/contents",
+          "icon": "https://resource.han-py.com/blog/logs/typescript_logo.svg",
+          "state": "ok"
+        },
+        {
+          "id": "nodejs",
+          "name": "Nodejs",
+          "href": "/language/ko/nodejs/contents",
+          "icon": "https://resource.han-py.com/blog/logs/nodejs_logo.svg",
+          "state": "ok"
+        },
+        {
+          "id": "python",
+          "name": "Python",
+          "href": "/language/ko/python/pyarmor",
+          "icon": "https://resource.han-py.com/blog/logs/python_logo.svg",
+          "state": "ok"
+        }
+      ],
+      "sidebars": {
+        "nodejs": [
+          {
+            "group": "Introduction & Fundamentals",
+            "links": [
+              {
+                "title": "Imperative Programming",
+                "href": "/language/ko/nodejs/beginner-imperative-programming",
+                "state": "ok"
+              },
+              {
+                "title": "Declarative Programming",
+                "href": "/language/ko/nodejs/beginner-declarative-programming",
+                "state": "ok"
+              },
+              {
+                "title": "OOP vs FP",
+                "href": "/language/ko/nodejs/beginner-oop-vs-fp",
+                "state": "ok"
+              },
+              {
+                "title": "First-Class Citizen",
+                "href": "/language/ko/nodejs/beginner-first-class",
+                "state": "ok"
+              },
+              {
+                "title": "Introduction",
+                "href": "/language/ko/nodejs/introduction",
+                "state": "ok"
+              },
+              {
+                "title": "Environment Variables",
+                "href": "/language/ko/nodejs/introduction-install_env_path",
+                "state": "ok"
+              },
+              {
+                "title": "Node Version Manager",
+                "href": "/language/ko/nodejs/introduction-nvm",
+                "state": "ok"
+              },
+              {
+                "title": "Buffer & Stream",
+                "href": "/language/ko/nodejs/buffer-stream-intro",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Built-in Modules",
+            "links": [
+              {
+                "title": "fs.existsSync",
+                "href": "/language/ko/nodejs/lib-fs-existsSync",
+                "state": "ok"
+              },
+              {
+                "title": "fs.lstatSync",
+                "href": "/language/ko/nodejs/lib-fs-lstatSync",
+                "state": "ok"
+              },
+              {
+                "title": "fs.statSync",
+                "href": "/language/ko/nodejs/lib-fs-statSync",
+                "state": "ok"
+              },
+              {
+                "title": "fs.promises",
+                "href": "/language/ko/nodejs/lib-fs-promises",
+                "state": "ok"
+              },
+              {
+                "title": "fs.promises.unlink",
+                "href": "/language/ko/nodejs/lib-fs-promises-unlink",
+                "state": "ok"
+              },
+              {
+                "title": "fs.readdir",
+                "href": "/language/ko/nodejs/lib-fs-readdir",
+                "state": "ok"
+              },
+              {
+                "title": "fs.readdirSync",
+                "href": "/language/ko/nodejs/lib-fs-readdirSync",
+                "state": "ok"
+              },
+              {
+                "title": "Encoder / Decoder",
+                "href": "/language/ko/nodejs/encoder-decoder",
+                "state": "ok"
+              },
+              {
+                "title": "child_process.exec",
+                "href": "/language/ko/nodejs/utils-child_process-exec",
+                "state": "ok"
+              },
+              {
+                "title": "child_process.spawn",
+                "href": "/language/ko/nodejs/utils-child_process-spawn",
+                "state": "ok"
+              },
+              {
+                "title": "child_process.fork",
+                "href": "/language/ko/nodejs/utils-child_process-fork",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "External Libraries",
+            "links": []
+          },
+          {
+            "group": "Error & Performance",
+            "links": [
+              {
+                "title": "CaptureStackTrace",
+                "href": "/language/ko/nodejs/error-captureStackTrace",
+                "state": "ok"
+              },
+              {
+                "title": "CPU and Memory Usage",
+                "href": "/language/ko/nodejs/beginner-nodejs-cpu-memory-monitoring",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "typescript": [
+          {
+            "group": "TypeScript Essentials",
+            "links": [
+              {
+                "title": "Basic Types",
+                "href": "/language/ko/typescript/typescript-essential-01-introduction",
+                "state": "ok"
+              },
+              {
+                "title": "Union & Intersection types",
+                "href": "/language/ko/typescript/typescript-essential-02-union-intersection",
+                "state": "ok"
+              },
+              {
+                "title": "Symbol",
+                "href": "/language/ko/typescript/typescript-essential-03-symbol",
+                "state": "ok"
+              },
+              {
+                "title": "Unknown",
+                "href": "/language/ko/typescript/unknown",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Classes & Types",
+            "links": [
+              {
+                "title": "Type Assertions",
+                "href": "/language/ko/typescript/typescript-intermediate-01-type-assertions",
+                "state": "ok"
+              },
+              {
+                "title": "Generics",
+                "href": "/language/ko/typescript/typescript-intermediate-02-generics",
+                "state": "ok"
+              },
+              {
+                "title": "Structural Typing",
+                "href": "/language/ko/typescript/typescript-intermediate-03-structural-typing",
+                "state": "ok"
+              }
+            ]
+          },
+          {
+            "group": "Advanced Patterns",
+            "links": []
+          },
+          {
+            "group": "Trouble-Shooting",
+            "links": [
+              {
+                "title": "Prototype Chain (setPrototypeOf)",
+                "href": "/language/ko/typescript/typescript-ts-01-prototype-chain",
+                "state": "ok"
+              }
+            ]
+          }
+        ],
+        "python": [
+          {
+            "group": "utils",
+            "links": [
+              {
+                "title": "Basic Types",
+                "href": "/language/ko/python/pyarmor",
+                "state": "ok"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
