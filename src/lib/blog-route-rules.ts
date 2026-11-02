@@ -1,11 +1,11 @@
-import type { CATEGORY_TYPE, SUB_CATEGORY_TYPE } from '@/app/(categories)/types'
+import type { CATEGORY_TYPE, SUB_CATEGORY_TYPE } from '@/types/category'
 import {
   BackendCategory,
   DesignCategory,
   FrontendCategory,
   InfraCategory,
   LanguageCategory,
-} from '@/app/(categories)/types'
+} from '@/types/category'
 
 export type BlogContentSkin = 'infra' | 'default'
 

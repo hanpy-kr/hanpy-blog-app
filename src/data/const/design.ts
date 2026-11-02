@@ -1,4 +1,4 @@
-import { DesignCategory } from '@/app/(categories)/types'
+import { DesignCategory } from '@/types/category'
 
 const subCategory: Record<
   DesignCategory,

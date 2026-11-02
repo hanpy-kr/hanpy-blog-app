@@ -1,4 +1,4 @@
-import { InfraCategory } from '@/app/(categories)/types'
+import { InfraCategory } from '@/types/category'
 
 const subCategory: Record<
   InfraCategory,

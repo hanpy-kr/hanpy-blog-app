@@ -1,0 +1,19 @@
+.main {
+  padding: 16px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 6px;
+  background: #edf2f7;
+  color: #1a202c;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.button:hover {
+  background: #e2e8f0;
+}

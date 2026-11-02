@@ -478,7 +478,7 @@ const WheelSVG = ({
           
           // 방사형 텍스트 배치 - 각도에 따라 텍스트 방향 결정
           let displayAngle = textAngle;
-          let anchor = "middle";
+          let anchor: "start" | "middle" | "end" = "middle";
           
           // 텍스트가 뒤집히지 않도록 조정 (아래쪽 반원에서는 180도 회전)
           if (textAngle > 90 && textAngle < 270) {

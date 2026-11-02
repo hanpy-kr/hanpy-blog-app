@@ -1,18 +1,8 @@
-
-# 추후 정리 파일
-/src/app/architecture
-/src/app/css
-/src/app/git
-/src/app/infra
-/src/app/network
-/src/app/nodejs
-/src/app/reactjs
-
-
 # dependencies
 /node_modules
 /.pnp
 .pnp.js
+.pnpm-store
 
 # testing
 /coverage
@@ -30,8 +20,7 @@
 
 # debug
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+pnpm-debug.log*
 
 # local env files
 .env*.local
@@ -43,13 +32,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# yarn
-.pnp.*
-.yarn/
-
-#contentlayer
-.contentlayer
-
+# content-collections
+.content-collections
 
 # test
 _test.md

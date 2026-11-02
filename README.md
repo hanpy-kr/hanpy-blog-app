@@ -1,5 +1,20 @@
 # Hanpy-blog-app
 
+## 개발
+
+Node 22.18+, pnpm 10 (`corepack enable` 또는 `npm i -g pnpm@10.28.0`)
+
+```bash
+pnpm install
+pnpm dev            # http://localhost:3000
+pnpm build          # Content Collections가 _content/**/*.mdx 를 먼저 컴파일한 뒤 next build
+pnpm typecheck
+pnpm start -p 3000 & pnpm check:urls --base http://127.0.0.1:3000   # urls.before.txt 기준 URL 비교 (CI와 같음)
+```
+
+- 글: `_content/{category}/{lng}/{sub}/.../{slug}.mdx` → `/{category}/{lng}/{sub}/.../{slug}`
+- 배포: AWS Amplify Hosting (`amplify.yml`, Node 22)
+
 ## code block
 
 - carbon 이미지처럼 드레그 할 수 있는 css 적용

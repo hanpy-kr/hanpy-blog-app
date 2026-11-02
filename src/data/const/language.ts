@@ -1,4 +1,4 @@
-import { LanguageCategory } from '@/app/(categories)/types'
+import { LanguageCategory } from '@/types/category'
 
 const subCategory: Record<
   LanguageCategory,

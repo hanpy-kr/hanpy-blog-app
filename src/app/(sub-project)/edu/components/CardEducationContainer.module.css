@@ -1,0 +1,60 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 90%;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+.row > .button {
+  flex: 1 1 0;
+}
+
+.button {
+  height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 6px;
+  background: #edf2f7;
+  color: #1a202c;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #e2e8f0;
+}
+
+.button:focus-visible {
+  outline: 3px solid rgba(66, 153, 225, 0.6);
+}
+
+/* 끝없이 흐르는 얇은 진행 막대 */
+.progress {
+  position: relative;
+  height: 4px;
+  overflow: hidden;
+  background: #edf2f7;
+}
+
+.progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 40%;
+  height: 100%;
+  background: #3182ce;
+  animation: slide 1.2s ease-in-out infinite;
+}
+
+@keyframes slide {
+  to {
+    left: 100%;
+  }
+}

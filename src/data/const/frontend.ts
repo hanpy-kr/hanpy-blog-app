@@ -1,4 +1,4 @@
-import { FrontendCategory } from '@/app/(categories)/types'
+import { FrontendCategory } from '@/types/category'
 
 const subCategory: Record<
   FrontendCategory,

@@ -1,4 +1,4 @@
-import { BackendCategory } from '@/app/(categories)/types'
+import { BackendCategory } from '@/types/category'
 
 // Record<BackendCategory, { name: string; href: string; icon: string }>
 const subCategory: Record<
