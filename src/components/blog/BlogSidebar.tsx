@@ -19,25 +19,27 @@ export default function BlogSidebar({ type, subType }: { type: CATEGORY_TYPE; su
   const selectId = `sub-select-${type}`
 
   return (
-    <nav aria-label="블로그 탐색 사이드바" className={styles.sidebar}>
-      <label htmlFor={selectId} className={styles.label}>
-        {CONTENT_CATEGORY[type].mainCategory ?? type}
-      </label>
-      <select
-        id={selectId}
-        className={styles.select}
-        value={current?.id}
-        onChange={(e) => {
-          const next = subCategories.find((s) => s.id === e.target.value)
-          if (next) router.push(next.href)
-        }}
-      >
-        {subCategories.map((s) => (
-          <option key={s.id} value={s.id}>
-            {s.name}
-          </option>
-        ))}
-      </select>
+    <nav aria-label={`${CONTENT_CATEGORY[type].mainCategory ?? type} 글 목록`} className={styles.sidebar}>
+      <div className={styles.field}>
+        <label htmlFor={selectId} className={styles.label}>
+          {CONTENT_CATEGORY[type].mainCategory ?? type}
+        </label>
+        <select
+          id={selectId}
+          className={styles.select}
+          value={current?.id}
+          onChange={(e) => {
+            const next = subCategories.find((s) => s.id === e.target.value)
+            if (next) router.push(next.href)
+          }}
+        >
+          {subCategories.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {detail && (
         <ul className={styles.sections}>

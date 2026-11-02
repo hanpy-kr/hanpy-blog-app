@@ -11,3 +11,9 @@ export const CATEGORY_LABEL: Record<Category, string> = {
 }
 
 export const categoryLabel = (c: string) => CATEGORY_LABEL[c as Category] ?? c
+
+/** `2025-5-20`·`2025-05-20` → `2025.05.20` (화면 표시용) */
+export function formatDate(date: string): string {
+  const [y, m, d] = date.split('-')
+  return d ? `${y}.${m.padStart(2, '0')}.${d.padStart(2, '0')}` : date
+}

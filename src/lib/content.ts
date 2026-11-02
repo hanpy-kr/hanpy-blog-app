@@ -2,9 +2,10 @@
 // URL은 파일 경로 그대로: _content/{category}/{lng}/{sub}/.../{slug}.mdx → /{category}/{lng}/{sub}/.../{slug}
 // (세션 5에서 taxonomy.ts·사이드바 자동 생성과 함께 확장)
 import { allPosts } from 'content-collections'
+import { CONTENT_CATEGORY } from '@/data/const'
 import type { Category } from './categories'
 
-export { CATEGORIES, CATEGORY_LABEL, categoryLabel, type Category } from './categories'
+export { CATEGORIES, CATEGORY_LABEL, categoryLabel, formatDate, type Category } from './categories'
 
 export type Post = (typeof allPosts)[number]
 export type Lng = 'ko' | 'en'
@@ -35,9 +36,11 @@ export function getAlternates(post: Post): Record<string, string> {
 }
 
 /** 목록 화면에 넘기는 최소 필드 (클라이언트 컴포넌트로 본문 코드가 넘어가지 않게) */
-export type PostSummary = Pick<Post, 'url' | 'title' | 'summary' | 'publishedAt' | 'category' | 'lng' | 'sub'>
+export type PostSummary = Pick<Post, 'url' | 'title' | 'summary' | 'publishedAt' | 'category' | 'lng' | 'sub' | 'tags'> & {
+  subName: string
+}
 
-export const toSummary = ({ url, title, summary, publishedAt, category, lng, sub }: Post): PostSummary => ({
+export const toSummary = ({ url, title, summary, publishedAt, category, lng, sub, tags }: Post): PostSummary => ({
   url,
   title,
   summary,
@@ -45,4 +48,12 @@ export const toSummary = ({ url, title, summary, publishedAt, category, lng, sub
   category,
   lng,
   sub,
+  subName: subLabel(category, sub),
+  tags,
 })
+
+/** 서브카테고리 표시 이름 (사이드바 데이터의 이름, 없으면 폴더 이름) */
+export function subLabel(category: string, sub: string): string {
+  const name = (CONTENT_CATEGORY[category]?.subCategory as Record<string, { name: string }> | undefined)?.[sub]?.name
+  return name ?? sub
+}

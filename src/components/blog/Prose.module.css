@@ -1,0 +1,270 @@
+/* 글 본문(MDX) 타이포그래피. 디자인 시안의 글 페이지 기준: 데스크톱 17px/1.85, 폰 16px/1.8 */
+.prose {
+  font-size: 16px;
+  line-height: 1.8;
+  overflow-wrap: break-word; /* 긴 URL이 폰 화면을 넘지 않게 */
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+
+.prose h1 {
+  margin: 2.2em 0 0.6em;
+  font-size: 1.6em;
+  line-height: 1.3;
+}
+
+.prose h2 {
+  margin: 2em 0 0.6em;
+  font-size: 22px;
+}
+
+.prose h3 {
+  margin: 1.6em 0 0.5em;
+  font-size: 19px;
+}
+
+.prose h4 {
+  margin: 1.4em 0 0.4em;
+  font-size: 17px;
+}
+
+.prose h5,
+.prose h6 {
+  margin: 1.2em 0 0.4em;
+  font-size: 16px;
+}
+
+/* rehype-autolink-headings가 제목을 링크로 감싼다 */
+.prose :is(h1, h2, h3, h4, h5, h6) > a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.prose p {
+  margin: 0.9em 0;
+}
+
+.prose a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+.prose a:hover {
+  color: var(--fg);
+}
+
+.prose strong {
+  font-weight: 700;
+}
+
+.prose hr {
+  margin: 2.2em 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.prose ul,
+.prose ol {
+  margin: 0.9em 0;
+  padding-left: 1.4em;
+}
+
+.prose li {
+  margin: 0.25em 0;
+}
+
+.prose li > ul,
+.prose li > ol {
+  margin: 0.25em 0;
+}
+
+.prose ul ::marker {
+  color: var(--accent);
+}
+
+.prose ol ::marker {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.prose blockquote {
+  margin: 1.2em 0;
+  padding: 0.75em 1em;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--fg);
+}
+
+.prose blockquote > :first-child {
+  margin-top: 0;
+}
+
+.prose blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.prose img {
+  display: block;
+  margin: 1.2em auto;
+  border-radius: 8px;
+}
+
+/* 인라인 코드 */
+.prose :not(pre) > code,
+.prose kbd {
+  padding: 0.12em 0.4em;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+
+/* 코드 블록 (rehype-pretty-code, slack-dark 테마의 배경을 그대로 쓴다) */
+.prose figure[data-rehype-pretty-code-figure] {
+  margin: 1.4em 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--code-bg);
+}
+
+.prose [data-rehype-pretty-code-title] {
+  padding: 6px 14px;
+  border-bottom: 1px solid #1e293b;
+  background: var(--code-bg);
+  color: #cbd5e1;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.prose pre {
+  margin: 1.4em 0;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-size: 13.5px;
+  line-height: 1.7;
+  tab-size: 2;
+}
+
+.prose figure[data-rehype-pretty-code-figure] pre {
+  margin: 0;
+  border-radius: 0;
+}
+
+.prose pre code {
+  display: grid;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: inherit;
+}
+
+.prose pre [data-line] {
+  padding: 0 2px;
+}
+
+.prose pre [data-line-numbers] {
+  counter-reset: line;
+}
+
+.prose pre [data-line-numbers] > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1.5rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: #64748b;
+}
+
+.prose pre [data-highlighted-line] {
+  background: var(--highlight-line);
+}
+
+.prose pre [data-highlighted-line-id='minus'] {
+  background: var(--diff-minus-bg);
+  box-shadow: inset 3px 0 var(--diff-minus-bar);
+}
+
+.prose pre [data-highlighted-line-id='plus'] {
+  background: var(--diff-plus-bg);
+  box-shadow: inset 3px 0 var(--diff-plus-bar);
+}
+
+/* 표: 바깥 상자(.tableWrap)가 가로 스크롤을 맡는다 */
+.tableWrap {
+  width: 100%;
+  margin: 1.4em 0;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.prose table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.prose th,
+.prose td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  background: var(--surface);
+  font-weight: 600;
+}
+
+.prose tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* 예전 글에서 쓰는 비표준 태그 */
+.prose codeline {
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
+  background: var(--surface);
+  font-weight: 500;
+}
+
+@media (min-width: 768px) {
+  .prose {
+    font-size: 17px;
+    line-height: 1.85;
+  }
+
+  .prose h2 {
+    font-size: 28px;
+    line-height: 1.35;
+  }
+
+  .prose h3 {
+    font-size: 21px;
+  }
+
+  .prose h4 {
+    font-size: 18px;
+  }
+}
