@@ -1,15 +1,12 @@
 ---
-deployment: true
-category: Infra
 title: 'Amazon EFS'
 summary: 'AWS EFS(Elastic File System)의 개념과 사용법, 그리고 실제 프로젝트에서 어떻게 활용할 수 있는지 자세히 알아봅니다.'
-pageKey: aws_efs_guide
-lng: KOR
 publishedAt: 2026-01-11
+group: 'AWS'
+order: 3
+series: aws-efs
 tags: [AWS, EFS, 클라우드, 파일 시스템, Backend]
 ---
-
-# Amazon EFS
 
 프로젝트를 운영하다 보면 "서버 여러 대가 동시에 접근할 수 있는 파일 저장소가 필요하다"는 상황이 찾아옵니다. 처음에는 S3 같은 객체 스토리지를 떠올릴 수 있지만, 때로는 **리눅스 파일 시스템처럼 mount해서 읽고 쓰는 형태**가 필요한 경우도 있습니다. 이때 필요한 것이 **Amazon EFS(Elastic File System)** 입니다.
 

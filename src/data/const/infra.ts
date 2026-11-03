@@ -212,10 +212,6 @@ const subCategoryDetail: {
           title: 'IdP(Identity Provider)',
         },
         {
-          href: '/infra/ko/cloud/aws-efs-4-transfer',
-          title: 'EFS - transfer',
-        },
-        {
           href: '/infra/ko/cloud/aws-s3-1-file-download',
           title: 'S3 - Download',
         },
@@ -391,7 +387,7 @@ const subCategoryDetail: {
       ],
       [
         {
-          href: '/infra/ko/kubernetes/kube-ts-01-x509.mdx',
+          href: '/infra/ko/kubernetes/kube-ts-01-x509',
           title: 'Introduction',
         },
         {

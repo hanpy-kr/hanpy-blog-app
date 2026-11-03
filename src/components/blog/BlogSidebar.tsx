@@ -9,11 +9,22 @@ import styles from './BlogSidebar.module.css'
 type SubCategoryItem = { id: string; name: string; href: string }
 type SubCategoryDetail = { title: string[]; subTitle: { title: string; href: string }[][] }
 
-export default function BlogSidebar({ type, subType }: { type: CATEGORY_TYPE; subType: SUB_CATEGORY_TYPE }) {
+export default function BlogSidebar({
+  type,
+  subType,
+  availableSubs,
+}: {
+  type: CATEGORY_TYPE
+  subType: SUB_CATEGORY_TYPE
+  /** 공개 글이 있는 서브카테고리 id (없는 서브카테고리는 선택 상자에서 뺀다) */
+  availableSubs: string[]
+}) {
   const router = useRouter()
   const path = usePathname()
 
-  const subCategories = Object.values(CONTENT_CATEGORY[type].subCategory as Record<string, SubCategoryItem>)
+  const subCategories = Object.values(CONTENT_CATEGORY[type].subCategory as Record<string, SubCategoryItem>).filter(
+    (s) => availableSubs.includes(s.id),
+  )
   const detail = CONTENT_CATEGORY[type].subCategoryDetail[subType] as SubCategoryDetail | undefined
   const current = subCategories.find((s) => s.id === String(subType)) ?? subCategories[0]
   const selectId = `sub-select-${type}`

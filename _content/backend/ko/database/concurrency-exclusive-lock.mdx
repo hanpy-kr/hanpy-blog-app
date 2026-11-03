@@ -1,14 +1,11 @@
 ---
-deployment: true
-category: Backend
 title: 'Exclusive Lock'
 summary: 'Exclusive Lock(배타 락)은 데이터에 대한 변경(Write) 연산을 수행할 때 다른 트랜잭션이나 사용자가 해당 데이터를 참조하거나 수정하지 못하도록 보장하는 잠금(Lock) 기법입니다.'
-pageKey: Backend_Exclusive_Lock_ko
-lng: KOR
 publishedAt: 2025-02-01
+group: 'Database'
+order: 4
+series: concurrency-control
 ---
-
-# 배타 락(Exclusive Lock)
 
 Exclusive Lock(배타 락)은 데이터에 대한 변경(Write) 연산을 수행할 때 다른 트랜잭션이나 사용자가 해당 데이터를 참조하거나 수정하지 못하도록 보장하는 잠금(Lock) 기법입니다. 읽기에만 사용되는 Shared Lock과 달리, Exclusive Lock은 오직 한 사용자(혹은 트랜잭션)만이 해당 자원을 독점하므로 ‘배타적(Exclusive)’이라는 이름이 붙었습니다. 다음은 Exclusive Lock의 특징과 활용 시 주의점을 알아보겠습니다.
 

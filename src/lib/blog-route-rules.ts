@@ -49,6 +49,12 @@ export const BLOG_ROUTE_RULES: BlogRouteRule[] = [
     contentSkin: 'default',
   },
   {
+    prefix: 'backend/ko/mongodb',
+    type: 'backend',
+    subType: BackendCategory.MONGODB,
+    contentSkin: 'default',
+  },
+  {
     prefix: 'backend/ko/database',
     type: 'backend',
     subType: BackendCategory.DATABASE,

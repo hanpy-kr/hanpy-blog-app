@@ -1,14 +1,11 @@
 ---
-deployment: true
-category: Backend
 title: 'MongoDB - Sharding'
 summary: '대용량 트래픽과 방대한 데이터 집합을 다루는 MongoDB 환경에서, 샤딩(Sharding)은 확장성(Scalability)을 확보하기 위한 핵심 전략입니다.'
-pageKey: backend_mongodb_sharding_ko
-lng: KOR
 publishedAt: 2025-01-29
+group: 'MongoDB'
+order: 8
+series: mongodb-concurrency
 ---
-
-# MongoDB - Sharding
 
 샤딩(Sharding)은 데이터를 분산하여 저장하는 개념입니다. 대용량 트래픽과 방대한 데이터 집합을 다루는 MongoDB 환경에서, 샤딩(Sharding)은 확장성(Scalability)을 확보하기 위한 핵심 전략이라 할 수 있습니다. 하지만 여러 샤드 노드와 Config 서버, 그리고 Mongos를 결합해 운영하는 구조이기에, 동시성 제어와 트랜잭션 처리에도 특별한 고려가 필요합니다. 이번 글에서는 Mongos와 Config 서버의 역할, 샤딩 키와 청크(Chunk) 분할이 동시성에 미치는 영향, 그리고 Sharded Cluster에서 트랜잭션을 운용할 때 주의해야 할 점을 중심으로 살펴보겠습니다.
 

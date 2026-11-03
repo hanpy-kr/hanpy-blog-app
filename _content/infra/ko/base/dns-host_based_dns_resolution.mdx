@@ -1,15 +1,11 @@
 ---
-deployment: true
-category: Infra
 title: '내부망 환경에서 /etc/hosts 기반 DNS Resolution이 동작하는 이유'
 summary: '내부망 환경에서 DNS 레코드가 없을 때 /etc/hosts를 통한 DNS Resolution이 어떻게 이루어지는지, 이름 해석 우선순위와 Host 헤더, SNI까지 실제 요청 흐름을 기준으로 설명합니다.'
-pageKey: hosts_based_dns_resolution
-lng: KOR
 publishedAt: 2026-02-03
+group: 'Beginner'
+order: 7
 tags: [DNS, hosts, DNS Resolution, 네트워크, 인프라, 내부망, Backend]
 ---
-
-# 내부망 환경에서 /etc/hosts 기반 DNS Resolution이 동작하는 이유
 
 이 글은 내부망 환경을 전제로 합니다. 외부 DNS에는 등록되어 있지 않지만, 내부 IP로만 접근 가능한 테스트 또는 사내 시스템을 다루는 상황입니다.
 

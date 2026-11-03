@@ -1,15 +1,12 @@
 ---
-deployment: true
-category: Infra
 title: 'packer - AWS EKS Node AMI 생성'
 summary: 'AWS EKS 공식 AMI를 기반으로 운영 환경에 맞춘 커스텀 EKS 노드 이미지를 빌드하는 방법을 소개합니다.'
-pageKey: packer_4_eks_node
-lng: KOR
 publishedAt: 2025-09-06
+group: 'Packer'
+order: 5
+series: packer
 tags: [Packer, EKS 최적화 AMI, 커스텀 노드 이미지, provisioner, manifest.json]
 ---
-
-# packer - AWS EKS Node AMI 생성
 
 Amazon EKS(Elastic Kubernetes Service)는 AWS에서 제공하는 관리형 Kubernetes 서비스입니다. EKS 클러스터의 워커 노드(Worker Node)는 보통 **EKS 공식 AMI**를 사용하지만, 운영 환경에 맞춰 필요한 패키지나 에이전트를 사전에 설치한 커스텀 AMI를 빌드하면 배포 속도와 일관성을 크게 높일 수 있습니다.
 

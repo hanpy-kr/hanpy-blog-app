@@ -1,14 +1,11 @@
 ---
-deployment: true
-category: Backend
 title: 'gRPC 스케일링과 아키텍처'
 summary: 'gRPC와 Kubernetes를 통한 오토스케일링, 프로브 설정, 서비스 디스커버리 및 gRPC 서비스의 확장성, KEDA/HPA를 이용한 스케일링 전략, 그리고 gRPC와 다른 프로토콜의 비교에 대해 살펴봅니다.'
-pageKey: grpc_scaling_and_architecture
-lng: KOR
 publishedAt: 2025-03-13
+group: 'Middle'
+order: 3
+series: grpc
 ---
-
-# gRPC 스케일링과 아키텍처: Kubernetes와의 통합 전략
 
 gRPC는 고성능 원격 프로시저 호출(RPC) 프레임워크로, 마이크로서비스 환경에서 빠른 응답성과 낮은 지연 시간을 제공하며, 서비스 간 통신의 효율성을 극대화합니다. 최근 Kubernetes와의 결합을 통해 gRPC 서비스의 자동 스케일링, 프로브 설정, 서비스 디스커버리 등 다양한 운영 전략이 도입되고 있습니다. 이 글에서는 gRPC와 Kubernetes의 통합, 서버와 클라이언트의 확장 전략, KEDA와 HPA를 활용한 스케일링, 그리고 gRPC와 다른 프로토콜과의 비교에 대해 중급 개발자 수준으로 자세히 알아보겠습니다.
 

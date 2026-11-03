@@ -1,15 +1,12 @@
 ---
-deployment: true
-category: Infra
 title: 'EKS - Karpenter NodeClass & NodePool'
 summary: 'EKS에서 Karpenter를 활용해 최소 설정으로 노드를 자동 생성하는 Hello World 실습. NodeClass와 NodePool의 개념과 차이를 이해하고, requirements를 통해 인스턴스 아키텍처/카테고리/용량 타입을 제어하는 방법을 알아봅시다.'
-pageKey: karpenter_2_nodeclass_nodepoll
-lng: KOR
 publishedAt: 2025-09-09
+group: 'Karpenter'
+order: 2
+series: karpenter
 tags: [Karpenter, NodeClass, NodePool]
 ---
-
-# Karpenter - NodeClass & NodePool
 
 Karpenter를 이해하는 데 가장 중요한 두 가지 개념은 **NodeClass**와 **NodePool**입니다. 이 둘은 함께 동작하면서 EKS에서 노드를 자동으로 생성하고 워크로드를 적절한 노드에 배치할 수 있도록 도와줍니다. 쉽게 말해 NodeClass는 노드 자체의 “청사진”을 정의하고, NodePool은 어떤 상황에서 그 노드를 사용할지 규칙을 정하는 역할을 합니다.
 

@@ -1,17 +1,11 @@
 ---
-deployment: true
-category: Infra
 title: 'Amazon EKS Kubernetes 버전 정책과 1.32 업그레이드 체크포인트'
 summary: 'Amazon EKS에서 Kubernetes 마이너 버전이 어떻게 릴리스·지원되는지, 표준 지원과 추가 지원(Extended Support) 기간, 자동 업그레이드 정책을 정리합니다. 특히 Kubernetes 1.31 → 1.32 업그레이드 시 주의해야 할 API 제거, ServiceAccount 변경, Amazon Linux 2 AMI 지원 종료 이슈와 EKS Auto Mode·AL2023·Bottlerocket 전환 전략까지 함께 다룹니다.'
-pageKey: infra_eks_kubernetes_132_upgrade
-lng: KOR
 publishedAt: 2025-12-13
+group: 'Trouble-Shooting'
+order: 2
 tags: [EKS, Kubernetes, 쿠버네티스, 버전 정책, Kubernetes 1.32, Extended Support, Amazon Linux 2, AL2023, Bottlerocket, Auto Mode, 인프라, 클러스터 운영]
 ---
-
-
-
-# EKS Kubernetes
 
 쿠버네티스는 4개월에 한번씩 Kubernetes 마이너 버전을 릴리스 합니다. 보통 릴리즈 이후 처음 14개월 동안은 Amazon EKS에서 표준지원을 받습니다. 그 후에 12 개월 동안은 추가 비용이 부과 되며 확장지원을 받게 됩니다. 확장지원이 종료 시, 업데이트를 하지 않으면 현재 지원되는 가장 오래된 추가 버전으로 자동 업그레이드 됩니다. 따라서 초기 생성 시 가장 최신의 Kubernetes 버전으로 클러스터를 생성하는 것이 좋습니다.
 

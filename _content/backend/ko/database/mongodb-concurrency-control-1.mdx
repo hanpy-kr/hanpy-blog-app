@@ -1,14 +1,11 @@
 ---
-deployment: true
-category: Backend
 title: 'MongoDB - Concurrency Control'
 summary: 'MongoDB를 비롯해 대부분의 데이터베이스가 지향하는 핵심 목표 중 하나는 동시성 제어(Concurrency Control)입니다. 문서 수준 잠금(Document-Level Lock)과 과거의 전역 잠금(Global Lock) 개념을 중심으로 설명합니다.'
-pageKey: backend_mongodb_concurrency_control_ko
-lng: KOR
 publishedAt: 2025-01-26
+group: 'MongoDB'
+order: 5
+series: mongodb-concurrency
 ---
-
-# MongoDB - Concurrency Control
 
 MongoDB를 비롯해 대부분의 데이터베이스가 지향하는 핵심 목표 중 하나는 <span style={{ fontWeight: "bold" }}>동시성 제어(Concurrency Control)</span>입니다. 여러 사용자가 동시에 데이터를 읽고 쓸 때, 어떻게 하면 <span style={{ fontWeight: 'bold' }}>정합성(Consistency)</span>과 <span style={{ fontWeight: 'bold' }}>성능(Performance)</span>을 모두 만족시킬 수 있을까요? 이번 글에서는 MongoDB의 동시성 제어 개념을 기초부터 살펴보겠습니다. 특히 MongoDB 버전별로 달라진 동시성 모델과 WiredTiger 스토리지 엔진, 그리고 문서 수준 잠금(Document-Level Lock)과 과거의 전역 잠금(Global Lock) 개념을 중심으로 설명합니다.
 
