@@ -210,7 +210,7 @@ const files = dry
     })
   : walk(ROOT).map((p) => relative(ROOT, p))
 const realPath = (rel: string) => {
-  if (!dry) return join(ROOT, rel)
+  if (!dry || existsSync(join(ROOT, rel))) return join(ROOT, rel)
   const from = Object.entries(RENAMES).find(([, to]) => to === rel)?.[0]
   return join(ROOT, from ?? (existsSync(join(ROOT, rel)) ? rel : rel.slice(0, -1)))
 }
@@ -268,7 +268,8 @@ const fmOf = (s: string): Fm | null => {
   const m = FM_RE.exec(s)
   return m ? (YAML.parse(m[1]) as Fm) : null
 }
-const isDraft = (fm: Fm) => (fm.draft !== undefined ? fm.draft === true : String(fm.deployment).toLowerCase() !== 'true')
+/** 옛 형식은 deployment(공개 여부), 새 형식은 draft(없으면 공개) */
+const isDraft = (fm: Fm) => ('deployment' in fm ? String(fm.deployment).toLowerCase() !== 'true' : fm.draft === true)
 const ownerOf = new Map<string, string>()
 for (const [f, s] of raw) {
   const fm = fmOf(s)
