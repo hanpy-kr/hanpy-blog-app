@@ -10,10 +10,10 @@ export { CATEGORIES, CATEGORY_LABEL, categoryLabel, formatDate, type Category } 
 export type Post = (typeof allPosts)[number]
 export type Lng = 'ko' | 'en'
 
-/** 최신순. publishedAt이 `2025-5-20`처럼 0이 빠진 글이 있어 문자열이 아니라 날짜로 비교한다 */
+/** 최신순 (publishedAt은 스키마에서 YYYY-MM-DD로 검사됨) */
 const byNewest = (a: Post, b: Post) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt)
 
-/** 공개 글: deployment가 true이고 게시일이 지난 글. 초안은 주소로도 열리지 않는다(404) */
+/** 공개 글: draft가 아니고 게시일이 지난 글. 초안·예약 글은 주소로도 열리지 않는다(404) */
 export const releasedPosts: Post[] = allPosts.filter((p) => p.released).toSorted(byNewest)
 
 export function getPost(category: string, lng: string, segments: string[]): Post | undefined {

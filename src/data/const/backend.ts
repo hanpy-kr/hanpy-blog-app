@@ -67,6 +67,15 @@ const subCategory: Record<
     href: '/',
     icon: '/icons/utils.svg',
   },
+  // 세션 4 등록. 글은 아직 모두 초안이라 사이드바 선택 상자에는 첫 글이 공개될 때 나타난다
+  mongodb: {
+    id: BackendCategory.MONGODB,
+    name: 'MongoDB',
+    description:
+      'Covers MongoDB fundamentals: moving from the relational model to documents, schema design patterns and anti-patterns, and indexing for performance.',
+    href: '/backend/ko/mongodb/foundation-1',
+    icon: '/icons/database.svg',
+  },
 }
 
 const subCategoryDetail: {
@@ -298,7 +307,7 @@ const subCategoryDetail: {
           title: 'Authentication',
         },
         {
-          href: '/backend/ko/nestjs/nestjs-config-service',
+          href: '/backend/ko/nestjs/nestjs-debug',
           title: 'VSCode Debugging',
         },
       ],
@@ -370,6 +379,10 @@ const subCategoryDetail: {
   utils: {
     title: ['Beginner', 'Middle', 'Trouble-Shooting'],
     subTitle: [[], [], []],
+  },
+  mongodb: {
+    title: [],
+    subTitle: [],
   },
 }
 

@@ -39,6 +39,7 @@ export enum BackendCategory {
   SECURITY = 'security',
   GRPC = 'grpc',
   UTILS = 'utils',
+  MONGODB = 'mongodb',
 }
 
 export enum InfraCategory {

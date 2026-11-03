@@ -12,7 +12,24 @@ pnpm typecheck
 pnpm start -p 3000 & pnpm check:urls --base http://127.0.0.1:3000   # urls.before.txt 기준 URL 비교 (CI와 같음)
 ```
 
-- 글: `_content/{category}/{lng}/{sub}/.../{slug}.mdx` → `/{category}/{lng}/{sub}/.../{slug}`
+- 글: `_content/{category}/{lng}/{sub}/.../{slug}.mdx` → `/{category}/{lng}/{sub}/.../{slug}` (카테고리·언어는 경로가 기준)
+
+### 글 frontmatter
+
+```yaml
+---
+title: '글 제목'            # 페이지 h1·목록·검색에 쓰는 유일한 제목 (본문에는 # 제목을 쓰지 않음, 본문 제목은 ## 부터)
+summary: '한두 문장 요약'    # 목록·description·OG
+publishedAt: 2026-11-03     # YYYY-MM-DD. 미래 날짜면 그날까지 비공개
+draft: true                 # 초안일 때만. 공개 글은 생략
+group: 'Beginner'           # 사이드바 그룹 (공개 글 필수)
+order: 3                    # 그룹 안 순서 (공개 글 필수)
+series: kubernetes          # 시리즈 id (선택)
+tags: [Kubernetes, Pod]     # 선택
+---
+```
+
+형식이 틀리면(날짜 형식, 본문 `#`, 공개 글의 group·order·summary 누락) 빌드가 멈춥니다.
 - 배포: AWS Amplify Hosting (`amplify.yml`, Node 22)
 
 ## code block

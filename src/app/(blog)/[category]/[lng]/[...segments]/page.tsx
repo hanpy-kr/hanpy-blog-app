@@ -58,12 +58,16 @@ export default async function PostPage({ params }: { params: Promise<Params> }) 
   const subName = subLabel(post.category, post.sub)
   const subHref: string | undefined = CONTENT_CATEGORY[post.category]?.subCategory?.[post.sub]?.href
   const en = post.lng === 'en'
+  // 사이드바 선택 상자에는 공개 글이 있는 서브카테고리만 (글 0개인 utils·mongodb 등은 숨김)
+  const availableSubs = [
+    ...new Set(releasedPosts.filter((p) => p.category === post.category && p.lng === post.lng).map((p) => p.sub)),
+  ]
 
   return (
     <div className={styles.layout} data-has-sidebar={rule ? '' : undefined}>
       {rule && (
         <aside className={styles.sidebar}>
-          <BlogSidebar type={rule.type} subType={rule.subType} />
+          <BlogSidebar type={rule.type} subType={rule.subType} availableSubs={availableSubs} />
         </aside>
       )}
 
@@ -78,7 +82,7 @@ export default async function PostPage({ params }: { params: Promise<Params> }) 
           <p className={styles.eyebrow}>
             {catName} · {subName}
           </p>
-          <h1 className={styles.title}>{post.heading}</h1>
+          <h1 className={styles.title}>{post.title}</h1>
           <p className={styles.summary}>{post.summary}</p>
           <div className={styles.meta}>
             <span className={styles.author}>

@@ -1,6 +1,6 @@
-// Content Collections 설정 (세션 2 PoC에서 검증, 세션 3에서 이식)
+// Content Collections 설정 (세션 2 PoC에서 검증, 세션 3에서 이식, 세션 4에서 frontmatter 정리)
 // 경로가 곧 메타데이터: _content/{category}/{lng}/{sub}/.../{slug}.mdx → URL /{category}/{lng}/{sub}/.../{slug}
-// frontmatter는 아직 기존 형식 그대로 읽는다 (category·lng·pageKey 정리, 날짜 형식 통일은 세션 4)
+// 카테고리·언어는 경로에서 읽는다. frontmatter 형식은 계획 문서 'frontmatter 스키마' 표 그대로
 import { defineCollection, defineConfig } from '@content-collections/core'
 import { compileMDX } from '@content-collections/mdx'
 import GithubSlugger from 'github-slugger'
@@ -15,10 +15,13 @@ const prettyCode: PrettyCodeOptions = {
   keepBackground: true,
 }
 
-// YAML은 `2024-01-02` 를 Date로 읽으므로 문자열·Date 둘 다 받아 YYYY-MM-DD로 맞춘다
+// 날짜는 YYYY-MM-DD 만 받는다. YAML은 `2024-01-02` 를 Date로 읽고 `2025-5-20` 같은 값은 문자열로 남기므로
+// 문자열이면 형식을 검사한다 (따옴표로 감싼 '2024-01-02' 도 통과)
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 const dateField = z
-  .union([z.string(), z.date()])
-  .transform((v) => (v instanceof Date ? v.toISOString().slice(0, 10) : v.trim()))
+  .union([z.date(), z.string().regex(DATE_RE, '날짜는 YYYY-MM-DD 형식이어야 합니다 (예: 2025-05-20)')])
+  .transform((v) => (v instanceof Date ? v.toISOString().slice(0, 10) : v))
+  .refine((v) => !Number.isNaN(Date.parse(v)) && new Date(v).toISOString().slice(0, 10) === v, '없는 날짜입니다')
 
 type TocItem = { depth: 2 | 3; text: string; id: string }
 
@@ -44,24 +47,18 @@ const displayText = (md: string) =>
 
 /**
  * 본문을 한 번 훑어
- * - 맨 앞의 `# 제목` 줄을 떼어 낸다 (글 머리는 페이지가 그리므로 제목이 두 번 나오지 않게)
  * - h2·h3 목차를 만든다. id는 rehype-slug와 같은 github-slugger 규칙으로 계산한다
  * - 코드 블록을 뺀 글자 수로 읽는 시간(분)을 어림한다 (한국어 기준 분당 약 500자)
+ * - 본문에 h1(`# `)이 있으면 그 줄 번호를 돌려준다. 글 제목은 frontmatter title 하나만 쓰므로 h1은 금지
  */
 function analyze(content: string) {
   const lines = content.split('\n')
-  let heading: string | null = null
-  const first = lines.findIndex((l) => l.trim() !== '')
-  if (first !== -1 && /^#\s+\S/.test(lines[first])) {
-    heading = displayText(lines[first].replace(/^#\s+/, ''))
-    lines.splice(first, 1)
-  }
-
   const slugger = new GithubSlugger()
   const toc: TocItem[] = []
   let fence: string | null = null
   let textLength = 0
-  for (const line of lines) {
+  const h1Lines: number[] = []
+  for (const [i, line] of lines.entries()) {
     const f = /^\s*(```|~~~)/.exec(line)
     if (f) {
       fence = fence === null ? f[1] : fence === f[1] ? null : fence
@@ -71,27 +68,37 @@ function analyze(content: string) {
     textLength += line.replace(/\s+/g, '').length
     const h = /^(#{1,6})\s+(.+?)\s*#*\s*$/.exec(line)
     if (!h) continue
+    if (h[1].length === 1) h1Lines.push(i + 1)
     const id = slugger.slug(slugText(h[2]))
     const depth = h[1].length
     if (depth === 2 || depth === 3) toc.push({ depth, text: displayText(h[2]), id })
   }
 
-  return { content: lines.join('\n'), heading, toc, readingMinutes: Math.max(1, Math.round(textLength / 500)) }
+  return { toc, h1Lines, readingMinutes: Math.max(1, Math.round(textLength / 500)) }
 }
 
 const posts = defineCollection({
   name: 'posts',
   directory: '_content',
-  include: '**/*.mdx', // .md 14개는 세션 4에서 .mdx로 바꾼 뒤 들어옴
+  include: '**/*.mdx', // .md는 받지 않는다 (세션 4에서 모두 .mdx로 바꿈)
   schema: z.object({
-    title: z.string(),
-    summary: z.string(),
+    title: z.string().trim().min(1),
+    /** 목록·메타 description·OG. 초안은 비워 둘 수 있다 */
+    summary: z.string().trim(),
+    /** 미래 날짜면 그날까지 비공개 (예약 발행) */
     publishedAt: dateField,
-    deployment: z.boolean(),
-    category: z.string(),
-    lng: z.string(),
-    pageKey: z.string(),
-    tags: z.array(z.string()).optional(),
+    updatedAt: dateField.optional(),
+    draft: z.boolean().default(false),
+    /** 사이드바 그룹과 그룹 안 순서. 공개 글은 필수 */
+    group: z.string().trim().min(1).optional(),
+    order: z.number().int().min(0).optional(),
+    /** 시리즈 id. 시리즈 안 순서는 사이드바 순서(그룹 순서 → order)를 따른다 */
+    series: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, '시리즈 id는 소문자·숫자·하이픈').optional(),
+    tags: z.array(z.coerce.string()).optional(),
+    /** 다른 언어 글과 slug가 다를 때만 그 글의 경로 (기본은 같은 sub/slug끼리 자동 연결) */
+    translationOf: z.string().optional(),
+    /** 광고를 뺄 글에만 false */
+    ads: z.boolean().default(true),
     content: z.string(),
   }),
   transform: async (doc, context) => {
@@ -99,8 +106,21 @@ const posts = defineCollection({
     const [category, lng, ...rest] = parts
     if (parts.length < 4) return context.skip(`경로가 짧음: ${doc._meta.filePath}`)
 
-    const { content, heading, toc, readingMinutes } = analyze(doc.content)
-    const body = await compileMDX(context, { ...doc, content }, {
+    const where = doc._meta.filePath
+    const { toc, h1Lines, readingMinutes } = analyze(doc.content)
+    // 규칙 위반은 빌드를 멈춘다 (초안도 마찬가지: 공개하는 순간 깨지지 않게)
+    if (h1Lines.length) {
+      throw new Error(`${where}: 본문에 h1(# )이 있습니다 (본문 ${h1Lines.join(', ')}번째 줄). 글 제목은 frontmatter title만 쓰고 본문 제목은 ## 부터`)
+    }
+    if (!doc.draft) {
+      const missing: string[] = []
+      if (!doc.summary) missing.push('summary')
+      if (doc.group === undefined) missing.push('group')
+      if (doc.order === undefined) missing.push('order')
+      if (missing.length) throw new Error(`${where}: 공개 글에 ${missing.join('·')}가 없습니다`)
+    }
+
+    const body = await compileMDX(context, doc, {
       remarkPlugins: [remarkGfm],
       rehypePlugins: [
         rehypeSlug,
@@ -109,14 +129,19 @@ const posts = defineCollection({
       ],
     })
 
-    const released = doc.deployment && new Date(doc.publishedAt).getTime() <= Date.now()
+    const released = !doc.draft && new Date(doc.publishedAt).getTime() <= Date.now()
     return {
       title: doc.title,
-      /** 본문 첫 줄의 `# 제목` (없으면 frontmatter title). 글 페이지의 h1 */
-      heading: heading || doc.title,
       summary: doc.summary,
       publishedAt: doc.publishedAt,
+      updatedAt: doc.updatedAt,
+      draft: doc.draft,
+      group: doc.group,
+      order: doc.order,
+      series: doc.series,
       tags: doc.tags ?? [],
+      translationOf: doc.translationOf,
+      ads: doc.ads,
       category,
       lng,
       sub: rest[0],
