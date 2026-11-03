@@ -1,15 +1,11 @@
 ---
-deployment: true
-category: Backend
 title: 'Git 오류: Not possible to fast-forward, aborting. 해결 방법'
 summary: 'Git에서 "Not possible to fast-forward, aborting." 에러가 발생하는 이유와, 이를 해결하는 방법을 단계별로 알아봅니다.'
-pageKey: git_fast_forward_abort_fix
-lng: KOR
 publishedAt: 2025-05-22
+group: 'Trouble-Shooting'
+order: 1
 tags: [Git, Backend, 협업, 버전관리]
 ---
-
-# Git 오류: Not possible to fast-forward, aborting. 해결 방법
 
 소소하게 코드를 수정하려고 했을 뿐인데, 터미널에서 예상하지 못한 에러를 볼 수 있습니다. "Not possible to fast-forward, aborting." 메시지를 보고 당황했던 경험, 한 번쯤 있으셨을 겁니다. 처음에는 이 에러가 마치 심각한 충돌처럼 느껴질 수 있지만, 알고 보면 비교적 간단한 문제입니다. 오늘은 이 에러의 원인과 해결 방법을 알아보겠습니다.
 
@@ -68,7 +64,7 @@ tags: [Git, Backend, 협업, 버전관리]
 
 ---
 
-# 정리
+## 정리
 
 "Not possible to fast-forward, aborting." 에러는 Git이 **자동으로 이력을 이어붙일 수 없을 때 발생**합니다.
 이 문제를 해결하려면 병합(Merge)하거나, 리베이스(Rebase)하거나, 필요시 강제로 초기화(Reset)하면 됩니다.
@@ -85,7 +81,7 @@ tags: [Git, Backend, 협업, 버전관리]
 
 ---
 
-# 참고 문서
+## 참고 문서
 
 - [Git 공식 문서 - git pull](https://git-scm.com/docs/git-pull)
 - [Git 공식 문서 - git merge](https://git-scm.com/docs/git-merge)

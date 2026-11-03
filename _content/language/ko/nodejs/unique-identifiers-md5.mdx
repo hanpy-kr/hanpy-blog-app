@@ -1,15 +1,10 @@
 ---
-deployment: false
-category: Backend
 title: 'MD5 해시로 유일한 파일명 만들기 (Node.js 파일 저장 전략)'
 summary: '동일한 파일명이 덮어쓰이지 않도록 MD5 해시를 활용해 고유한 파일명을 생성하는 방법과 실전 예제를 Node.js로 구현해봅니다.'
-pageKey: md5\_filename\_unique\_guide
-lng: KOR
 publishedAt: 2025-04-17
+draft: true
 tags: [Node.js, 파일명 충돌 방지, 해시, md5, 파일 업로드, Backend]
 ---
-
-# MD5 해시로 유일한 파일명 만들기 (Node.js 파일 저장 전략)
 
 웹 애플리케이션에서 파일 업로드 기능을 제공할 때 흔히 발생하는 문제가 있습니다. 바로 **동일한 이름을 가진 파일이 여러 번 업로드되는 상황**입니다. 예를 들어 `resume.pdf`라는 이름의 파일이 여러 번 업로드되면 이전 파일이 덮어쓰기 되거나, 덮어쓰지 않기 위해 복잡한 이름 변경 로직을 따로 구현해야 하는 번거로움이 생깁니다.
 

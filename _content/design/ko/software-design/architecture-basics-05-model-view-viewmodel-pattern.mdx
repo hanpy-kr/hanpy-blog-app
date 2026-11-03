@@ -1,15 +1,12 @@
 ---
-deployment: true
-category: Backend
 title: 'MVVM Pattern'
 summary: 'MVVM(Model-View-ViewModel) 패턴은 사용자 인터페이스(UI)와 비즈니스 로직을 분리하고, 중간에 ViewModel이라는 중재자를 두어 데이터와 UI를 양방향으로 자동 연결해주는 소프트웨어 아키텍처입니다.'
-pageKey: mvvm_pattern_overview
-lng: KOR
 publishedAt: 2025-08-23
+group: 'Architecture Pattern'
+order: 6
+series: architecture-basics
 tags: [MVVM Pattern, 아키텍처]
 ---
-
-# MVVM Pattern
 
 스마트 거울이 있다고 상상해보세요. 거울(뷰)은 사용자에게 현재 날씨와 일정을 보여주고, 마이크를 통해 음성 명령을 받습니다. 사용자의 명령은 내부 시스템(ViewModel)으로 전달되어 데이터를 가공하고, 날씨 API나 캘린더에서 실제 데이터를 가져오는 역할(Model)이 수행됩니다. 거울은 스스로 데이터를 처리하지 않지만, 백그라운드에서 자동으로 갱신된 정보를 표시해줍니다. 이처럼 각 구성 요소가 느슨하게 연결되며 **양방향 데이터 바인딩**을 활용하는 구조가 바로 **MVVM 패턴**입니다.
 

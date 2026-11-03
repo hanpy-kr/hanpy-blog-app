@@ -1,15 +1,12 @@
 ---
-deployment: true
-category: Backend
 title: '인터페이스 분리 원칙 (Interface Segregation Principle, ISP)'
 summary: '하나의 인터페이스가 너무 많은 책임을 갖지 않도록 기능을 분리하는 인터페이스 분리 원칙(ISP)에 대해 자세히 알아봅니다.'
-pageKey: interface_segregation_principle_guide
-lng: KOR
 publishedAt: 2025-05-06
+group: 'Beginner'
+order: 4
+series: solid
 tags: [Layered Architecture, 아키텍처, 소프트웨어 설계, Backend]
 ---
-
-# 인터페이스 분리 원칙 (Interface Segregation Principle, ISP)이란?
 
 인터페이스에 수십 개의 메서드가 들어있고, 사용하는 건 겨우 두세 개에 불과한 경우에 "이 기능은 쓰지도 않는데 왜 꼭 구현해야 하지?"라는 생각이 드는 경우가 잇습니다. 이렇게 하나의 인터페이스가 지나치게 크고 복잡할 때, 코드를 읽고 관리하는 것 자체가 부담스러워집니다. 이런 불편을 해결하기 위해 제안된 원칙이 바로 **인터페이스 분리 원칙**(Interface Segregation Principle, ISP)입니다.
 

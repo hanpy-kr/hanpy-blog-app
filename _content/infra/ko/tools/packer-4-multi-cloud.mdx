@@ -1,15 +1,12 @@
 ---
-deployment: true
-category: Infra
 title: 'packer - MultiCloud (AWS + GCP)'
 summary: '하나의 Packer 템플릿에서 AWS AMI와 GCP Compute Engine 이미지를 동시에 빌드하는 방법과 동작 원리, 자격 증명/네트워킹 주의점을 상세히 설명합니다.'
-pageKey: packer_3_multi_cloud
-lng: KOR
 publishedAt: 2025-09-05
+group: 'Packer'
+order: 4
+series: packer
 tags: [Packer Multi-Cloud, amazon-ebs 빌더, googlecompute 빌더, 병렬 빌드, 자격 증명 관리]
 ---
-
-# packer - Multi-Cloud (AWS + GCP)
 
 Packer의 큰 강점은 **동일한 빌드 파이프라인으로 여러 클라우드 이미지를 동시에 만들 수 있다는 점**입니다. 이번 글에서는 하나의 템플릿으로 AWS(AMI)와 GCP(Compute Engine Image)를 한 번에 생성하는 방법과, 각 빌더의 핵심 필드·자격 증명·네트워킹 주의 사항까지 정리합니다.
 

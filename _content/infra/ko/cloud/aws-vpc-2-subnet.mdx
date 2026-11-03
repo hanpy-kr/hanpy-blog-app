@@ -1,16 +1,12 @@
 ---
-deployment: true
-category: Infra
-title: AWS - Subnet
-summary: AWS VPC에서 Subnet의 정의와 필요성, 구성 방법을 다룹니다. 가용영역, 서브넷 마스크, 리소스 배치까지 이해할 수 있습니다.
-pageKey: aws_vpc_2_subnet
-lng: KOR
+title: 'AWS - Subnet'
+summary: 'AWS VPC에서 Subnet의 정의와 필요성, 구성 방법을 다룹니다. 가용영역, 서브넷 마스크, 리소스 배치까지 이해할 수 있습니다.'
 publishedAt: 2026-01-09
+group: 'VPC'
+order: 2
+series: aws-vpc
 tags: [AWS, VPC, Subnet, 인프라, 클라우드 네트워크]
 ---
-
-
-# AWS - Subnet
 
 AWS에서 VPC를 만들면 하나의 큰 네트워크가 생깁니다. 하지만 이 큰 네트워크를 그대로 쓰기보다는, 더 작은 조각으로 나눠서 쓰는 게 관리와 보안에 유리합니다. 이렇게 VPC를 잘게 나눈 단위를 서브넷(Subnet) 이라고 부릅니다. 서브넷은 VPC보다 작은 주소 범위를 사용합니다. 그래서 서브넷 마스크(네트워크 크기를 정하는 기준표 `/24` `/16`)의 값이 더 높아지고, 실제로 쓸 수 있는 IP 개수는 줄어듭니다. 쉽게 말해, 큰 도로망(VPC)을 여러 개의 동네(Subnet)로 나누는 것과 비슷합니다.
 

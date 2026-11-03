@@ -1,15 +1,11 @@
 ---
-deployment: true
-category: Backend
 title: 'NestJS에서 JWT를 이용한 인증(Authentication) 구현하기'
 summary: 'NestJS에서 JWT(JSON Web Token)를 이용한 인증 방식을 구현하는 방법을 알아봅시다.'
-pageKey: nestjs-authentication-guide
-lng: KOR
 publishedAt: 2025-04-10
+group: 'Middle'
+order: 1
 tags: [NestJS, RBAC, Authorization, Backend, 인증, 권한 관리, AuthGuard]
 ---
-
-# NestJS에서 JWT를 이용한 인증(Authentication) 구현하기
 
 인증(Authentication)은 대부분의 애플리케이션에서 필수적인 기능입니다. 다양한 인증 방식이 있으며, 프로젝트의 요구사항에 따라 적절한 방식을 선택해야 합니다. 이 글에서는 NestJS에서 **JWT**(JSON Web Token)를 이용한 인증 방식을 구현하는 방법을 소개합니다.
 
@@ -423,7 +419,7 @@ export class AuthGuard implements CanActivate {
 }
 ```
 
-# 참고
+## 참고
 
 - https://github.com/nestjs/jwt
 - https://github.com/auth0/node-jsonwebtoken#usage

@@ -1,15 +1,12 @@
 ---
-deployment: true
-category: Infra
-title: "OpenID Connect(OIDC) 쉽게 이해하기: OAuth 2.0 위에서 로그인 기능을 만든 이유"
-summary: "OIDC가 무엇인지, OAuth 2.0과 어떤 관계인지, 실제 로그인 과정은 어떻게 동작하는지를 개발자 관점에서 자연스럽게 설명합니다."
-pageKey: security_8_oidc
-lng: KOR
+title: 'OpenID Connect(OIDC) 쉽게 이해하기: OAuth 2.0 위에서 로그인 기능을 만든 이유'
+summary: 'OIDC가 무엇인지, OAuth 2.0과 어떤 관계인지, 실제 로그인 과정은 어떻게 동작하는지를 개발자 관점에서 자연스럽게 설명합니다.'
 publishedAt: 2025-11-29
-tags: ['OIDC', 'OpenID Connect', 'OAuth2', '소셜로그인', 'ID Token', 'JWT', 'Access Token', '인증', 'SSO']
+group: 'Auth'
+order: 8
+series: auth
+tags: [OIDC, OpenID Connect, OAuth2, 소셜로그인, ID Token, JWT, Access Token, 인증, SSO]
 ---
-
-# OpenID Connect(OIDC) 쉽게 이해하기: OAuth 2.0 위에서 로그인 기능을 만든 이유
 
 구글 로그인, 카카오 로그인, 네이버 로그인. 우리가 매일 사용하는 이 소셜 로그인은 OIDC(OpenID Connect)라는 프로토콜을 기반으로 동작합니다. 많은 사람들은 OAuth 2.0으로 로그인을 한다고 생각합니다. 하지만 사실 OAuth 2.0은 로그인용 기술이 아닙니다. OAuth의 본래 목적은 권한 위임, 즉 이 앱이 내 구글 드라이브에 접근하도록 허용할까 같은 문제를 해결하는 것입니다. 그러나 이런 구조만으로는 누가 로그인했는지를 인증하기에는 부족했습니다. 이 빈틈을 메워주는 것이 바로 OIDC입니다.
 

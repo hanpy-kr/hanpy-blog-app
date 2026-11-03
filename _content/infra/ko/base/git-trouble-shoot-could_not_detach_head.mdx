@@ -1,15 +1,11 @@
 ---
-deployment: true
-category: Backend
 title: 'Git 오류: error: could not detach HEAD 해결 방법'
 summary: 'Git 사용 중 "error: could not detach HEAD" 오류가 발생하는 원인과 이를 안전하게 해결하는 방법을 정리해봅니다.'
-pageKey: git_could_not_detach_head_fix
-lng: KOR
 publishedAt: 2025-05-24
+group: 'Trouble-Shooting'
+order: 2
 tags: [Git, Backend, 버전관리, 협업]
 ---
-
-# Git 오류: error: could not detach HEAD 해결 방법
 
 "그냥 브랜치 하나 체크아웃했을 뿐인데, 갑자기 터미널에 낯선 에러가 떴습니다." 개발을 하다 보면 이런 당황스러운 순간을 한 번쯤은 겪게 됩니다. 특히 Git을 사용하는 중에 **error: could not detach HEAD** 라는 메시지를 만나면, 뭔가 심각한 문제가 생긴 건 아닌지 걱정될 수 있죠. 이 에러는 이해하고 나면 생각보다 단순한 구조를 가지고 있습니다. 오늘은 이 문제를 깔끔하게 분석하고, 어떻게 하면 부드럽게 해결할 수 있는지 알아보겠습니다.
 
@@ -118,7 +114,7 @@ o---o---o (main)
 
 ---
 
-# 정리
+## 정리
 
 **error: could not detach HEAD** 에러는 주로 **현재 Git 작업 상태가 깨끗하지 않을 때** 발생합니다. 이러한 경우에, 변경사항을 임시로 저장하거나(commit, stash) 병합이나 리베이스를 완료하여(abort, continue) 이후 checkout을 다시 시도하면 정상적으로 해결할 수 있습니다.
 
@@ -134,7 +130,7 @@ Git을 다룰 때 "상태"를 항상 의식하는 습관을 들이면, 이런 �
 
 ---
 
-# 참고 문서
+## 참고 문서
 
 - [Git 공식 문서 - git checkout](https://git-scm.com/docs/git-checkout)
 - [Git 공식 문서 - git stash](https://git-scm.com/docs/git-stash)

@@ -1,15 +1,11 @@
 ---
-deployment: true
-category: Infra
 title: 'AWS - Elastic IP(EIP)'
 summary: 'AWS에서 Elastic IP(EIP)를 활용해 EC2 인스턴스에 고정 Public IP를 할당하고, 장애 대응 및 네트워크 설계를 안정적으로 구성하는 방법을 알아봅시다.'
-pageKey: aws_ec2_elastic_ip
-lng: KOR
 publishedAt: 2026-01-05
+group: 'AWS'
+order: 1
 tags: [AWS, VPC, Elastic IP, EIP, EC2, Public IP, 네트워킹]
 ---
-
-# AWS - Elastic IP(EIP)
 
 AWS에서 EC2 인스턴스를 생성하면 기본적으로 Public IP가 자동 할당될 수 있습니다. 하지만 이 Public IP는 **인스턴스를 중지(stop)하거나 재시작**하면 변경되는 임시 주소라는 한계가 있습니다. 이러한 특성은 고정 IP를 요구하는 서비스 환경(웹 서버, API 서버, 외부 연동 시스템 등)에서는 큰 제약이 됩니다.
 

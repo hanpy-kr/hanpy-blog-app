@@ -1,15 +1,12 @@
 ---
-deployment: true
-category: Backend
 title: 'Master-Slave Pattern'
 summary: 'Master-Slave 패턴은 마스터가 작업을 제어하고, 여러 슬레이브가 실제 처리를 수행하는 구조로, 병렬 처리와 부하 분산에 적합한 패턴입니다.'
-pageKey: master_slave_pattern_overview
-lng: KOR
 publishedAt: 2025-08-29
+group: 'Architecture Pattern'
+order: 11
+series: architecture-basics
 tags: [Master-Slave, 아키텍처]
 ---
-
-# Master-Slave Pattern
 
 TV 요리 경연 프로그램을 보면, 메인 셰프(마스터)가 요리의 전체 구성을 지시하고, 보조 셰프들(슬레이브)이 각각 재료를 손질하거나 소스를 만드는 역할을 맡습니다. 보조 셰프들은 각자 맡은 작업만 집중적으로 수행하고, 결과는 모두 메인 셰프가 모아서 하나의 완성된 요리로 조율하죠. 메인 셰프가 중심에서 전체 진행을 통제하고, 보조들이 맡은 역할만 충실히 수행하는 협업 방식은 바로 중앙 제어자가 역할을 분배하고 결과를 취합하는 구조로, 마스터-슬레이브 패턴과 닮아 있습니다.
 

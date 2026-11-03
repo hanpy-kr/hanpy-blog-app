@@ -1,15 +1,11 @@
 ---
-deployment: true
-category: Infra
 title: 'TCP 4-Way Handshake'
 summary: 'TCP 연결을 종료할 때는 연결 설정보다 복잡한 4단계 과정을 거칩니다. 이 글에서는 TCP 4-Way 핸드셰이크 구조를 통해 안전하고 신중하게 연결을 해제하는 방법을 알아봅니다.'
-pageKey: tcp\_4way\_teardown\_guide
-lng: KOR
 publishedAt: 2025-06-24
+group: 'Beginner'
+order: 13
 tags: [TCP, 연결 해제, 전송 계층, 핸드셰이크, Backend]
 ---
-
-# TCP 4-Way Handshake
 
 TCP(Transmission Control Protocol)는 신뢰성 있는 연결 지향형 통신을 제공하기 위해 설계된 프로토콜로, 연결을 설정하고 데이터를 주고받은 뒤에는 반드시 **정상적인 연결 종료 과정**을 거칩니다. 많은 개발자들이 연결을 여는 과정인 3-Way Handshake는 잘 알고 있지만, 연결을 닫는 과정인 4-Way Handshake는 다소 생소할 수 있습니다. 그러나 연결 종료 역시 설정만큼이나 중요하며, 잘못된 종료는 데이터 유실이나 시스템 리소스 낭비로 이어질 수 있습니다.
 

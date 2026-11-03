@@ -1,14 +1,11 @@
 ---
-deployment: true
-category: Infra
 title: 'Kubernetes Selector/Label'
 summary: 'Kubernetes의 Selector/Label를 통해 자원관리에 대해 알아봅시다.'
-lng: KOR
-pageKey: kubernetes_6_ko
 publishedAt: 2024-03-26
+group: 'Beginner'
+order: 6
+series: kubernetes
 ---
-
-# 자원 관리 / 식별 (Selector / Label)
 
 쿠베너티스에서 컨테이너의 생성/삭제가 자유롭습니다. 이떄, 컨테이너의 생성과 삭제에 따른 IP값이 변하게 됩니다. IP값이 변경된다면 쿠버네티스에서는 컨테이너를 어떻게 관리하고 식별할 수 있을까요?? 우선은 쿠버네티스 이전에 관리방법에 대해 알아봅시다.
 
@@ -93,7 +90,7 @@ selector:
 
 
 
-# Word
+## Word
 
 - Proxy Server : 클라이언트가 자신을 통해 다른 네트워크 서비스에 간접적으로 접속할 수 있게 해주는 컴퓨터 시스템이나 응용 프로그램으로 크게 Forward Proxy Server와 Reverse Proxy Server로 나뉜다.
 - Forward Proxy server : 클라이언트의 요청을 중간에서 Forward Proxy Server가 가로챈다. 즉 웹사이트에 직접적으로 접근할 수 없게 한다. 따라서 사용자 IP 주소 추적이 어렵다.

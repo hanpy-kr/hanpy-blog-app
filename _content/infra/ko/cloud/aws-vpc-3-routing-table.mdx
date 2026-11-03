@@ -1,15 +1,12 @@
 ---
-deployment: true
-category: Infra
 title: 'AWS - Routing Table & Router'
 summary: 'AWS VPC에서 라우팅 테이블과 라우터가 어떻게 네트워크 요청을 처리하는지, 그리고 인터넷 게이트웨이를 통해 외부와 통신하는 방식을 설명합니다.'
-pageKey: aws_vpc_3_routing_table
-lng: KOR
 publishedAt: 2025-12-16
+group: 'VPC'
+order: 3
+series: aws-vpc
 tags: [AWS, VPC, Routing, Router, InternetGateway, CloudNetworking, Infra]
 ---
-
-# AWS - Routing Table & Router
 
 클라우드 네트워크 설계에서 라우터(Router) 와 라우팅 테이블(Routing Table) 은 트래픽 흐름을 제어하는 핵심 구성 요소입니다. 라우터는 네트워크 패킷이 어느 방향으로 흘러가야 하는지를 결정하는 관문이며, 라우팅 테이블은 그 결정을 위한 경로 정보의 집합입니다. 쉽게 말해, 라우터가 운전사라면 라우팅 테이블은 도로 지도가 됩니다. AWS VPC 환경에서는 라우터가 VPC 내에 논리적으로 기본 제공되며, 사용자는 이를 직접 제어할 수는 없고 라우팅 테이블(Route Table) 을 통해 동작 방식을 정의합니다. 아래의 표와 같이 표현합니다.
 

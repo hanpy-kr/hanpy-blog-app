@@ -1,14 +1,11 @@
 ---
-deployment: true
-category: Backend
 title: 'MongoDB - Transaction'
 summary: 'MongoDB에서는 문서(Document) 단위로 락이 걸린다고 알려져 있지만, 실제로는 컬렉션·데이터베이스 수준 등 다양한 단계(Granularity)에서 락이 발생할 수 있습니다. 이번 글에서는 문서·컬렉션·인덱스 등 어디에 어떻게 락이 걸리는지 살펴보고, MongoDB 내부에서 사용하는 Intent Lock, Shared Lock, Exclusive Lock 개념을 설명합니다.'
-pageKey: backend_mongodb_transaction_ko
-lng: KOR
 publishedAt: 2025-01-28
+group: 'MongoDB'
+order: 7
+series: mongodb-concurrency
 ---
-
-# MongoDB - Transaction
 
 MongoDB는 원래 “단일 문서 쓰기는 원자적으로 처리”하는 특성을 가졌지만, 복잡한 비즈니스 로직이나 여러 문서를 동시에 업데이트해야 하는 상황에서는 이보다 더 강력한 트랜잭션 기능이 필요했습니다. 이에 따라 MongoDB 4.0부터는 Replica Set 환경에서, 그리고 MongoDB 4.2부터는 Sharded Cluster 환경에서도 Multi-Document Transactions를 공식 지원하게 되었는데요. 이번 글에서는 이러한 Multi-Document Transactions의 도입 배경, ACID 보장 범위와 성능 이슈, 그리고 트랜잭션으로 인해 잠금 범위가 확장되면서 생길 수 있는 동시성 저하 문제를 다뤄봅니다.
 

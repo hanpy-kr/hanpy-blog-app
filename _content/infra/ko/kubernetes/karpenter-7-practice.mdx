@@ -1,16 +1,12 @@
 ---
-deployment: true
-category: Infra
 title: 'Karpenter - All-in-One Practice'
 summary: 'Karpenter 실습을 하나의 번들 YAML로 정리했습니다. NodeClass, Spot/On-Demand 분리, 멀티 아키텍처, GPU 풀, AZ/Family/세대 제약 및 자원 상한까지 한 번에 배포하고 검증할 수 있습니다.'
-pageKey: karpenter_7_practice
-lng: KOR
 publishedAt: 2025-09-14
+group: 'Karpenter'
+order: 7
+series: karpenter
 tags: [Karpenter, EKS, NodePool, EC2NodeClass, Spot, On-Demand, GPU, AZ제약, 인스턴스제약, 자원상한, 쿠버네티스, AWS]
 ---
-
-
-# All-in-One Practice for Karpenter
 
 Karpenter를 단계별로 학습하다 보면, 매번 NodeClass와 NodePool을 따로따로 정의하고 적용하는 과정이 반복됩니다. 실습 목적이라면 이렇게 쪼개진 파일을 관리하는 것이 오히려 번거롭고, 전체 구성을 한눈에 이해하기도 어렵습니다.
 
