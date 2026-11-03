@@ -1,69 +1,49 @@
+// 전체 글 목록 (한국어, 최신순, 15개씩)
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import {
-  isReleasedPost,
-  queryPostsMeta,
-} from '@/lib/posts-query'
+import { categoryLabel, getPosts } from '@/lib/content'
+import styles from './page.module.css'
 
 const PAGE_SIZE = 15
 
-export default function PostsArchivePage({
-  searchParams,
-}: {
-  searchParams: { page?: string }
-}) {
-  const page = Math.max(1, parseInt(searchParams.page || '1', 10) || 1)
-  const all = queryPostsMeta({
-    category: 'All',
-    currentLng: 'ko',
-    orderBy: 'publishedAt',
-  }).filter(isReleasedPost)
+export const metadata: Metadata = {
+  title: '전체 글',
+  alternates: { canonical: '/posts' },
+}
+
+export default async function PostsArchivePage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const { page: pageParam } = await searchParams
+  const all = getPosts({ lng: 'ko' })
   const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE))
-  const current = Math.min(page, totalPages)
+  const current = Math.min(Math.max(1, parseInt(pageParam ?? '1', 10) || 1), totalPages)
   const slice = all.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE)
 
   return (
-    <>
-      <Header />
-      <main style={{ maxWidth: 720, margin: '0 auto', padding: '2rem 1rem' }}>
-        <h1 style={{ marginBottom: '1.5rem' }}>전체 글</h1>
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-          {slice.map((post) => (
-            <li key={post._id} style={{ marginBottom: '1.25rem' }}>
-              <Link href={`/${post._raw.flattenedPath}`}>
-                <strong>{post.title}</strong>
-              </Link>
-              <div style={{ fontSize: '0.9rem', opacity: 0.85 }}>
-                {post.category} · {post.publishedAt}
-              </div>
-              <p style={{ margin: '0.35rem 0 0' }}>{post.summary}</p>
-            </li>
-          ))}
-        </ul>
-        <nav
-          style={{
-            display: 'flex',
-            gap: '1rem',
-            marginTop: '2rem',
-            justifyContent: 'center',
-          }}
-        >
-          {current > 1 ? (
-            <Link href={`/posts?page=${current - 1}`}>이전</Link>
-          ) : null}
-          <span>
-            {current} / {totalPages}
-          </span>
-          {current < totalPages ? (
-            <Link href={`/posts?page=${current + 1}`}>다음</Link>
-          ) : null}
-        </nav>
-        <p style={{ marginTop: '2rem' }}>
-          <Link href="/">홈으로</Link>
-        </p>
-      </main>
-      <Footer />
-    </>
+    <main className={styles.main}>
+      <h1 className={styles.title}>전체 글</h1>
+      <ul className={styles.list}>
+        {slice.map((post) => (
+          <li key={post.url} className={styles.item}>
+            <Link href={post.url} className={styles.link}>
+              {post.title}
+            </Link>
+            <div className={styles.meta}>
+              {categoryLabel(post.category)} · {post.publishedAt}
+            </div>
+            <p className={styles.summary}>{post.summary}</p>
+          </li>
+        ))}
+      </ul>
+      <nav aria-label="페이지" className={styles.pager}>
+        {current > 1 && <Link href={`/posts?page=${current - 1}`}>이전</Link>}
+        <span>
+          {current} / {totalPages}
+        </span>
+        {current < totalPages && <Link href={`/posts?page=${current + 1}`}>다음</Link>}
+      </nav>
+      <p>
+        <Link href="/">홈으로</Link>
+      </p>
+    </main>
   )
 }

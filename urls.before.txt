@@ -5,7 +5,7 @@
 # 형식
 #   /path     반드시 200 (리다이렉트도 실패)
 #   !/path    반드시 404 (의도적으로 삭제한 주소)
-#   ?/path    상태만 기록, 실패 처리 안 함 (개편에서 정할 주소)
+#   ?/path    상태만 기록, 실패 처리 안 함 (개편에서 정할 주소, 지금은 없음)
 
 # 페이지 (4)
 /
@@ -266,14 +266,14 @@
 !/profile
 !/reactjs
 
-# 미정 (10)
-?/backend/ko/database/_mongodb-concurrency  # deployment:false 초안 (main에서는 주소로 열리지만 목록·사이트맵에 없음)
-?/frontend/ko/react/typescript-fileupload  # deployment:false 초안 (main에서는 주소로 열리지만 목록·사이트맵에 없음)
-?/frontend/ko/utils/monorepo-pm-npm  # deployment:false 초안 (main에서는 주소로 열리지만 목록·사이트맵에 없음)
-?/frontend/ko/utils/monorepo-pm-pnpm  # deployment:false 초안 (main에서는 주소로 열리지만 목록·사이트맵에 없음)
-?/frontend/ko/utils/monorepo-pm-yarn  # deployment:false 초안 (main에서는 주소로 열리지만 목록·사이트맵에 없음)
-?/frontend/ko/web/date  # deployment:false 초안 (main에서는 주소로 열리지만 목록·사이트맵에 없음)
-?/login  # Firebase 인증 제거(세션 3) 시 함께 사라짐
-?/next.svg  # create-next-app 기본 파일, 참조 없음
-?/signup  # Firebase 인증 제거(세션 3) 시 함께 사라짐
-?/vercel.svg  # create-next-app 기본 파일, 참조 없음
+# 2026-11-02 결정으로 삭제 (10) — 세션 3에서 `?` → `!`
+!/backend/ko/database/_mongodb-concurrency  # deployment:false 초안 → 404 (2026-11-02 결정)
+!/frontend/ko/react/typescript-fileupload  # deployment:false 초안 → 404 (2026-11-02 결정)
+!/frontend/ko/utils/monorepo-pm-npm  # deployment:false 초안 → 404 (2026-11-02 결정)
+!/frontend/ko/utils/monorepo-pm-pnpm  # deployment:false 초안 → 404 (2026-11-02 결정)
+!/frontend/ko/utils/monorepo-pm-yarn  # deployment:false 초안 → 404 (2026-11-02 결정)
+!/frontend/ko/web/date  # deployment:false 초안 → 404 (2026-11-02 결정)
+!/login  # Firebase 인증 제거와 함께 404 (2026-11-02 결정)
+!/next.svg  # create-next-app 기본 파일 삭제 (2026-11-02 결정)
+!/signup  # Firebase 인증 제거와 함께 404 (2026-11-02 결정)
+!/vercel.svg  # create-next-app 기본 파일 삭제 (2026-11-02 결정)

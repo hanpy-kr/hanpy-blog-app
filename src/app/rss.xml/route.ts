@@ -1,35 +1,24 @@
-import { getAllDocumentsFlat } from '@/lib/blog-documents'
-import { isReleasedPost } from '@/lib/posts-query'
+import { releasedPosts } from '@/lib/content'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/site'
 
-const SITE = 'https://hanpy-blog.com'
+export const dynamic = 'force-static'
 
 function escapeXml(s: string) {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
 
 export function GET() {
-  const items = getAllDocumentsFlat()
-    .filter(isReleasedPost)
-    .sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() -
-        new Date(a.publishedAt).getTime(),
-    )
+  // 지금은 예전처럼 모든 언어의 최신 글 50개. 한국어·영어 분리(/rss.xml, /en/rss.xml)는 세션 7
+  const items = releasedPosts
     .slice(0, 50)
-
-  const channelItems = items
-    .map((item) => {
-      const link = `${SITE}/${item._raw.flattenedPath}`
+    .map((p) => {
+      const link = SITE_URL + p.url
       return `<item>
-<title>${escapeXml(item.title)}</title>
+<title>${escapeXml(p.title)}</title>
 <link>${link}</link>
 <guid>${link}</guid>
-<pubDate>${new Date(item.publishedAt).toUTCString()}</pubDate>
-<description>${escapeXml(item.summary)}</description>
+<pubDate>${new Date(p.publishedAt).toUTCString()}</pubDate>
+<description>${escapeXml(p.summary)}</description>
 </item>`
     })
     .join('\n')
@@ -37,10 +26,10 @@ export function GET() {
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 <channel>
-<title>Hanpy Blog</title>
-<link>${SITE}</link>
-<description>Hanpy development blog</description>
-${channelItems}
+<title>${SITE_NAME}</title>
+<link>${SITE_URL}</link>
+<description>${escapeXml(SITE_DESCRIPTION)}</description>
+${items}
 </channel>
 </rss>`
 

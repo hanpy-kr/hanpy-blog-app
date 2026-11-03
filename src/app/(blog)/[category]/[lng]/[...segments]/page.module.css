@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 16px 16px 80px;
+}
+
+.sidebar {
+  display: none;
+  flex: 0 0 270px;
+}
+
+.content {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 62rem;
+  /* 긴 URL이 폰 화면을 넘지 않게 */
+  overflow-wrap: break-word;
+}
+
+.label {
+  margin: 1rem 0;
+  color: var(--accent);
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    display: block;
+  }
+}
+
+.tableWrap {
+  width: 100%;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+.tableWrap > table {
+  margin: 0;
+}

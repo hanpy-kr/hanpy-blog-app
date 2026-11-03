@@ -1,0 +1,25 @@
+# Amplify Hosting 빌드 설정 (저장소 파일이 콘솔 설정보다 우선)
+# Next 16 + pnpm + Node 22. 세션 2 PoC(refactor/s2-poc)에서 Amplify 빌드·배포 확인 후 세션 3에서 이식
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - nvm install 22 && nvm use 22
+        - node -v
+        - npm install -g pnpm@10.28.0
+        - pnpm config set store-dir .pnpm-store
+        - pnpm install --frozen-lockfile
+    build:
+      commands:
+        - pnpm run build
+        # 결과물 크기 기록 (Amplify SSR 결과물 230MB 제한 확인용)
+        - du -sh .next node_modules || true
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - .pnpm-store/**/*
+      - .next/cache/**/*

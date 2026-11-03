@@ -1,14 +1,12 @@
-'use client'
-
-import { Button } from '@chakra-ui/react'
+import Link from 'next/link'
+import styles from './page.module.css'
 
 export default function EnglishHome() {
-  const goBusiness = () => {
-    window.location.href = '/edu/business-english'
-  }
   return (
-    <>
-      <Button onClick={() => goBusiness()}>Business English</Button>
-    </>
+    <main className={styles.main}>
+      <Link href="/edu/business-english" className={styles.button}>
+        Business English
+      </Link>
+    </main>
   )
 }
