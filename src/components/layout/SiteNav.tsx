@@ -1,18 +1,13 @@
 'use client'
 // 주 메뉴. 넓은 화면은 가로 메뉴, 폰은 ☰ 버튼(<details>)으로 펼친다
 // 시리즈·About·검색·언어 전환은 해당 화면이 생기는 세션 7에서 추가
+// 카테고리 목록은 머리글(서버)이 넘겨 준다: 공개 글이 있는 카테고리만, taxonomy 등록 순서
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
-import { CATEGORIES, CATEGORY_LABEL } from '@/lib/categories'
 import styles from './Header.module.css'
 
-const LINKS = [
-  ...CATEGORIES.map((c) => ({ href: `/posts?category=${c}`, label: CATEGORY_LABEL[c], match: `/${c}/` })),
-  { href: '/posts', label: '전체 글', match: '/posts' },
-]
-
-export default function SiteNav() {
+export default function SiteNav({ categories }: { categories: { id: string; name: string }[] }) {
   const pathname = usePathname()
   const menuRef = useRef<HTMLDetailsElement>(null)
 
@@ -21,6 +16,10 @@ export default function SiteNav() {
     if (menuRef.current) menuRef.current.open = false
   }, [pathname])
 
+  const LINKS = [
+    ...categories.map((c) => ({ href: `/posts?category=${c.id}`, label: c.name, match: `/${c.id}/` })),
+    { href: '/posts', label: '전체 글', match: '/posts' },
+  ]
   const links = LINKS.map((l) => (
     <Link
       key={l.href}

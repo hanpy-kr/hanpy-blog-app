@@ -11,7 +11,8 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "check:urls": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-urls.ts"
+    "check:urls": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-urls.ts",
+    "check:sidebar": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-sidebar.ts"
   },
   "dependencies": {
     "@content-collections/core": "^0.15.3",

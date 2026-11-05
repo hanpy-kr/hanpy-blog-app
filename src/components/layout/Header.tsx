@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { visibleCategories } from '@/lib/content'
 import SiteNav from './SiteNav'
 import ThemeToggle from './ThemeToggle'
 import styles from './Header.module.css'
@@ -10,7 +11,7 @@ export default function Header() {
         <Link href="/" className={styles.logo}>
           Hanpy&apos;s Blog
         </Link>
-        <SiteNav />
+        <SiteNav categories={visibleCategories().map(({ id, name }) => ({ id, name }))} />
         <div className={styles.actions}>
           <ThemeToggle />
           <a href="/rss.xml" className={styles.iconButton} aria-label="RSS 피드">

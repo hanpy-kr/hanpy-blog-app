@@ -1,6 +1,6 @@
 // 글 페이지 (디자인 시안 'Post'·'PostMobile'). URL은 그대로 /{category}/{lng}/{sub}/.../{slug}
 // [...segments]로 받는 이유: frontend/ko/nextjs/seo/next-sitemap 처럼 sub 아래 한 단계가 더 있는 글이 있음
-// 시리즈 상자·이전/다음 글은 세션 4·5(series 데이터), 함께 읽을 글·광고 자리는 세션 7
+// 왼쪽 사이드바는 frontmatter group·order로 자동 생성(세션 5). 시리즈 상자·이전/다음 글·함께 읽을 글·광고 자리는 세션 7
 import { MDXContent } from '@content-collections/mdx/react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -9,9 +9,7 @@ import AuthorCard from '@/components/common/AuthorCard'
 import BlogSidebar from '@/components/blog/BlogSidebar'
 import prose from '@/components/blog/Prose.module.css'
 import { TocDisclosure, TocRail } from '@/components/blog/Toc'
-import { CONTENT_CATEGORY } from '@/data/const'
-import { resolveBlogRouteRule } from '@/lib/blog-route-rules'
-import { categoryLabel, formatDate, getAlternates, getPost, releasedPosts, subLabel } from '@/lib/content'
+import { categoryLabel, formatDate, getAlternates, getPost, getSidebar, releasedPosts, subLabel } from '@/lib/content'
 import { AUTHOR } from '@/lib/site'
 import styles from './page.module.css'
 
@@ -52,22 +50,25 @@ export default async function PostPage({ params }: { params: Promise<Params> }) 
   const post = getPost(category, lng, segments)
   if (!post) notFound()
 
-  // 사이드바 목록은 아직 라우트 규칙(src/lib/blog-route-rules.ts)에 등록된 폴더에만 있다. 없으면 본문만 보여 준다
-  const rule = resolveBlogRouteRule(post.url.slice(1))
   const catName = categoryLabel(post.category)
   const subName = subLabel(post.category, post.sub)
-  const subHref: string | undefined = CONTENT_CATEGORY[post.category]?.subCategory?.[post.sub]?.href
   const en = post.lng === 'en'
-  // 사이드바 선택 상자에는 공개 글이 있는 서브카테고리만 (글 0개인 utils·mongodb 등은 숨김)
-  const availableSubs = [
-    ...new Set(releasedPosts.filter((p) => p.category === post.category && p.lng === post.lng).map((p) => p.sub)),
-  ]
+  // 같은 카테고리·언어의 공개 글로 만든 사이드바. 공개 글은 모두 group·order가 있으므로(빌드 검사) 항상 있다
+  const sidebar = getSidebar(post.category, post.lng)
+  const subHref = sidebar?.subs.find((s) => s.id === post.sub)?.href
+  const groups = sidebar?.groups[post.sub] ?? []
 
   return (
-    <div className={styles.layout} data-has-sidebar={rule ? '' : undefined}>
-      {rule && (
+    <div className={styles.layout} data-has-sidebar={sidebar ? '' : undefined}>
+      {sidebar && (
         <aside className={styles.sidebar}>
-          <BlogSidebar type={rule.type} subType={rule.subType} availableSubs={availableSubs} />
+          <BlogSidebar
+            category={post.category}
+            categoryName={catName}
+            subs={sidebar.subs.map(({ id, name, href }) => ({ id, name, href }))}
+            current={post.sub}
+            groups={groups}
+          />
         </aside>
       )}
 

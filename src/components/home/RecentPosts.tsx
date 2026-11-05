@@ -2,16 +2,21 @@
 // 최근 글. 탭을 바꾸면 서버가 미리 넘겨 준 목록 중에서 고른다
 import Link from 'next/link'
 import { useState } from 'react'
-import { CATEGORIES, CATEGORY_LABEL, categoryLabel, formatDate } from '@/lib/categories'
 import type { PostSummary } from '@/lib/content'
+import { formatDate } from '@/lib/format'
 import styles from './RecentPosts.module.css'
 
-const TABS = [{ key: 'all', label: '전체' }, ...CATEGORIES.map((c) => ({ key: c, label: CATEGORY_LABEL[c] }))]
-
-export default function RecentPosts({ postsByTab }: { postsByTab: Record<string, PostSummary[]> }) {
+/** categories: 공개 글이 있는 카테고리 (서버가 taxonomy 순서로 넘김) */
+export default function RecentPosts({
+  postsByTab,
+  categories,
+}: {
+  postsByTab: Record<string, PostSummary[]>
+  categories: { id: string; name: string }[]
+}) {
   const [tab, setTab] = useState('all')
   const posts = postsByTab[tab] ?? []
-  const tabs = TABS.filter((t) => t.key === 'all' || (postsByTab[t.key]?.length ?? 0) > 0)
+  const tabs = [{ key: 'all', label: '전체' }, ...categories.map((c) => ({ key: c.id, label: c.name }))]
 
   return (
     <div className={styles.recent}>
@@ -41,7 +46,7 @@ export default function RecentPosts({ postsByTab }: { postsByTab: Record<string,
           <article key={post.url} className={styles.item}>
             <div className={styles.meta}>
               <span className={styles.chip} data-tone={post.category}>
-                {categoryLabel(post.category)} · {post.subName}
+                {post.categoryName} · {post.subName}
               </span>
               <time dateTime={post.publishedAt} className={styles.date}>
                 {formatDate(post.publishedAt)}
@@ -60,7 +65,7 @@ export default function RecentPosts({ postsByTab }: { postsByTab: Record<string,
 
       <div className={styles.more}>
         <Link href={tab === 'all' ? '/posts' : `/posts?category=${tab}`} className={styles.moreLink}>
-          {tab === 'all' ? '전체 글 보기' : `${CATEGORY_LABEL[tab as keyof typeof CATEGORY_LABEL]} 글 전체 보기`} →
+          {tab === 'all' ? '전체 글 보기' : `${tabs.find((t) => t.key === tab)?.label ?? tab} 글 전체 보기`} →
         </Link>
       </div>
     </div>
