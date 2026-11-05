@@ -1,6 +1,7 @@
 # 개편 안전장치: 빌드 + URL 비교
 # refactor/v2·main 으로 가는 모든 PR과 refactor/v2 push에서 실행한다.
 # 빌드한 앱을 띄우고 scripts/check-urls.ts 로 urls.before.txt 의 주소를 모두 요청한다.
+# 세션 5부터: 빌드한 글 데이터로 만든 사이드바를 sidebar.before.json 과 비교한다(scripts/check-sidebar.ts).
 name: CI
 
 on:
@@ -64,6 +65,10 @@ jobs:
 
       - name: Build
         run: ${{ steps.pm.outputs.build }}
+
+      # 예전 사이드바 링크가 frontmatter group·order로 만든 사이드바에 모두 있는지 + 시리즈 편수
+      - name: Check sidebar
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-sidebar.ts
 
       - name: Start server
         run: |
