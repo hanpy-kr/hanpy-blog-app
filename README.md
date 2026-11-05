@@ -38,6 +38,15 @@ tags: [Kubernetes, Pod]     # 선택
 형식이 틀리면(날짜 형식, 본문 `#`, 공개 글의 group·order·summary 누락, taxonomy에 없는 카테고리·서브카테고리·그룹) 빌드가 멈춥니다.
 - 배포: AWS Amplify Hosting (`amplify.yml`, Node 22)
 
+### SEO·분석 (세션 6)
+
+- 사이트 전역 설정(사이트명·주소·작성자·GitHub·AdSense·기본 메타데이터): `src/config/site.ts`
+- 페이지 제목은 `제목 | Hanpy Blog` (레이아웃 title 템플릿). 글은 summary → description, canonical, OG(article)·Twitter 카드
+- 글별 OG 이미지: `/og/{글 경로}.png` (`src/app/og/[category]/[lng]/[...segments]/route.tsx`, next/og). 빌드 때 공개 글마다 정적 생성. 글꼴은 `assets/og/`(woff, README 참고)
+- JSON-LD: 글 BlogPosting + BreadcrumbList, 홈 WebSite + Person (`src/lib/structured-data.ts`)
+- `sitemap.xml`: lastmod = `updatedAt`(없으면 `publishedAt`), 같은 sub/slug의 다른 언어 글이 있으면 hreflang. `robots.txt`는 `src/app/robots.ts`
+- GA4: 빌드 환경변수 `NEXT_PUBLIC_GA_ID`(예: Amplify 환경 변수, main 브랜치에만)가 있을 때만 스크립트를 넣는다. 코드에 ID를 적지 않는다
+
 ## code block
 
 - carbon 이미지처럼 드레그 할 수 있는 css 적용
