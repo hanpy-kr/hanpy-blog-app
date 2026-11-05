@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title: post.title, // 레이아웃 템플릿으로 '제목 | Hanpy Blog'
     description: post.summary,
     keywords: post.tags,
-    authors: [{ name: AUTHOR.name, url: AUTHOR.github }],
+    authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
     alternates: {
       canonical: post.url,
       ...(Object.keys(languages).length ? { languages } : {}),
@@ -69,7 +69,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       images: [image],
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt ?? post.publishedAt,
-      authors: [AUTHOR.github],
+      authors: [AUTHOR.url],
       section: categoryLabel(post.category),
       tags: post.tags,
     },

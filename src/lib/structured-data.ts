@@ -1,6 +1,6 @@
 // 구조화 데이터(schema.org JSON-LD) 만들기. 서버 전용 (글 페이지·홈에서 <JsonLd>로 출력)
 // - 글: BlogPosting(작성일·수정일·작성자) + BreadcrumbList(홈 > 카테고리 > 서브카테고리 > 글)
-// - 홈: WebSite + Person(sameAs GitHub)
+// - 홈: WebSite + Person (외부 계정 sameAs는 넣지 않음 — GitHub 주소 비노출, 2026-11-05)
 // 작성자·사이트는 @id로 서로 가리킨다 (같은 사람·사이트로 묶이게)
 import { AUTHOR, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/config/site'
 import { categoryLabel, ogImagePath, subHref, subLabel, type Post } from './content'
@@ -18,9 +18,8 @@ export function personLd() {
     '@type': 'Person',
     '@id': PERSON_ID,
     name: AUTHOR.name,
-    url: SITE_URL,
+    url: AUTHOR.url,
     description: AUTHOR.intro,
-    sameAs: [AUTHOR.github],
   }
 }
 
@@ -65,7 +64,7 @@ export function postLd(post: Post) {
         image: [abs(ogImagePath(post))],
         datePublished: isoDate(post.publishedAt),
         dateModified: isoDate(post.updatedAt ?? post.publishedAt),
-        author: { '@type': 'Person', '@id': PERSON_ID, name: AUTHOR.name, url: SITE_URL, sameAs: [AUTHOR.github] },
+        author: { '@type': 'Person', '@id': PERSON_ID, name: AUTHOR.name, url: AUTHOR.url },
         publisher: { '@id': PERSON_ID },
         isPartOf: { '@id': WEBSITE_ID },
         inLanguage: post.lng,

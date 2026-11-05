@@ -22,9 +22,11 @@ export const OG_LOCALE = { ko: 'ko_KR', en: 'en_US' } as const
 /** RSS 자동 발견 링크. 페이지가 alternates를 따로 정하면 레이아웃 값이 통째로 바뀌므로 그때도 이것을 함께 넣는다 */
 export const RSS_ALTERNATE = { 'application/rss+xml': [{ url: '/rss.xml', title: SITE_NAME }] }
 
+// GitHub 등 외부 계정 주소는 사이트에 노출하지 않는다 (2026-11-05 결정)
 export const AUTHOR = {
   name: 'Hanpy',
-  github: 'https://github.com/hanpy-kr',
+  /** 작성자 URL (메타데이터 authors·article:author·JSON-LD Person). /about이 생기면(세션 7) 그 주소로 */
+  url: SITE_URL,
   tagline: '백엔드·인프라 엔지니어 · AI 트렌드 정리 중',
   intro:
     'Node.js·NestJS 백엔드와 AWS·Kubernetes 인프라를 주로 다룹니다. 요즘은 AI 개발 도구와 LLM 활용 트렌드를 정리하고 있습니다.',
@@ -35,7 +37,7 @@ export const baseMetadata: Metadata = {
   // 하위 페이지의 title은 '제목 | Hanpy Blog'가 된다 (홈은 default)
   title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
-  authors: [{ name: AUTHOR.name, url: AUTHOR.github }],
+  authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
   alternates: { types: RSS_ALTERNATE },
   applicationName: 'hanpy blog',
   verification: {

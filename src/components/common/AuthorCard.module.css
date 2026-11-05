@@ -52,27 +52,3 @@
   line-height: 1.7;
 }
 
-.links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 44px;
-  padding: 0 14px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--bg);
-  color: var(--fg);
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.button:hover {
-  border-color: var(--muted);
-}
