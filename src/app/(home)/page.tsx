@@ -1,12 +1,19 @@
 // 홈 (디자인 시안 'Main'). 시리즈 묶음·태그·검색·광고 자리는 화면이 생기는 세션 7에서 채운다
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import AuthorCard from '@/components/common/AuthorCard'
 import RecentPosts from '@/components/home/RecentPosts'
 import { getPosts, subLabel, toSummary, visibleCategories, type PostSummary } from '@/lib/content'
-import { SITE_DESCRIPTION, SITE_URL } from '@/lib/site'
+import JsonLd from '@/components/seo/JsonLd'
+import { RSS_ALTERNATE, SITE_DESCRIPTION, SITE_URL } from '@/config/site'
+import { homeLd } from '@/lib/structured-data'
 import styles from './page.module.css'
 
 const RECENT_LIMIT = 6
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/', types: RSS_ALTERNATE },
+}
 
 export default function HomePage() {
   const koPosts = getPosts({ lng: 'ko' })
@@ -30,6 +37,7 @@ export default function HomePage() {
 
   return (
     <main>
+      <JsonLd data={homeLd()} />
       <section className={`${styles.wrap} ${styles.hero}`}>
         <div className={styles.heroText}>
           <p className={styles.eyebrow}>{new URL(SITE_URL).host}</p>

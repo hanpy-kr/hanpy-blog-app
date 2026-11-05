@@ -65,6 +65,13 @@ export function getSeries(post: Post): SeriesInfo | undefined {
   return { id: post.series, posts: posts.map(({ url, title }) => ({ url, title })), index: posts.findIndex((p) => p.url === post.url) }
 }
 
+// ── OG 이미지 ───────────────────────────────────────────────────────
+
+export const OG_IMAGE_SIZE = { width: 1200, height: 630 } as const
+
+/** 글별 OG 이미지 주소 (src/app/og/[category]/[lng]/[...segments]/route.tsx 가 빌드 때 만든다) */
+export const ogImagePath = (post: Pick<Post, 'url'>) => `/og${post.url}.png`
+
 // ── 목록 화면용 요약 ─────────────────────────────────────────────────
 
 /** 목록 화면에 넘기는 최소 필드 (클라이언트 컴포넌트로 본문 코드·taxonomy 설명이 넘어가지 않게 이름까지 여기서 붙인다) */

@@ -2,7 +2,7 @@
 // (루트 레이아웃이 여러 개라 어느 라우트에도 맞지 않는 주소는 app/global-not-found.tsx 가 받는다)
 import type { Metadata } from 'next'
 import SiteDocument from '@/components/layout/SiteDocument'
-import { baseMetadata } from '@/lib/site'
+import { baseMetadata } from '@/config/site'
 import '@/styles/globals.css'
 
 export const dynamicParams = false

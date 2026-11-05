@@ -6,7 +6,7 @@ import '@/styles/globals.css'
 import styles from './not-found.module.css'
 
 export const metadata: Metadata = {
-  title: '404 · hanpy blog',
+  title: '페이지를 찾을 수 없습니다 | Hanpy Blog',
   robots: { index: false },
 }
 

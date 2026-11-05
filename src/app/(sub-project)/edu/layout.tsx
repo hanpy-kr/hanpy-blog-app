@@ -1,7 +1,7 @@
 // /edu 루트 레이아웃 (비즈니스 영어 카드)
 import type { Metadata, Viewport } from 'next'
 import AdSenseScript from '@/components/layout/AdSenseScript'
-import { SITE_URL } from '@/lib/site'
+import { SITE_URL } from '@/config/site'
 import './edu.css'
 
 const title = 'Hanpy Education Center - Interactive Learning Platform'

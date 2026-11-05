@@ -1,6 +1,8 @@
 // 전체 글 목록 (한국어, 최신순, 15개씩). ?category=backend 로 카테고리만 볼 수 있다
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { RSS_ALTERNATE, SITE_NAME, baseMetadata } from '@/config/site'
+import { TAXONOMY } from '@/config/taxonomy'
 import { categoryLabel, formatDate, getPosts, subLabel, visibleCategories, type Category } from '@/lib/content'
 import styles from './page.module.css'
 
@@ -13,9 +15,17 @@ const isCategory = (c: string | undefined): c is Category => visibleCategories('
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<Search> }): Promise<Metadata> {
   const { category } = await searchParams
+  const title = isCategory(category) ? `${categoryLabel(category)} 글` : '전체 글'
+  // 카테고리 설명은 taxonomy에서
+  const description = isCategory(category) ? TAXONOMY[category].description : `${SITE_NAME}의 모든 글을 최신순으로 봅니다.`
+  const url = isCategory(category) ? `/posts?category=${category}` : '/posts'
   return {
-    title: isCategory(category) ? `${categoryLabel(category)} 글` : '전체 글',
-    alternates: { canonical: isCategory(category) ? `/posts?category=${category}` : '/posts' },
+    title,
+    description,
+    alternates: { canonical: url, types: RSS_ALTERNATE },
+    // openGraph·twitter는 레이아웃 값을 통째로 바꾸므로 기본값(이미지·사이트명)을 펼쳐 넣는다
+    openGraph: { ...baseMetadata.openGraph, title: `${title} | ${SITE_NAME}`, description, url },
+    twitter: { ...baseMetadata.twitter, title: `${title} | ${SITE_NAME}`, description },
   }
 }
 

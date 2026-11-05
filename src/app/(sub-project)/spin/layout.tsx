@@ -1,7 +1,7 @@
 // /spin 루트 레이아웃. 블로그 스타일과 섞이지 않게 자기 CSS(page.css)만 쓴다
 import type { Metadata, Viewport } from 'next'
 import AdSenseScript from '@/components/layout/AdSenseScript'
-import { SITE_URL } from '@/lib/site'
+import { SITE_URL } from '@/config/site'
 
 const title = 'Lucky Wheel - Free Online Spinning Wheel for Games & Prizes'
 const description =

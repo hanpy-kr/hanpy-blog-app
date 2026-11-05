@@ -1,4 +1,4 @@
-import { AUTHOR } from '@/lib/site'
+import { AUTHOR } from '@/config/site'
 import styles from './Footer.module.css'
 
 export default function Footer() {
