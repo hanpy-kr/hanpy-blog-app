@@ -167,6 +167,7 @@
 .categoryCard[data-tone='design'] { background: var(--t-design); }
 .categoryCard[data-tone='language'] { background: var(--t-language); }
 .categoryCard[data-tone='frontend'] { background: var(--t-frontend); }
+.categoryCard[data-tone='ai'] { background: var(--t-ai); }
 
 .categoryHead {
   display: flex;

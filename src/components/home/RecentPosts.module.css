@@ -78,6 +78,7 @@
 .chip[data-tone='design'] { background: var(--t-design); }
 .chip[data-tone='language'] { background: var(--t-language); }
 .chip[data-tone='frontend'] { background: var(--t-frontend); }
+.chip[data-tone='ai'] { background: var(--t-ai); }
 
 .date {
   color: var(--muted);

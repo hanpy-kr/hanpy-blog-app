@@ -1,6 +1,7 @@
 // Content Collections 설정 (세션 2 PoC에서 검증, 세션 3에서 이식, 세션 4에서 frontmatter 정리)
 // 경로가 곧 메타데이터: _content/{category}/{lng}/{sub}/.../{slug}.mdx → URL /{category}/{lng}/{sub}/.../{slug}
 // 카테고리·언어는 경로에서 읽는다. frontmatter 형식은 계획 문서 'frontmatter 스키마' 표 그대로
+// 경로의 category·sub와 frontmatter group은 src/config/taxonomy.ts 에 등록된 것만 받는다 (세션 5)
 import { defineCollection, defineConfig } from '@content-collections/core'
 import { compileMDX } from '@content-collections/mdx'
 import GithubSlugger from 'github-slugger'
@@ -9,6 +10,9 @@ import rehypePrettyCode, { type Options as PrettyCodeOptions } from 'rehype-pret
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 import { z } from 'zod'
+import { getSubDef, isCategory, subIds, TAXONOMY } from './src/config/taxonomy'
+
+const LNGS = ['ko', 'en']
 
 const prettyCode: PrettyCodeOptions = {
   theme: 'slack-dark', // 기존 설정 유지
@@ -107,6 +111,19 @@ const posts = defineCollection({
     if (parts.length < 4) return context.skip(`경로가 짧음: ${doc._meta.filePath}`)
 
     const where = doc._meta.filePath
+    const sub = rest[0]
+    // 폴더 이름 오타·미등록 서브카테고리는 배포 전에 빌드를 멈춘다 (초안 포함)
+    if (!isCategory(category)) {
+      throw new Error(`${where}: 카테고리 '${category}'가 src/config/taxonomy.ts 에 없습니다 (${Object.keys(TAXONOMY).join(', ')})`)
+    }
+    if (!LNGS.includes(lng)) throw new Error(`${where}: 언어 '${lng}'는 ${LNGS.join('·')}만 받습니다`)
+    const subDef = getSubDef(category, sub)
+    if (!subDef) {
+      throw new Error(`${where}: 서브카테고리 '${category}/${sub}'가 src/config/taxonomy.ts 에 없습니다 (등록된 것: ${subIds(category).join(', ') || '없음'})`)
+    }
+    if (doc.group !== undefined && !subDef.groups.includes(doc.group)) {
+      throw new Error(`${where}: group '${doc.group}'는 '${category}/${sub}'의 그룹이 아닙니다 (taxonomy groups: ${subDef.groups.join(', ')})`)
+    }
     const { toc, h1Lines, readingMinutes } = analyze(doc.content)
     // 규칙 위반은 빌드를 멈춘다 (초안도 마찬가지: 공개하는 순간 깨지지 않게)
     if (h1Lines.length) {
@@ -144,7 +161,7 @@ const posts = defineCollection({
       ads: doc.ads,
       category,
       lng,
-      sub: rest[0],
+      sub,
       segments: rest, // [sub, ...slug] — frontend/ko/nextjs/seo/next-sitemap 처럼 5단도 있음
       url: '/' + doc._meta.path,
       released,

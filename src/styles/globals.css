@@ -26,6 +26,7 @@
   --t-design: #faf3f5;
   --t-language: #faf6f5;
   --t-frontend: #f2f8f5;
+  --t-ai: #f4f1fa;
 
   /* 코드 줄 강조·diff */
   --highlight-line: rgba(96, 165, 250, 0.16);
@@ -57,6 +58,7 @@
   --t-design: #1b1521;
   --t-language: #1b1717;
   --t-frontend: #121d1a;
+  --t-ai: #17142a;
   color-scheme: dark;
 }
 

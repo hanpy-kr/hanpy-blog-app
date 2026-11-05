@@ -1,19 +1,20 @@
 // 전체 글 목록 (한국어, 최신순, 15개씩). ?category=backend 로 카테고리만 볼 수 있다
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { CATEGORIES, CATEGORY_LABEL, formatDate, getPosts, subLabel, type Category } from '@/lib/content'
+import { categoryLabel, formatDate, getPosts, subLabel, visibleCategories, type Category } from '@/lib/content'
 import styles from './page.module.css'
 
 const PAGE_SIZE = 15
 
 type Search = { page?: string; category?: string }
 
-const isCategory = (c: string | undefined): c is Category => CATEGORIES.includes(c as Category)
+// 공개 글이 있는 카테고리만 필터로 받는다 (글 0개인 ai 등은 ?category= 로 와도 전체 글을 보여 줌)
+const isCategory = (c: string | undefined): c is Category => visibleCategories('ko').some((v) => v.id === c)
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<Search> }): Promise<Metadata> {
   const { category } = await searchParams
   return {
-    title: isCategory(category) ? `${CATEGORY_LABEL[category]} 글` : '전체 글',
+    title: isCategory(category) ? `${categoryLabel(category)} 글` : '전체 글',
     alternates: { canonical: isCategory(category) ? `/posts?category=${category}` : '/posts' },
   }
 }
@@ -28,12 +29,12 @@ export default async function PostsArchivePage({ searchParams }: { searchParams:
   const href = (page: number) =>
     `/posts?${new URLSearchParams({ ...(category ? { category } : {}), ...(page > 1 ? { page: String(page) } : {}) })}`.replace(/\?$/, '')
 
-  const filters = [{ id: undefined, label: '전체', count: getPosts({ lng: 'ko' }).length }, ...CATEGORIES.map((c) => ({ id: c, label: CATEGORY_LABEL[c], count: getPosts({ lng: 'ko', category: c }).length }))].filter((f) => f.count > 0)
+  const filters = [{ id: undefined, label: '전체', count: getPosts({ lng: 'ko' }).length }, ...visibleCategories('ko').map((c) => ({ id: c.id, label: c.name, count: c.count }))]
 
   return (
     <main className={styles.main}>
       <p className={styles.eyebrow}>/posts{category ? `?category=${category}` : ''}</p>
-      <h1 className={styles.title}>{category ? `${CATEGORY_LABEL[category]} 글` : '전체 글'}</h1>
+      <h1 className={styles.title}>{category ? `${categoryLabel(category)} 글` : '전체 글'}</h1>
       <p className={styles.lead}>최신 글부터 {all.length}개</p>
 
       <nav aria-label="카테고리 필터" className={styles.filters}>
@@ -54,7 +55,7 @@ export default async function PostsArchivePage({ searchParams }: { searchParams:
           <li key={post.url} className={styles.item}>
             <div className={styles.meta}>
               <span className={styles.chip} data-tone={post.category}>
-                {CATEGORY_LABEL[post.category as Category] ?? post.category} · {subLabel(post.category, post.sub)}
+                {categoryLabel(post.category)} · {subLabel(post.category, post.sub)}
               </span>
               <time dateTime={post.publishedAt} className={styles.date}>
                 {formatDate(post.publishedAt)}
