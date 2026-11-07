@@ -1,0 +1,151 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--muted);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.trigger:hover {
+  color: var(--fg);
+}
+
+.triggerLabel,
+.kbd {
+  display: none;
+}
+
+.kbd {
+  padding: 1px 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+@media (min-width: 900px) {
+  .triggerLabel,
+  .kbd {
+    display: inline;
+  }
+}
+
+.dialog {
+  width: min(680px, calc(100vw - 24px));
+  max-height: min(640px, calc(100dvh - 48px));
+  margin: 48px auto auto;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--bg);
+  color: var(--fg);
+  box-shadow: 0 20px 60px rgb(15 23 42 / 0.25);
+}
+
+.dialog::backdrop {
+  background: rgb(15 23 42 / 0.45);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 8px 16px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 17px;
+  outline: none;
+}
+
+.input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.close {
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.status {
+  margin: 0;
+  padding: 10px 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.results {
+  overflow-y: auto;
+  margin: 0;
+  padding: 0 8px 8px;
+  list-style: none;
+}
+
+.hit {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 10px;
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.hit:hover,
+.hit:focus-visible {
+  background: var(--accent-weak);
+  outline: none;
+}
+
+.hitMeta {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.hitTitle {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.hitSummary {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}

@@ -2,7 +2,7 @@
 // Next 메타데이터는 최상위 키 단위로 합쳐져서, 페이지가 openGraph·twitter·alternates를 정하면 레이아웃 값이 통째로 바뀐다.
 // 그래서 새 화면은 이 함수로 기본값(사이트명·기본 OG 이미지·RSS 링크)을 펼쳐 넣는다
 import type { Metadata } from 'next'
-import { OG_LOCALE, RSS_ALTERNATE, SITE_NAME, baseMetadata } from '@/config/site'
+import { OG_LOCALE, SITE_NAME, baseMetadata, rssAlternate } from '@/config/site'
 
 export function pageMetadata({
   title,
@@ -23,7 +23,7 @@ export function pageMetadata({
   return {
     title,
     description,
-    alternates: { canonical: path, types: RSS_ALTERNATE },
+    alternates: { canonical: path, types: rssAlternate(lng) },
     openGraph: {
       ...baseMetadata.openGraph,
       title: full,

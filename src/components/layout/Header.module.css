@@ -120,6 +120,45 @@
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
 }
 
+/* KO/EN (세션 7b). 폰에서는 다른 언어 하나만 보인다 */
+.lang {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.langLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 100%;
+  padding: 0 8px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.langLink:hover {
+  color: var(--fg);
+}
+
+.langLink[aria-current='true'] {
+  display: none;
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* 폰: RSS 아이콘은 바닥글에 있으므로 숨김 (머리글 폭 390px 안에 들게) */
+.rssIcon {
+  display: none;
+}
+
 @media (min-width: 900px) {
   .inner {
     gap: 16px 28px;
@@ -140,5 +179,13 @@
 
   .menu {
     display: none;
+  }
+
+  .langLink[aria-current='true'] {
+    display: flex;
+  }
+
+  .rssIcon {
+    display: flex;
   }
 }
