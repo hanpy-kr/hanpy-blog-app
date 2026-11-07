@@ -37,3 +37,6 @@ next-env.d.ts
 
 # test
 _test.md
+release-report.md
+ui-report.md
+shots/
