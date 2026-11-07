@@ -1,9 +1,10 @@
 // 구조화 데이터(schema.org JSON-LD) 만들기. 서버 전용 (글 페이지·홈에서 <JsonLd>로 출력)
 // - 글: BlogPosting(작성일·수정일·작성자) + BreadcrumbList(홈 > 카테고리 > 서브카테고리 > 글)
 // - 홈: WebSite + Person (외부 계정 sameAs는 넣지 않음 — GitHub 주소 비노출, 2026-11-05)
+// - /about: ProfilePage(mainEntity = Person) (세션 7)
 // 작성자·사이트는 @id로 서로 가리킨다 (같은 사람·사이트로 묶이게)
 import { AUTHOR, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/config/site'
-import { categoryLabel, ogImagePath, subHref, subLabel, type Post } from './content'
+import { categoryHref, categoryLabel, ogImagePath, subLabel, subListHref, type Post } from './content'
 
 const abs = (path: string) => new URL(path, SITE_URL).toString()
 
@@ -35,6 +36,14 @@ export function websiteLd() {
   }
 }
 
+/** /about: ProfilePage + WebSite */
+export function aboutLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [{ '@type': 'ProfilePage', url: AUTHOR.url, name: `${AUTHOR.name} 소개`, mainEntity: personLd() }, websiteLd()],
+  }
+}
+
 /** 홈: WebSite + Person */
 export function homeLd() {
   return { '@context': 'https://schema.org', '@graph': [websiteLd(), personLd()] }
@@ -45,10 +54,9 @@ export function postLd(post: Post) {
   const url = abs(post.url)
   const crumbs: { name: string; item: string }[] = [
     { name: SITE_NAME, item: SITE_URL },
-    { name: categoryLabel(post.category), item: abs(`/posts?category=${post.category}`) },
+    { name: categoryLabel(post.category), item: abs(categoryHref(post.category, post.lng)) },
+    { name: subLabel(post.category, post.sub), item: abs(subListHref(post.category, post.lng, post.sub)) },
   ]
-  const sub = subHref(post.category, post.lng, post.sub)
-  if (sub) crumbs.push({ name: subLabel(post.category, post.sub), item: abs(sub) })
   crumbs.push({ name: post.title, item: url })
 
   return {

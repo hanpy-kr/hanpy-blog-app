@@ -1,6 +1,6 @@
 'use client'
 // 주 메뉴. 넓은 화면은 가로 메뉴, 폰은 ☰ 버튼(<details>)으로 펼친다
-// 시리즈·About·검색·언어 전환은 해당 화면이 생기는 세션 7에서 추가
+// 카테고리(→ /{category}/ko 목록) · 시리즈 · About (디자인 시안 머리글, 세션 7). 검색·언어 전환은 세션 7b
 // 카테고리 목록은 머리글(서버)이 넘겨 준다: 공개 글이 있는 카테고리만, taxonomy 등록 순서
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -17,15 +17,16 @@ export default function SiteNav({ categories }: { categories: { id: string; name
   }, [pathname])
 
   const LINKS = [
-    ...categories.map((c) => ({ href: `/posts?category=${c.id}`, label: c.name, match: `/${c.id}/` })),
-    { href: '/posts', label: '전체 글', match: '/posts' },
+    ...categories.map((c) => ({ href: `/${c.id}/ko`, label: c.name, match: `/${c.id}/` })),
+    { href: '/series/ko', label: '시리즈', match: '/series/' },
+    { href: '/about', label: 'About', match: '/about' },
   ]
   const links = LINKS.map((l) => (
     <Link
       key={l.href}
       href={l.href}
       className={styles.navLink}
-      aria-current={pathname.startsWith(l.match) ? 'page' : undefined}
+      aria-current={(pathname + '/').startsWith(l.match) ? 'page' : undefined}
     >
       {l.label}
     </Link>

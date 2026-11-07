@@ -1,4 +1,5 @@
-// 작성자 카드 (홈 첫 화면 오른쪽, 글 끝). 문구는 2026-11-02 확정본. GitHub 버튼은 2026-11-05 삭제(주소 비노출)
+// 작성자 카드 (홈 첫 화면 오른쪽, 글 끝). 문구는 2026-11-02 확정본. GitHub 버튼은 2026-11-05 삭제(주소 비노출), About 버튼은 세션 7
+import Link from 'next/link'
 import { AUTHOR } from '@/config/site'
 import styles from './AuthorCard.module.css'
 
@@ -15,6 +16,9 @@ export default function AuthorCard({ withIntro = false, as: Tag = 'aside' }: { w
         </div>
       </div>
       {withIntro && <p className={styles.intro}>{AUTHOR.intro}</p>}
+      <Link href="/about" className={styles.button}>
+        About 보기
+      </Link>
     </Tag>
   )
 }

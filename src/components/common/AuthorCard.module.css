@@ -52,3 +52,22 @@
   line-height: 1.7;
 }
 
+
+/* /about 링크 (디자인 시안 'About 보기') */
+.button {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 10px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.button:hover {
+  opacity: 0.9;
+}

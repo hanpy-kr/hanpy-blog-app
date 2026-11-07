@@ -1,28 +1,81 @@
-// sitemap.xml: 공개 글 전부 + 홈·목록·/spin·RSS
-// lastmod = updatedAt(없으면 publishedAt). 다른 언어 짝이 있는 글은 hreflang(xhtml:link)을 함께 낸다
+// sitemap.xml: 공개 글 전부 + 홈·목록·소개·/spin·RSS
+// lastmod = updatedAt(없으면 publishedAt). 목록 화면은 그 안에 든 글 중 가장 최근 날짜 (빌드할 때마다 날짜가 바뀌지 않게)
+// 다른 언어 짝이 있는 글은 hreflang(xhtml:link)을 함께 낸다
+// 세션 7: 카테고리·서브카테고리 목록, 시리즈 목록·목차, 태그(글 2개 이상만), /about
 import type { MetadataRoute } from 'next'
 import { SITE_URL } from '@/config/site'
-import { getAlternates, releasedPosts } from '@/lib/content'
+import {
+  LNGS,
+  TAG_INDEX_MIN_POSTS,
+  categoryHref,
+  categoryLngs,
+  getAlternates,
+  getPosts,
+  getSeriesList,
+  getTagPosts,
+  getTags,
+  releasedPosts,
+  seriesLngs,
+  subListHref,
+  visibleSubs,
+  type Post,
+} from '@/lib/content'
 
 const abs = (path: string) => SITE_URL + path
+const modified = (p: Post) => p.updatedAt ?? p.publishedAt
+const latestOf = (posts: Post[]) => posts.map(modified).toSorted().at(-1)
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const modified = (p: (typeof releasedPosts)[number]) => p.updatedAt ?? p.publishedAt
-  // 홈·목록·RSS는 가장 최근에 바뀐 글 날짜 (빌드할 때마다 날짜가 바뀌지 않게)
-  const latest = releasedPosts.map(modified).toSorted().at(-1)
+  const latest = latestOf(releasedPosts)
+
+  const posts = releasedPosts.map((p) => {
+    const languages = getAlternates(p)
+    return {
+      url: abs(p.url),
+      lastModified: modified(p),
+      ...(Object.keys(languages).length
+        ? { alternates: { languages: Object.fromEntries(Object.entries(languages).map(([l, u]) => [l, abs(u)])) } }
+        : {}),
+    }
+  })
+
+  const categories = categoryLngs().flatMap(({ category, lng }) => {
+    const inCategory = getPosts({ lng, category })
+    return [
+      { url: abs(categoryHref(category, lng)), lastModified: latestOf(inCategory), priority: 0.7 },
+      ...visibleSubs(category, lng).map((s) => ({
+        url: abs(subListHref(category, lng, s.id)),
+        lastModified: latestOf(inCategory.filter((p) => p.sub === s.id)),
+        priority: 0.6,
+      })),
+    ]
+  })
+
+  const series = seriesLngs().flatMap((lng) => {
+    const list = getSeriesList(lng)
+    return [
+      { url: abs(`/series/${lng}`), lastModified: latestOf(list.flatMap((s) => s.posts)), priority: 0.8 },
+      ...list.map((s) => ({ url: abs(s.href), lastModified: latestOf(s.posts), priority: 0.7 })),
+    ]
+  })
+
+  // 글 1개짜리 태그는 noindex라 넣지 않는다
+  const tags = LNGS.flatMap((lng) => {
+    const list = getTags(lng).filter((t) => t.count >= TAG_INDEX_MIN_POSTS)
+    if (list.length === 0) return []
+    return [
+      { url: abs(`/tags/${lng}`), lastModified: latestOf(releasedPosts.filter((p) => p.lng === lng)), priority: 0.4 },
+      ...list.map((t) => ({ url: abs(t.href), lastModified: latestOf(getTagPosts(lng, t.slug)), priority: 0.4 })),
+    ]
+  })
 
   return [
     { url: SITE_URL, lastModified: latest, priority: 1 },
-    ...releasedPosts.map((p) => {
-      const languages = getAlternates(p)
-      return {
-        url: abs(p.url),
-        lastModified: modified(p),
-        ...(Object.keys(languages).length
-          ? { alternates: { languages: Object.fromEntries(Object.entries(languages).map(([l, u]) => [l, abs(u)])) } }
-          : {}),
-      }
-    }),
+    ...posts,
+    ...categories,
+    ...series,
+    ...tags,
+    { url: abs('/about'), lastModified: latest, priority: 0.6 },
     { url: `${SITE_URL}/spin`, lastModified: '2025-08-10', priority: 1 },
     { url: `${SITE_URL}/posts`, lastModified: latest, priority: 0.8 },
     { url: `${SITE_URL}/rss.xml`, lastModified: latest, priority: 0.5 },

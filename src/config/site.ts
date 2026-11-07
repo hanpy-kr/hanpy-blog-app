@@ -25,8 +25,8 @@ export const RSS_ALTERNATE = { 'application/rss+xml': [{ url: '/rss.xml', title:
 // GitHub 등 외부 계정 주소는 사이트에 노출하지 않는다 (2026-11-05 결정)
 export const AUTHOR = {
   name: 'Hanpy',
-  /** 작성자 URL (메타데이터 authors·article:author·JSON-LD Person). /about이 생기면(세션 7) 그 주소로 */
-  url: SITE_URL,
+  /** 작성자 URL (메타데이터 authors·article:author·JSON-LD Person) = 소개 페이지 (세션 7) */
+  url: `${SITE_URL}/about`,
   tagline: '백엔드·인프라 엔지니어 · AI 트렌드 정리 중',
   intro:
     'Node.js·NestJS 백엔드와 AWS·Kubernetes 인프라를 주로 다룹니다. 요즘은 AI 개발 도구와 LLM 활용 트렌드를 정리하고 있습니다.',

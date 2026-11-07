@@ -1,15 +1,18 @@
-// 홈 (디자인 시안 'Main'). 시리즈 묶음·태그·검색·광고 자리는 화면이 생기는 세션 7에서 채운다
+// 홈 (디자인 시안 'Main'). 시리즈로 읽기·많이 쓴 태그·카테고리 목록 링크는 세션 7a, 검색·광고 자리·Projects는 세션 7b
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import AuthorCard from '@/components/common/AuthorCard'
 import RecentPosts from '@/components/home/RecentPosts'
-import { getPosts, subLabel, toSummary, visibleCategories, type PostSummary } from '@/lib/content'
+import SeriesCards from '@/components/list/SeriesCards'
+import { categoryHref, getPosts, getSeriesList, getTags, subLabel, toSummary, visibleCategories, type PostSummary } from '@/lib/content'
 import JsonLd from '@/components/seo/JsonLd'
 import { RSS_ALTERNATE, SITE_DESCRIPTION, SITE_URL } from '@/config/site'
 import { homeLd } from '@/lib/structured-data'
 import styles from './page.module.css'
 
 const RECENT_LIMIT = 6
+const HOME_SERIES = 4
+const HOME_TAGS = 12
 
 export const metadata: Metadata = {
   alternates: { canonical: '/', types: RSS_ALTERNATE },
@@ -25,6 +28,11 @@ export default function HomePage() {
   for (const c of visible) {
     recent[c.id] = koPosts.filter((p) => p.category === c.id).slice(0, RECENT_LIMIT).map(toSummary)
   }
+
+  // 시리즈: 편수 많은 순 4개 (전체는 /series/ko)
+  const allSeries = getSeriesList('ko')
+  const series = allSeries.toSorted((a, b) => b.posts.length - a.posts.length).slice(0, HOME_SERIES)
+  const tags = getTags('ko').slice(0, HOME_TAGS)
 
   // 카테고리별 글 수와 서브카테고리 내역 (글 많은 순)
   const categories = visible
@@ -53,6 +61,10 @@ export default function HomePage() {
               <dd>{koPosts.length}</dd>
             </div>
             <div>
+              <dt>시리즈</dt>
+              <dd>{allSeries.length}</dd>
+            </div>
+            <div>
               <dt>카테고리</dt>
               <dd>{categories.length}</dd>
             </div>
@@ -63,9 +75,36 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section aria-labelledby="series-heading" className={`${styles.wrap} ${styles.seriesBand}`}>
+        <div className={styles.sectionHead}>
+          <h2 id="series-heading" className={styles.sectionTitle}>
+            시리즈로 읽기
+          </h2>
+          <Link href="/series/ko" className={styles.more}>
+            시리즈 {allSeries.length}개 전체 보기 →
+          </Link>
+        </div>
+        <SeriesCards series={series} />
+      </section>
+
       <section aria-labelledby="recent-heading" className={`${styles.wrap} ${styles.recent}`}>
         <RecentPosts postsByTab={recent} categories={visible.map(({ id, name }) => ({ id, name }))} />
-        <aside aria-label="새 글 받아보기" className={styles.recentAside}>
+        <aside aria-label="태그와 새 글 받아보기" className={styles.recentAside}>
+          <div className={styles.tags}>
+            <h2 className={styles.asideTitle}>많이 쓴 태그</h2>
+            <ul className={styles.tagList}>
+              {tags.map((t) => (
+                <li key={t.slug}>
+                  <Link href={t.href} className={styles.tagLink}>
+                    #{t.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Link href="/tags/ko" className={styles.more}>
+              태그 전체 보기 →
+            </Link>
+          </div>
           <div className={styles.rss}>
             <h2 className={styles.asideTitle}>새 글 받아보기</h2>
             <p className={styles.asideText}>RSS 리더에 등록하면 새 글이 올라올 때 바로 받아볼 수 있습니다.</p>
@@ -83,7 +122,7 @@ export default function HomePage() {
           </h2>
           <div className={styles.categoryGrid}>
             {categories.map((c) => (
-              <Link key={c.id} href={`/posts?category=${c.id}`} className={styles.categoryCard} data-tone={c.id}>
+              <Link key={c.id} href={categoryHref(c.id, 'ko')} className={styles.categoryCard} data-tone={c.id}>
                 <span className={styles.categoryHead}>
                   <span className={styles.categoryName}>{c.name}</span>
                   <span className={styles.categoryCount}>{c.count}편</span>
