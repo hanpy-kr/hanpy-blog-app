@@ -1,4 +1,6 @@
-/* 높이 고정 (광고가 늦게 떠도 본문이 밀리지 않게) */
+/* 높이 고정 (광고가 늦게 떠도 본문이 밀리지 않게)
+   AdSense는 광고를 넣을 때 부모 요소에 height: auto !important 를 인라인으로 넣기도 해서,
+   광고가 비면(unfilled) 자리가 0으로 접혀 본문이 당겨졌다(CI 폰, 세션 8). min-height로 한 번 더 고정한다 */
 .slot {
   display: flex;
   flex-direction: column;
@@ -17,24 +19,28 @@
   letter-spacing: 0.08em;
 }
 
+.slot {
+  --ad-h: 250px;
+}
+
 .box {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 250px;
+  height: var(--ad-h);
+  min-height: var(--ad-h);
   overflow: hidden;
   border-radius: 10px;
   background: var(--surface);
 }
 
-.slot[data-placement='in-article'] .box {
-  height: 280px;
+.slot[data-placement='in-article'] {
+  --ad-h: 280px;
 }
 
 .slot[data-placement='sidebar'] .box {
   max-width: 300px;
-  height: 250px;
 }
 
 .ins {
