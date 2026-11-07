@@ -243,6 +243,22 @@ async function ga() {
   }
 }
 
+// ── 5b. 광고 자리 (서버 HTML) ─────────────────────────────────────
+// AdSlot은 높이를 잡은 빈 자리만 서버에서 그리고, 광고 요청(<ins>)은 화면 근처에서 브라우저가 넣는다(check-ui가 확인)
+const AD_CLIENT = 'ca-pub-8185415229814052'
+async function ads(locs: string[]) {
+  const home = (await get('/')).body
+  check('ads', '자동 광고 스크립트(adsbygoogle.js, 기존 그대로)', home.includes(`adsbygoogle.js?client=${AD_CLIENT}`))
+  check('ads', '홈 사이드 광고 자리', home.includes('data-placement="sidebar"'))
+  const post = (await get('/backend/ko/security/auth-05-jwt')).body
+  check('ads', '글 본문 중간 광고 자리', (post.match(/data-placement="in-article"/g) ?? []).length === 1)
+  check('ads', '글 오른쪽 사이드 광고 자리', (post.match(/data-placement="sidebar"/g) ?? []).length === 1)
+  // 모든 글: 본문 중간 자리는 0~1개 (## 3개 이상인 글만)
+  const posts = locs.map(pathOf).filter((p) => p.split('/').length >= 5 && !p.startsWith('/series/') && !p.startsWith('/tags/') && !p.startsWith('/og/'))
+  const counts = await pool(posts, 12, async (p) => ((await get(p)).body.match(/data-placement="in-article"/g) ?? []).length)
+  check('ads', `글마다 본문 중간 자리 0~1개 (${posts.length}개 글)`, counts.every((n) => n <= 1), `있는 글 ${counts.filter((n) => n === 1).length}개`)
+}
+
 // ── 6. 404·리다이렉트 ──────────────────────────────────────────────
 async function errors() {
   for (const path of ['/no-such-page', '/backend/ko/security/no-such-post', '/series/ko/no-such-series', '/tags/ko/no-such-tag-xyz', '/og/backend/ko/x.png', '/series', '/nextjs']) {
@@ -280,6 +296,7 @@ await robots()
 await rss()
 await pages(locs)
 await ga()
+await ads(locs)
 await errors()
 if (LIVE) await live()
 
