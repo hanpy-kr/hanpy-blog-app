@@ -9,7 +9,7 @@ export const SITE_NAME = 'Hanpy Blog'
 export const SITE_DESCRIPTION =
   '직접 만들고 운영하며 배운 것을 시리즈로 정리합니다. 처음부터 순서대로 읽으면 한 주제를 끝까지 이해할 수 있게 씁니다.'
 
-/** 영어 화면(/en)·영어 피드용 소개 — 위 확정 문구를 옮긴 것 (세션 7b, 사용자 확인 전) */
+/** 영어 화면(/en)·영어 피드용 소개 — 위 확정 문구를 옮긴 것 (세션 7b, 2026-11-07 사용자 확정) */
 export const SITE_DESCRIPTION_EN =
   'Notes from building and running real systems, written as series. Read a series from the start to understand one topic end to end.'
 
@@ -22,8 +22,8 @@ export const ADSENSE_CLIENT = 'ca-pub-8185415229814052'
  * 빈 자리 모양을 미리 보려면 빌드 환경변수 NEXT_PUBLIC_AD_PREVIEW=1
  */
 export const AD_SLOTS: Partial<Record<'in-article' | 'sidebar', string>> = {
-  // 'in-article': '1234567890',
-  // sidebar: '1234567890',
+  'in-article': '5145013792', // 본문 중간 (2026-11-07 사용자 제공)
+  sidebar: '7928069746', // 오른쪽 목차 아래·홈 사이드 (2026-11-07 사용자 제공)
 }
 
 /** GA4 측정 ID. 코드에 적지 않고 빌드 환경변수로만 받는다 (Amplify 환경 변수 NEXT_PUBLIC_GA_ID). 없으면 GA 스크립트를 내지 않는다 */
