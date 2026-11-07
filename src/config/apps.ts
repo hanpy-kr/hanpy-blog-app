@@ -33,7 +33,7 @@ export const APPS: readonly AppDef[] = [
     sitemap: { lastModified: '2025-08-10', priority: 1 },
   },
   {
-    // 세션 6까지 sitemap에 없던 앱이라 노출 설정은 그대로 둠 (홈·사이트맵에 넣을지는 사용자 결정)
+    // 홈·사이트맵 비노출 유지 (2026-11-07 사용자 결정)
     slug: 'edu',
     name: 'Hanpy Education Center',
     description: 'Interactive learning platform for business English and educational content',
