@@ -13,7 +13,7 @@ export default function SeriesCards({ series, headingLevel = 3 }: { series: Seri
             <span className={styles.cardWhere}>
               {categoryLabel(s.category)} · {subLabel(s.category, s.sub)}
             </span>
-            <H className={styles.cardTitle} style={{ margin: 0 }}>
+            <H className={styles.cardTitle}>
               {s.name}
             </H>
             <span className={styles.cardMeta}>

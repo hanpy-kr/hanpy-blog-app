@@ -1,8 +1,9 @@
 // sitemap.xml: 공개 글 전부 + 홈·목록·소개·/spin·RSS
 // lastmod = updatedAt(없으면 publishedAt). 목록 화면은 그 안에 든 글 중 가장 최근 날짜 (빌드할 때마다 날짜가 바뀌지 않게)
 // 다른 언어 짝이 있는 글은 hreflang(xhtml:link)을 함께 낸다
-// 세션 7: 카테고리·서브카테고리 목록, 시리즈 목록·목차, 태그(글 2개 이상만), /about
+// 세션 7: 카테고리·서브카테고리 목록, 시리즈 목록·목차, 태그(글 2개 이상만), /about, /en, 앱 등록부(src/config/apps.ts)
 import type { MetadataRoute } from 'next'
+import { APPS } from '@/config/apps'
 import { SITE_URL } from '@/config/site'
 import {
   LNGS,
@@ -27,6 +28,7 @@ const latestOf = (posts: Post[]) => posts.map(modified).toSorted().at(-1)
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const latest = latestOf(releasedPosts)
+  const enPosts = releasedPosts.filter((p) => p.lng === 'en')
 
   const posts = releasedPosts.map((p) => {
     const languages = getAlternates(p)
@@ -76,8 +78,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...series,
     ...tags,
     { url: abs('/about'), lastModified: latest, priority: 0.6 },
-    { url: `${SITE_URL}/spin`, lastModified: '2025-08-10', priority: 1 },
+    ...(enPosts.length ? [{ url: abs('/en'), lastModified: latestOf(enPosts), priority: 0.8 }] : []),
+    ...APPS.filter((a) => a.sitemap).map((a) => ({ url: abs(a.href), lastModified: a.sitemap!.lastModified, priority: a.sitemap!.priority })),
     { url: `${SITE_URL}/posts`, lastModified: latest, priority: 0.8 },
     { url: `${SITE_URL}/rss.xml`, lastModified: latest, priority: 0.5 },
+    ...(enPosts.length ? [{ url: abs('/en/rss.xml'), lastModified: latestOf(enPosts), priority: 0.5 }] : []),
   ]
 }
