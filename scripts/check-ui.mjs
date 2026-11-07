@@ -156,8 +156,14 @@ for (const [label, viewport, first] of [
     const page = await ctx.newPage()
     await page.addInitScript(() => {
       window.__cls = 0
+      window.__shifts = []
+      const name = (n) => (n ? `${n.nodeName.toLowerCase()}${n.id ? '#' + n.id : ''}${typeof n.className === 'string' && n.className ? '.' + n.className.split(' ')[0].slice(0, 30) : ''}` : '?')
       new PerformanceObserver((list) => {
-        for (const e of list.getEntries()) if (!e.hadRecentInput) window.__cls += e.value
+        for (const e of list.getEntries()) {
+          if (e.hadRecentInput) continue
+          window.__cls += e.value
+          window.__shifts.push(`${e.value.toFixed(3)}@${Math.round(e.startTime)}ms ${e.sources.map((x) => `${name(x.node)} ${Math.round(x.previousRect.y)}→${Math.round(x.currentRect.y)}`).join(', ')}`)
+        }
       }).observe({ type: 'layout-shift', buffered: true })
     })
     await page.goto(BASE + POST, { waitUntil: 'load' })
@@ -182,7 +188,15 @@ for (const [label, viewport, first] of [
     }
     check(`ads ${label}`, '처음엔 광고 요청 없음(지연 로드)', before === 0, `처음 ins ${before}개`)
     const cls = await page.evaluate(() => window.__cls)
-    check(`ads ${label}`, 'CLS 0.1 미만 (끝까지 스크롤)', cls < 0.1, cls.toFixed(4))
+    const shifts = await page.evaluate(() => window.__shifts.toSorted((a, b) => parseFloat(b) - parseFloat(a)).slice(0, 3))
+    // 페이지 바깥에서 들어온 요소(자동 광고 등) 기록
+    const injected = await page.evaluate(() =>
+      [...document.querySelectorAll('ins.adsbygoogle, iframe, [id^="aswift"], .google-auto-placed')]
+        .filter((e) => !e.closest('[data-placement]'))
+        .map((e) => `${e.nodeName.toLowerCase()}.${String(e.className).split(' ').slice(0, 2).join('.')} h${Math.round(e.getBoundingClientRect().height)}`)
+        .slice(0, 5),
+    )
+    check(`ads ${label}`, 'CLS 0.1 미만 (끝까지 스크롤)', cls < 0.1, `${cls.toFixed(4)} ${cls >= 0.01 ? `| 큰 밀림: ${shifts.join(' / ')}` : ''}${injected.length ? ` | 자리 밖 광고 요소: ${injected.join(', ')}` : ''}`)
     if (SHOTS) {
       await page.evaluate(() => document.querySelector('[data-placement="in-article"]')?.scrollIntoView({ block: 'center' }))
       await page.screenshot({ path: `${SHOTS}/ad_in-article_${viewport.width}.png` })
