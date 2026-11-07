@@ -38,6 +38,21 @@ tags: [Kubernetes, Pod]     # 선택
 형식이 틀리면(날짜 형식, 본문 `#`, 공개 글의 group·order·summary 누락, taxonomy에 없는 카테고리·서브카테고리·그룹) 빌드가 멈춥니다.
 - 배포: AWS Amplify Hosting (`amplify.yml`, Node 22)
 
+### 목록·시리즈·태그 (세션 7a)
+
+| 주소 | 내용 |
+| --- | --- |
+| `/{category}/{lng}` | 카테고리: 서브카테고리 카드 · 시리즈 · 최근 글 |
+| `/{category}/{lng}/{sub}` | 서브카테고리: 사이드바 순서 글 목록 (글 라우트 `[...segments]`가 세그먼트 하나짜리 주소를 처리) |
+| `/series/{lng}`, `/series/{lng}/{id}` | 시리즈 목록, 시리즈 목차 |
+| `/tags/{lng}`, `/tags/{lng}/{tag}` | 태그 전체, 태그별 글 (글 1개짜리 태그는 noindex·사이트맵 제외) |
+| `/about` | 작성자 소개 (작성자 URL·JSON-LD Person url) |
+
+- 시리즈 이름: `src/config/series.ts` (frontmatter `series`가 여기 없으면 빌드 중단). 글 순서는 사이드바 순서
+- 글 페이지: 시리즈 상자(n/m, 목차) · 이전/다음 글 · 함께 읽을 글(같은 시리즈를 뺀 글 중 태그 겹침 많은 순 3개) · 태그 칩 링크
+- 태그 주소: 소문자, 공백·특수문자 → `-` (`Node.js` → `/tags/ko/node-js`)
+- 새 화면의 메타데이터는 `src/lib/page-metadata.ts`의 `pageMetadata()`로 (기본 OG·Twitter·RSS 링크 유지)
+
 ### SEO·분석 (세션 6)
 
 - 사이트 전역 설정(사이트명·주소·작성자·GitHub·AdSense·기본 메타데이터): `src/config/site.ts`

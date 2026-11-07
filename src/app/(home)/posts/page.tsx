@@ -3,8 +3,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { RSS_ALTERNATE, SITE_NAME, baseMetadata } from '@/config/site'
 import { TAXONOMY } from '@/config/taxonomy'
-import { categoryLabel, formatDate, getPosts, subLabel, visibleCategories, type Category } from '@/lib/content'
-import styles from './page.module.css'
+import { categoryLabel, getPosts, visibleCategories, type Category } from '@/lib/content'
+import PostList from '@/components/list/PostList'
+import styles from '@/components/list/List.module.css'
 
 const PAGE_SIZE = 15
 
@@ -60,24 +61,7 @@ export default async function PostsArchivePage({ searchParams }: { searchParams:
         ))}
       </nav>
 
-      <ul className={styles.list}>
-        {slice.map((post) => (
-          <li key={post.url} className={styles.item}>
-            <div className={styles.meta}>
-              <span className={styles.chip} data-tone={post.category}>
-                {categoryLabel(post.category)} · {subLabel(post.category, post.sub)}
-              </span>
-              <time dateTime={post.publishedAt} className={styles.date}>
-                {formatDate(post.publishedAt)}
-              </time>
-            </div>
-            <h2 className={styles.postTitle}>
-              <Link href={post.url}>{post.title}</Link>
-            </h2>
-            <p className={styles.summary}>{post.summary}</p>
-          </li>
-        ))}
-      </ul>
+      <PostList posts={slice} />
 
       {totalPages > 1 && (
         <nav aria-label="페이지" className={styles.pager}>

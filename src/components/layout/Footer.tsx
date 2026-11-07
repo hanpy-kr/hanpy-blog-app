@@ -9,6 +9,9 @@ export default function Footer() {
           <span className={styles.copy}>© Hanpy. All rights reserved.</span>
         </div>
         <nav aria-label="바닥글" className={styles.nav}>
+          <a href="/about" className={styles.link}>
+            About
+          </a>
           <a href="/rss.xml" className={styles.link}>
             RSS
           </a>

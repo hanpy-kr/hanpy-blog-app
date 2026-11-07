@@ -119,6 +119,62 @@
   overflow-wrap: anywhere;
 }
 
+/* 시리즈로 읽기 (세션 7) */
+.seriesBand {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-block: 8px 24px;
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.more {
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* 많이 쓴 태그 (세션 7) */
+.tags {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tagLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.tagLink:hover {
+  border-color: var(--muted);
+  color: var(--fg);
+}
+
 /* 카테고리 */
 .categoryBand {
   border-block: 1px solid var(--line);

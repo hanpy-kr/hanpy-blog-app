@@ -1,0 +1,364 @@
+.main {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 16px 64px;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(32px, 6vw, 44px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 24px 0 16px;
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.filter:hover {
+  color: var(--fg);
+}
+
+.filter[aria-current='page'] {
+  border-color: var(--fg);
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.chip {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.chip[data-tone='backend'] { background: var(--t-backend); }
+.chip[data-tone='infra'] { background: var(--t-infra); }
+.chip[data-tone='design'] { background: var(--t-design); }
+.chip[data-tone='language'] { background: var(--t-language); }
+.chip[data-tone='frontend'] { background: var(--t-frontend); }
+.chip[data-tone='ai'] { background: var(--t-ai); }
+
+.date {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.postTitle {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.postTitle a {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.postTitle a:hover {
+  color: var(--accent);
+}
+
+.summary {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.pager {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.pageLink {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--fg);
+  font-size: 15px;
+  text-decoration: none;
+  justify-self: start;
+}
+
+.pageLink:last-child {
+  justify-self: end;
+}
+
+.pageInfo {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+/* ── 세션 7: 목록 화면 공통 (카테고리·서브카테고리·시리즈·태그·About) ─────────── */
+
+.wide {
+  max-width: 1200px;
+}
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--accent);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 40px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.sectionCount {
+  margin-left: 6px;
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.groupTitle {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* 카드 격자: 시리즈·서브카테고리 */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.card:hover {
+  border-color: var(--muted);
+}
+
+.card[data-tone='backend'] { background: var(--t-backend); }
+.card[data-tone='infra'] { background: var(--t-infra); }
+.card[data-tone='design'] { background: var(--t-design); }
+.card[data-tone='language'] { background: var(--t-language); }
+.card[data-tone='frontend'] { background: var(--t-frontend); }
+.card[data-tone='ai'] { background: var(--t-ai); }
+
+.cardWhere {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cardTitle {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.cardMeta {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.cardDesc {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.cardCta {
+  margin-top: auto;
+  padding-top: 6px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 시리즈 목차 */
+.toc {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: part;
+}
+
+.tocItem {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 4px 12px;
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+
+.tocNo {
+  grid-row: span 2;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  padding-top: 2px;
+}
+
+/* 태그 묶음 */
+.tagCloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tagLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.tagLink:hover {
+  border-color: var(--muted);
+  color: var(--fg);
+}
+
+.tagCount {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 10px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.cta:hover {
+  opacity: 0.9;
+}
+
+.more {
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+}
