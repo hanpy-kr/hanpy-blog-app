@@ -2,6 +2,8 @@
 # refactor/v2·main 으로 가는 모든 PR과 refactor/v2 push에서 실행한다.
 # 빌드한 앱을 띄우고 scripts/check-urls.ts 로 urls.before.txt 의 주소를 모두 요청한다.
 # 세션 5부터: 빌드한 글 데이터로 만든 사이드바를 sidebar.before.json 과 비교한다(scripts/check-sidebar.ts).
+# 세션 8부터: 출시 점검(scripts/check-release.ts)·화면 점검(scripts/check-ui.mjs, 390px·다크 모드)·빌드 크기 기록.
+# 운영 사이트 점검은 release-check.yml (수동 실행)
 name: CI
 
 on:
@@ -66,6 +68,17 @@ jobs:
       - name: Build
         run: ${{ steps.pm.outputs.build }}
 
+      # Amplify SSR 배포 묶음 크기 제한(amplify.yml 참고) 대비 기록. .next/cache 는 배포에 안 들어감
+      - name: Build size
+        run: |
+          {
+            echo "### 빌드 크기"
+            echo '```'
+            du -sh .next/server .next/static .next/server/app .next/server/route-cache 2>/dev/null || true
+            echo "pages: $(find .next/server/app -name '*.html' | wc -l)"
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
       # 예전 사이드바 링크가 frontmatter group·order로 만든 사이드바에 모두 있는지 + 시리즈 편수
       - name: Check sidebar
         run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-sidebar.ts
@@ -83,6 +96,29 @@ jobs:
 
       - name: Check URLs
         run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-urls.ts --base "http://127.0.0.1:$PORT"
+
+      # 사이트맵·RSS·robots·메타태그·JSON-LD·404·리다이렉트, GA는 환경변수 없이 빌드했으므로 없어야 함
+      - name: Check release
+        run: |
+          status=0
+          node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-release.ts --base "http://127.0.0.1:$PORT" --expect-ga none --report release-report.md || status=$?
+          cat release-report.md >> "$GITHUB_STEP_SUMMARY"
+          exit $status
+
+      # Playwright는 저장소 의존성이 아니라 점검 때만 설치
+      - name: Install Playwright
+        run: |
+          npm i --no-save --no-audit --no-fund --prefix "$RUNNER_TEMP/pw" playwright@1.64.1
+          "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium
+
+      - name: Check UI (390px · dark mode)
+        env:
+          NODE_PATH: ${{ runner.temp }}/pw/node_modules
+        run: |
+          status=0
+          node scripts/check-ui.mjs --base "http://127.0.0.1:$PORT" --report ui-report.md || status=$?
+          cat ui-report.md >> "$GITHUB_STEP_SUMMARY"
+          exit $status
 
       - name: Server log
         if: failure()
