@@ -98,7 +98,7 @@
   font-family: var(--font-mono);
 }
 
-/* 태그 페이지(/tags/…)는 세션 7. 지금은 링크 없이 보여 준다 */
+/* 태그 칩 → /tags/{lng}/{tag} (세션 7) */
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -108,12 +108,28 @@
   list-style: none;
 }
 
-.tags li {
-  padding: 4px 10px;
+.tags a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 10px;
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--muted);
   font-size: 13px;
+  text-decoration: none;
+}
+
+.tags a:hover {
+  border-color: var(--muted);
+  color: var(--fg);
+}
+
+/* 글 아래: 시리즈 이전·다음 → 작성자 → 함께 읽을 글 */
+.after {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
 @media (min-width: 768px) {

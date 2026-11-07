@@ -10,6 +10,7 @@ import rehypePrettyCode, { type Options as PrettyCodeOptions } from 'rehype-pret
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 import { z } from 'zod'
+import { isSeriesId, SERIES } from './src/config/series'
 import { getSubDef, isCategory, subIds, TAXONOMY } from './src/config/taxonomy'
 
 const LNGS = ['ko', 'en']
@@ -123,6 +124,10 @@ const posts = defineCollection({
     }
     if (doc.group !== undefined && !subDef.groups.includes(doc.group)) {
       throw new Error(`${where}: group '${doc.group}'는 '${category}/${sub}'의 그룹이 아닙니다 (taxonomy groups: ${subDef.groups.join(', ')})`)
+    }
+    // 시리즈 id는 src/config/series.ts 에 등록된 것만 (세션 7)
+    if (doc.series !== undefined && !isSeriesId(doc.series)) {
+      throw new Error(`${where}: 시리즈 '${doc.series}'가 src/config/series.ts 에 없습니다 (${Object.keys(SERIES).join(', ')})`)
     }
     const { toc, h1Lines, readingMinutes } = analyze(doc.content)
     // 규칙 위반은 빌드를 멈춘다 (초안도 마찬가지: 공개하는 순간 깨지지 않게)
