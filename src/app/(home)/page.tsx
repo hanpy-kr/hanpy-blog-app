@@ -1,9 +1,13 @@
-// 홈 (디자인 시안 'Main'). 시리즈로 읽기·많이 쓴 태그·카테고리 목록 링크는 세션 7a, 검색·광고 자리·Projects는 세션 7b
+// 홈 (디자인 시안 'Main'). 시리즈로 읽기·많이 쓴 태그·카테고리 목록 링크는 세션 7a, 검색 상자·광고 자리·Projects(앱 등록부)는 세션 7b
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import AdSlot from '@/components/ads/AdSlot'
 import AuthorCard from '@/components/common/AuthorCard'
 import RecentPosts from '@/components/home/RecentPosts'
+import AppCards from '@/components/list/AppCards'
 import SeriesCards from '@/components/list/SeriesCards'
+import SearchBox from '@/components/search/SearchBox'
+import { homeApps } from '@/config/apps'
 import { categoryHref, getPosts, getSeriesList, getTags, subLabel, toSummary, visibleCategories, type PostSummary } from '@/lib/content'
 import JsonLd from '@/components/seo/JsonLd'
 import { RSS_ALTERNATE, SITE_DESCRIPTION, SITE_URL } from '@/config/site'
@@ -15,7 +19,7 @@ const HOME_SERIES = 4
 const HOME_TAGS = 12
 
 export const metadata: Metadata = {
-  alternates: { canonical: '/', types: RSS_ALTERNATE },
+  alternates: { canonical: '/', languages: { ko: '/', en: '/en' }, types: RSS_ALTERNATE },
 }
 
 export default function HomePage() {
@@ -55,6 +59,7 @@ export default function HomePage() {
             개발 기록
           </h1>
           <p className={styles.lead}>{SITE_DESCRIPTION}</p>
+          <SearchBox label="블로그 검색" />
           <dl className={styles.stats}>
             <div>
               <dt>글</dt>
@@ -105,6 +110,7 @@ export default function HomePage() {
               태그 전체 보기 →
             </Link>
           </div>
+          <AdSlot placement="sidebar" />
           <div className={styles.rss}>
             <h2 className={styles.asideTitle}>새 글 받아보기</h2>
             <p className={styles.asideText}>RSS 리더에 등록하면 새 글이 올라올 때 바로 받아볼 수 있습니다.</p>
@@ -114,6 +120,15 @@ export default function HomePage() {
           </div>
         </aside>
       </section>
+
+      {homeApps().length > 0 && (
+        <section aria-labelledby="projects-heading" className={`${styles.wrap} ${styles.seriesBand}`}>
+          <h2 id="projects-heading" className={styles.sectionTitle}>
+            Projects
+          </h2>
+          <AppCards />
+        </section>
+      )}
 
       <section aria-labelledby="cat-heading" className={styles.categoryBand}>
         <div className={styles.wrap}>

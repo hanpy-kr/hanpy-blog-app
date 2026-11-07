@@ -1,9 +1,11 @@
 // 소개: /about (세션 7). 작성자 문구는 src/config/site.ts (2026-11-02 확정본)
-// 외부 계정(GitHub 등) 링크는 넣지 않는다 (2026-11-05 결정). 서브프로젝트 목록은 앱 등록부가 생기면(세션 7b) 추가
+// 외부 계정(GitHub 등) 링크는 넣지 않는다 (2026-11-05 결정). 서브프로젝트는 앱 등록부(src/config/apps.ts)에서
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import styles from '@/components/list/List.module.css'
+import AppCards from '@/components/list/AppCards'
 import SeriesCards from '@/components/list/SeriesCards'
+import { homeApps } from '@/config/apps'
 import JsonLd from '@/components/seo/JsonLd'
 import { AUTHOR, SITE_DESCRIPTION, SITE_URL } from '@/config/site'
 import { categoryHref, getPosts, getSeriesList, visibleCategories } from '@/lib/content'
@@ -78,6 +80,15 @@ export default function AboutPage() {
           시리즈 {series.length}개 전체 보기 →
         </Link>
       </section>
+
+      {homeApps().length > 0 && (
+        <section aria-labelledby="about-projects" className={styles.section}>
+          <h2 id="about-projects" className={styles.sectionTitle}>
+            서브프로젝트
+          </h2>
+          <AppCards />
+        </section>
+      )}
 
       <section aria-labelledby="about-follow" className={styles.section}>
         <h2 id="about-follow" className={styles.sectionTitle}>

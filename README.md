@@ -53,6 +53,13 @@ tags: [Kubernetes, Pod]     # 선택
 - 태그 주소: 소문자, 공백·특수문자 → `-` (`Node.js` → `/tags/ko/node-js`)
 - 새 화면의 메타데이터는 `src/lib/page-metadata.ts`의 `pageMetadata()`로 (기본 OG·Twitter·RSS 링크 유지)
 
+### 검색·영어·광고·앱 (세션 7b)
+
+- 검색: 빌드 때 `/search-index/{lng}.json`(제목·요약·태그·소제목) → 브라우저에서 MiniSearch. 머리글 버튼·`/` 키·홈 검색 상자
+- 영어: `/en` 홈, `/en/rss.xml`(영어 글), `/rss.xml`은 한국어 글만. 머리글 KO/EN은 짝이 있으면 그 화면, 없으면 언어 홈. 화면 문구는 `src/i18n`
+- 광고: `<AdSlot placement="in-article" | "sidebar" />`, 단위 ID는 `src/config/site.ts`의 `AD_SLOTS`(비어 있으면 안 그림, 자동 광고는 그대로). 본문 중간은 빌드 때 가운데 `##` 앞(## 3개 이상인 글), 글 frontmatter `ads: false`면 둘 다 안 그림. 빈 자리 미리보기는 `NEXT_PUBLIC_AD_PREVIEW=1`
+- 서브프로젝트: `src/config/apps.ts` → 홈 Projects·/about·sitemap
+
 ### SEO·분석 (세션 6)
 
 - 사이트 전역 설정(사이트명·주소·작성자·GitHub·AdSense·기본 메타데이터): `src/config/site.ts`

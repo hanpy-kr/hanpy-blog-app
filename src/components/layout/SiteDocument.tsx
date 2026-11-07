@@ -15,9 +15,9 @@ export default function SiteDocument({ lang, children }: { lang: 'ko' | 'en'; ch
       <body>
         <ThemeProvider>
           <AdSenseScript />
-          <Header />
+          <Header lng={lang} />
           {children}
-          <Footer />
+          <Footer lng={lang} />
         </ThemeProvider>
       </body>
       {GA_ID && <GoogleAnalytics gaId={GA_ID} />}

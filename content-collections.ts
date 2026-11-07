@@ -10,6 +10,7 @@ import rehypePrettyCode, { type Options as PrettyCodeOptions } from 'rehype-pret
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 import { z } from 'zod'
+import remarkAdSlot from './src/lib/remark-ad-slot'
 import { isSeriesId, SERIES } from './src/config/series'
 import { getSubDef, isCategory, subIds, TAXONOMY } from './src/config/taxonomy'
 
@@ -143,7 +144,9 @@ const posts = defineCollection({
     }
 
     const body = await compileMDX(context, doc, {
-      remarkPlugins: [remarkGfm],
+      // 본문 중간 광고 자리 표시를 넣는다 (세션 7b). ads: false 는 글 페이지가 이 표시를 비워서 처리한다
+      // (compileMDX 캐시가 본문 기준이라 frontmatter만 바꾸면 다시 컴파일되지 않으므로 여기서 분기하지 않음)
+      remarkPlugins: [remarkGfm, remarkAdSlot],
       rehypePlugins: [
         rehypeSlug,
         [rehypeAutolinkHeadings, { behavior: 'wrap' }],

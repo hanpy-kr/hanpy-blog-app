@@ -194,6 +194,30 @@ export function getRelated(post: Post, limit = 3): Post[] {
     .map((x) => x.p)
 }
 
+// ── 언어 짝 ─────────────────────────────────────────────────────────
+
+/**
+ * 언어 전환 버튼용 짝: 주소 → { ko, en }
+ * 번역 짝이 있는 글(getAlternates), 두 언어 모두 공개 글이 있는 카테고리·서브카테고리 목록. 짝이 없으면 언어 홈으로 간다
+ */
+export function langPairs(): Record<string, Partial<Record<Lng, string>>> {
+  const out: Record<string, Partial<Record<Lng, string>>> = {}
+  const add = (byLng: Partial<Record<Lng, string>>) => {
+    if (Object.keys(byLng).length < 2) return
+    for (const url of Object.values(byLng)) out[url as string] = byLng
+  }
+  for (const p of releasedPosts) add(getAlternates(p) as Partial<Record<Lng, string>>)
+  for (const category of CATEGORIES) {
+    const lngs = LNGS.filter((l) => getPosts({ lng: l, category }).length > 0)
+    add(Object.fromEntries(lngs.map((l) => [l, categoryHref(category, l)])))
+    for (const sub of subIds(category)) {
+      const has = lngs.filter((l) => releasedPosts.some((p) => p.lng === l && p.category === category && p.sub === sub))
+      add(Object.fromEntries(has.map((l) => [l, subListHref(category, l, sub)])))
+    }
+  }
+  return out
+}
+
 // ── 카테고리·서브카테고리 목록 ───────────────────────────────────────
 
 export const categoryHref = (category: string, lng: string) => `/${category}/${lng}`

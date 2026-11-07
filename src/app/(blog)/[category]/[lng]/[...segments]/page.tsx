@@ -6,6 +6,7 @@ import { MDXContent } from '@content-collections/mdx/react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import AdSlot from '@/components/ads/AdSlot'
 import AuthorCard from '@/components/common/AuthorCard'
 import BlogSidebar from '@/components/blog/BlogSidebar'
 import prose from '@/components/blog/Prose.module.css'
@@ -13,7 +14,7 @@ import { RelatedPosts, SeriesPager } from '@/components/blog/PostFooterNav'
 import SeriesBox from '@/components/blog/SeriesBox'
 import { TocDisclosure, TocRail } from '@/components/blog/Toc'
 import JsonLd from '@/components/seo/JsonLd'
-import { AUTHOR, OG_LOCALE, RSS_ALTERNATE, SITE_NAME } from '@/config/site'
+import { AUTHOR, OG_LOCALE, SITE_NAME, rssAlternate } from '@/config/site'
 import {
   OG_IMAGE_SIZE,
   categoryLabel,
@@ -39,13 +40,14 @@ import styles from './page.module.css'
 type Params = { category: string; lng: string; segments: string[] }
 
 // 넓은 표가 폰 화면에서 페이지 전체를 늘리지 않도록 가로 스크롤 상자로 감싼다
-const mdxComponents = {
-  table: (props: React.ComponentProps<'table'>) => (
-    <div className={prose.tableWrap}>
-      <table {...props} />
-    </div>
-  ),
-}
+// AdSlot: 빌드 때 본문 가운데 ## 앞에 들어간 광고 자리 (src/lib/remark-ad-slot.ts). ads: false 글은 비운다
+const tableWrap = (props: React.ComponentProps<'table'>) => (
+  <div className={prose.tableWrap}>
+    <table {...props} />
+  </div>
+)
+const mdxComponents = { table: tableWrap, AdSlot }
+const mdxComponentsNoAds = { table: tableWrap, AdSlot: () => null }
 
 export const dynamicParams = false
 
@@ -75,7 +77,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     alternates: {
       canonical: post.url,
       ...(Object.keys(languages).length ? { languages } : {}),
-      types: RSS_ALTERNATE,
+      types: rssAlternate(post.lng),
     },
     openGraph: {
       type: 'article',
@@ -174,7 +176,7 @@ export default async function PostPage({ params }: { params: Promise<Params> }) 
         )}
 
         <article className={prose.prose}>
-          <MDXContent code={post.body} components={mdxComponents} />
+          <MDXContent code={post.body} components={post.ads ? mdxComponents : mdxComponentsNoAds} />
         </article>
 
         <div className={styles.after}>
@@ -187,6 +189,7 @@ export default async function PostPage({ params }: { params: Promise<Params> }) 
       {post.toc.length > 1 && (
         <aside className={styles.toc}>
           <TocRail items={post.toc} />
+          {post.ads && <AdSlot placement="sidebar" />}
         </aside>
       )}
     </div>

@@ -1,6 +1,8 @@
+import { dict } from '@/i18n'
 import styles from './Footer.module.css'
 
-export default function Footer() {
+export default function Footer({ lng }: { lng: 'ko' | 'en' }) {
+  const t = dict(lng).footer
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
@@ -8,15 +10,15 @@ export default function Footer() {
           <span className={styles.name}>Hanpy&apos;s Blog</span>
           <span className={styles.copy}>© Hanpy. All rights reserved.</span>
         </div>
-        <nav aria-label="바닥글" className={styles.nav}>
+        <nav aria-label={t.label} className={styles.nav}>
           <a href="/about" className={styles.link}>
-            About
+            {t.about}
           </a>
-          <a href="/rss.xml" className={styles.link}>
-            RSS
+          <a href={dict(lng).rss} className={styles.link}>
+            {t.rss}
           </a>
           <a href="/sitemap.xml" className={styles.link}>
-            Sitemap
+            {t.sitemap}
           </a>
         </nav>
       </div>
