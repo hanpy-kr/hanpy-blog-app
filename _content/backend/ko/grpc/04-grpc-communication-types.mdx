@@ -1,14 +1,11 @@
 ---
-deployment: true
-category: Backend
 title: 'gRPC 통신 방식'
 summary: 'gRPC의 다양한 통신 방식(단방향, 서버 스트리밍, 클라이언트 스트리밍, 양방향 스트리밍)과 각 방식의 사용 사례, 적합한 상황, 성능 최적화 및 보안 전략에 대해 알아봅니다.'
-pageKey: grpc_communication_types
-lng: KOR
 publishedAt: 2025-03-07
+group: 'Beginner'
+order: 4
+series: grpc
 ---
-
-# gRPC 통신 방식
 
 gRPC는 원격 프로시저 호출(RPC)을 구현하기 위한 강력한 프레임워크로, 다양한 통신 패턴을 지원합니다. 각 통신 방식은 특정 요구 사항과 사용 사례에 최적화되어 있으며, 성능 최적화 및 보안 측면에서도 다양한 전략을 적용할 수 있습니다. 이번 포스팅에서는 gRPC의 주요 통신 방식인 **Unary RPC, 서버 스트리밍 RPC, 클라이언트 스트리밍 RPC, 양방향 스트리밍 RPC**에 대해 살펴보고, 각 방식의 사용 사례와 적합한 상황, 그리고 gRPC의 성능 최적화 및 보안 전략에 대해 설명하겠습니다.
 

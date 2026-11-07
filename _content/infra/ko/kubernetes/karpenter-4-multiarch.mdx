@@ -1,16 +1,12 @@
 ---
-deployment: true
-category: Infra
 title: 'Karpenter - Multi-Architecture'
 summary: 'Karpenter를 활용해 멀티 아키텍처(amd64/arm64) 환경을 운영하고, 라벨과 테인트로 워크로드 전용 노드 풀을 구성하는 방법을 알아봅시다.'
-pageKey: karpenter_4_multi_arch
-lng: KOR
 publishedAt: 2025-09-11
-tags: ['Karpenter', 'Kubernetes', '멀티 아키텍처', 'arm64', 'amd64', 'NodePool', '워크로드 분리', 'Taint', 'Spot 인스턴스']
+group: 'Karpenter'
+order: 4
+series: karpenter
+tags: [Karpenter, Kubernetes, 멀티 아키텍처, arm64, amd64, NodePool, 워크로드 분리, Taint, Spot 인스턴스]
 ---
-
-
-# Setting Up Multi-Architecture and Workload-Specific Node Pools with Karpenter
 
 클라우드 환경에서 모든 워크로드를 하나의 노드풀에 몰아넣는 방식은 단순하지만, 효율적인 운영에는 한계가 있습니다. 워크로드의 특성이나 CPU 아키텍처에 따라 요구사항이 달라지기 때문에, 이를 고려한 세밀한 자원 관리가 필요합니다. 이번 글에서는 Karpenter의 `requirements`와 `라벨/테인트 기능`을 활용하여 멀티 아키텍처(amd64 + arm64)를 지원하고, 동시에 특정 워크로드 전용 풀을 구성하는 방법을 알아봅시다.
 

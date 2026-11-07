@@ -1,15 +1,12 @@
 ---
-deployment: true
-category: Infra
-title: 'JWT 기반 로그인 구현 흐름'
+title: 'JWT 기반 로그인 구현 흐름: Access Token, Refresh Token'
 summary: 'JWT(Json Web Token)를 활용한 로그인 구조와 Access/Refresh Token 발급 및 보관 전략, 그리고 실무에서 고려해야 하는 보안 포인트를 정리합니다.'
-pageKey: security_5_jwt
-lng: KOR
 publishedAt: 2025-11-23
-tags: ['JWT', 'AccessToken', 'RefreshToken', '토큰 기반 인증', '백엔드 보안', '세션 vs JWT', '웹 인증']
+group: 'Auth'
+order: 5
+series: auth
+tags: [JWT, AccessToken, RefreshToken, 토큰 기반 인증, 백엔드 보안, 세션 vs JWT, 웹 인증]
 ---
-
-# JWT 기반 로그인 구현 흐름: Access Token, Refresh Token
 
 앞서 살펴본 OAuth 기반 소셜 로그인처럼, 웹 서비스에서는 사용자 인증 후 토큰(Token) 을 사용해 로그인 상태를 유지하는 방식이 널리 사용됩니다. 그중 가장 대표적인 방식이 **JWT(Json Web Token)** 기반 인증입니다. 이번 글에서는 JWT 로그인 방식이 어떻게 동작하는지 알아봅시다.
 

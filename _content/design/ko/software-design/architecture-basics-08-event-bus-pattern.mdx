@@ -1,15 +1,12 @@
 ---
-deployment: true
-category: Backend
 title: 'Event-Bus Pattern'
 summary: 'Event-Bus 패턴은 이벤트 생산자와 소비자가 느슨하게 결합되어 있으며, 이벤트 버스를 통해 메시지를 주고받는 방식으로 실시간 알림, 로그 처리에 유용합니다.'
-pageKey: event_bus_pattern_overview
-lng: KOR
 publishedAt: 2025-08-26
+group: 'Architecture Pattern'
+order: 9
+series: architecture-basics
 tags: [Event-Bus, 아키텍처]
 ---
-
-# Event-Bus Pattern
 
 회사에서 공지를 알리는 단체 메신저 공지를 본 적 있으실겁니다. 인사팀이 메시지를 보내면, 이를 필요한 부서나 개인이 각자 확인하고 반응합니다. 인사팀은 누가 읽는지, 누가 반응할지 알지 못해도 필요한 사람에게는 정보가 전달되죠. 이처럼 이벤트를 한 번 발행하면 관심 있는 수신자만 이를 받아 처리하는 구조가 바로 이벤트-버스(Event-Bus) 패턴입니다. 이 방식은 조직 내 공지처럼 "누구에게 갈지 직접 알 필요 없는 메시지"를 효율적으로 전달할 때 특히 유용합니다.
 

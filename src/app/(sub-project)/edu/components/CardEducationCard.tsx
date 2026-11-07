@@ -1,7 +1,8 @@
+'use client'
+
 import styles from './CardEducationCard.module.css'
 import { ItemType } from '../service/types'
 import { useEffect, useState } from 'react'
-import { Progress } from '@chakra-ui/react'
 
 export const CardEducationCard = ({ sample }: { sample: ItemType }) => {
   const [englishContent, setEnglishContent] = useState('')

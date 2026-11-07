@@ -1,0 +1,91 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+li[data-depth='3'] > .link {
+  padding-left: 28px;
+  font-size: 13px;
+}
+
+.link:hover {
+  background: var(--surface);
+  color: var(--fg);
+}
+
+.link[aria-current='location'] {
+  background: var(--accent-weak);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* 넓은 화면: 오른쪽 고정 */
+.rail {
+  position: sticky;
+  top: calc(var(--header-h) + 24px);
+  max-height: calc(100vh - var(--header-h) - 48px);
+  overflow-y: auto;
+}
+
+.heading {
+  margin: 0 0 8px;
+  padding: 0 12px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* 폰·태블릿: 본문 위에서 펼치기 */
+.disclosure {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: 0 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.count {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.count::after {
+  content: ' ▾';
+}
+
+.disclosure[open] .count::after {
+  content: ' ▴';
+}
+
+.panel {
+  padding: 0 8px 12px;
+}

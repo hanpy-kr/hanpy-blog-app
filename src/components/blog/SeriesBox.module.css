@@ -1,0 +1,165 @@
+.box {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px 12px;
+  min-height: 48px;
+  padding: 14px 16px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 14px;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.count {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.chevron {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg) translateY(-3px);
+  transition: transform 0.15s;
+}
+
+.box[open] .chevron {
+  transform: rotate(-135deg) translateY(-3px);
+}
+
+.progress {
+  grid-column: 1 / -1;
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.progress > span {
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.box[open] .progress {
+  display: none;
+}
+
+.list {
+  margin: 0;
+  padding: 0 8px 4px;
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 8px;
+  border-radius: 8px;
+}
+
+.item[aria-current='page'] {
+  background: var(--accent-weak);
+}
+
+.no {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.link,
+.current {
+  display: block;
+  padding: 10px 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.link {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--accent);
+}
+
+.current {
+  font-weight: 600;
+}
+
+.here {
+  margin-left: 8px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.all {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0 16px 6px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* 폰: 처음(data-mode=auto)에는 접힌 모양 — 목록을 숨기고 진행 막대를 보여 준다 (세션 8, CLS 방지) */
+@media (max-width: 1023px) {
+  .box[data-mode='auto'] .list,
+  .box[data-mode='auto'] .all {
+    display: none;
+  }
+
+  .box[data-mode='auto'][open] .progress {
+    display: block;
+  }
+
+  .box[data-mode='auto'][open] .chevron {
+    transform: rotate(45deg) translateY(-3px);
+  }
+}

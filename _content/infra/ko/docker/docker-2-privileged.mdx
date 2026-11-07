@@ -1,16 +1,11 @@
 ---
-
-deployment: true
-category: Infra
 title: '도커에서 --privileged 옵션이 위험한 이유'
 summary: '도커의 --privileged 옵션이 왜 위험한지, 리눅스 Capability 개념부터 특권 컨테이너의 보안 리스크까지 정리해봅니다.'
-pageKey: docker_privileged_container
-lng: KOR
 publishedAt: 2025-08-11
+group: 'Beginner'
+order: 2
 tags: [docker, container, privileged]
 ---
-
-# Docker --privileged
 
 docker를 다루다 보면 --privileged 옵션을 사용하는 명령어를 한 번쯤 보셨을 겁니다. 처음에는 "그냥 권한을 좀 더 주는 거겠지" 하고 생각하기 쉽지만, 이 옵션은 도커 컨테이너의 보안을 완전히 무너뜨릴 수 있는 매우 위험한 도구입니다. 오늘은 이 특권 컨테이너(privileged container)가 왜 위험한지, 그 근본적인 원리와 대안을 알아봅시다.
 

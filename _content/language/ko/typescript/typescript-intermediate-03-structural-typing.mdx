@@ -1,14 +1,11 @@
 ---
-deployment: true
-category: TypeScript
-title: 'TypeScript Structural Typing'
+title: 'TypeScript 구조적 타이핑(Structural Typing) 이해하기'
 summary: 'TypeScript의 구조적 타이핑(Structural Typing)과 Duck Typing 개념을 이해하고, 타입스크립트가 어떻게 타입 호환성을 판단하는지 알아봅시다.'
-pageKey: typescript-structural-typing-guide
-lng: KOR
 publishedAt: 2025-04-27
+group: 'Classes & Types'
+order: 3
+series: typescript-intermediate
 ---
-
-# TypeScript 구조적 타이핑(Structural Typing) 이해하기
 
 개발하다 보면 가끔 "이 객체의 타입은 뭐라고 해야 하지?" 하고 고민할 때가 있습니다. 클래스 이름이나 인터페이스 이름은 다르지만, 갖고 있는 속성이나 메서드가 비슷하거나 같을 때 더욱 헷갈립니다. 이럴 때 등장하는 개념이 바로 **구조적 타이핑**(Structural Typing) 입니다. 흔히 말하는 "**Duck Typing**(덕 타이핑)"과 유사한 개념인데요. 이 두 개념이 정말 같은 건지, 그리고 TypeScript에서는 어떻게 타입의 호환성을 판단하는지 이번 글을 통해 명확히 짚어보겠습니다.
 

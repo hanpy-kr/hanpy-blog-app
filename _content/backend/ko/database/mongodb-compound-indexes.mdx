@@ -1,14 +1,10 @@
 ---
-deployment: true
-category: Backend
 title: 'MongoDB - Compound Indexes Guide'
 summary: 'MongoDB에서 Compound Index(복합 인덱스)는 두 개 이상의 필드를 결합하여 만든 인덱스로, 다차원 쿼리에서 효율적인 검색을 지원합니다.'
-pageKey: backend_mongodb_compound_index_ko
-lng: KOR
 publishedAt: 2025-01-22
+group: 'MongoDB'
+order: 4
 ---
-
-# MongoDB Compound Indexes Guide
 
 MongoDB에서 Compound Index(복합 인덱스)는 두 개 이상의 필드를 결합하여 만든 인덱스로, 다차원 쿼리에서 효율적인 검색을 지원합니다. 복합 인덱스는 단일 필드 인덱스만으로는 충족할 수 없는 복잡한 데이터 검색 요구를 해결할 수 있도록 설계되었습니다. 하지만 올바른 순서와 구조로 인덱스를 설계하지 않으면 크리티컬한 성능을 저하가 발생합니다. 이 글에서 Compound Index의 동작 방식, 설계 원칙, 그리고 실무적인 최적화 방법을 알아봅시다.
 

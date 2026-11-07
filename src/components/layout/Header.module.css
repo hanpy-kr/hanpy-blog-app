@@ -1,0 +1,191 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: saturate(1.4) blur(8px);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 1360px;
+  min-height: 60px;
+  margin: 0 auto;
+  padding: 8px 8px 8px 16px;
+}
+
+.logo {
+  flex: none;
+  color: var(--fg);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.nav {
+  display: none;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.navLink {
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  background: var(--surface);
+  color: var(--fg);
+}
+
+.navLink[aria-current='page'] {
+  background: var(--surface);
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--fg);
+  cursor: pointer;
+  list-style: none;
+}
+
+.iconButton:hover {
+  background: var(--surface);
+}
+
+.iconButton::-webkit-details-marker {
+  display: none;
+}
+
+/* 해·달 아이콘: 라이트일 때 달(다크로 전환), 다크일 때 해 */
+.sun {
+  display: none;
+}
+
+:global(.dark) .sun {
+  display: block;
+}
+
+:global(.dark) .moon {
+  display: none;
+}
+
+/* 폰 메뉴 */
+.menu {
+  position: relative;
+  order: 3;
+}
+
+.menu[open] .iconButton {
+  background: var(--surface);
+}
+
+.menuPanel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+/* KO/EN (세션 7b). 폰에서는 다른 언어 하나만 보인다 */
+.lang {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.langLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 100%;
+  padding: 0 8px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.langLink:hover {
+  color: var(--fg);
+}
+
+.langLink[aria-current='true'] {
+  display: none;
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* 폰: RSS 아이콘은 바닥글에 있으므로 숨김 (머리글 폭 390px 안에 들게) */
+.rssIcon {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .inner {
+    gap: 16px 28px;
+    padding: 12px 24px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .nav {
+    display: flex;
+  }
+
+  .actions {
+    margin-left: 0;
+  }
+
+  .menu {
+    display: none;
+  }
+
+  .langLink[aria-current='true'] {
+    display: flex;
+  }
+
+  .rssIcon {
+    display: flex;
+  }
+}

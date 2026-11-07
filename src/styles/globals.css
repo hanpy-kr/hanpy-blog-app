@@ -1,0 +1,126 @@
+/*
+ * 전역 스타일: 디자인 토큰 + 최소한의 기본값만 둔다.
+ * 화면별 모양은 각 컴포넌트의 CSS Modules, 글 본문은 components/blog/Prose.module.css.
+ * 토큰 값은 디자인 시안(홈·글·시리즈·모바일 글)의 값을 그대로 옮겼다.
+ */
+
+:root {
+  --font-sans: var(--font-plex), 'IBM Plex Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR',
+    'Segoe UI', sans-serif;
+  --font-mono: var(--font-jb), 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --bg: #ffffff;
+  --surface: #f8fafc;
+  --fg: #0f172a;
+  --muted: #475569;
+  --line: #e2e8f0;
+  --accent: #2563eb;
+  --accent-weak: #eff6ff;
+  --ad: #f1f5f9;
+  --code-bg: #0f172a;
+  --code-fg: #e2e8f0;
+
+  /* 카테고리별 파스텔 배경 (기존 홈 카드 색 유지) */
+  --t-backend: #f1f3fa;
+  --t-infra: #fafaf5;
+  --t-design: #faf3f5;
+  --t-language: #faf6f5;
+  --t-frontend: #f2f8f5;
+  --t-ai: #f4f1fa;
+
+  /* 코드 줄 강조·diff */
+  --highlight-line: rgba(96, 165, 250, 0.16);
+  --diff-plus-bg: rgba(34, 197, 94, 0.14);
+  --diff-plus-bar: #22c55e;
+  --diff-minus-bg: rgba(248, 113, 113, 0.14);
+  --diff-minus-bar: #f87171;
+
+  --radius: 10px;
+  --header-h: 69px;
+  color-scheme: light;
+}
+
+/* next-themes가 <html class="dark">를 붙인다 (기본값: 시스템 설정을 따름) */
+:root.dark {
+  --bg: #0b1220;
+  --surface: #111a2e;
+  --fg: #e5e7eb;
+  --muted: #9ca3af;
+  --line: #1f2937;
+  --accent: #60a5fa;
+  --accent-weak: #0f2547;
+  --ad: #111a2e;
+  --code-bg: #060b16;
+  --code-fg: #e2e8f0;
+
+  --t-backend: #121a30;
+  --t-infra: #17191b;
+  --t-design: #1b1521;
+  --t-language: #1b1717;
+  --t-frontend: #121d1a;
+  --t-ai: #17142a;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 머리글·바닥글 사이 본문이 남은 높이를 채운다 */
+body > main,
+body > [data-page] {
+  flex: 1 0 auto;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+button {
+  font: inherit;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,15 +1,12 @@
 ---
-deployment: true
-category: Infra
 title: '소셜 로그인 이해하기: OAuth 2.0 흐름과 Access Token 발급 과정 정리'
 summary: '구글, 카카오, 네이버 로그인 등 소셜 로그인이 왜 OAuth 2.0 기반으로 동작하는지, 그리고 토큰 발급 과정이 어떻게 이루어지는지를 알아봅시다.'
-pageKey: security_4_oauth
-lng: KOR
 publishedAt: 2025-11-21
-tags: ['OAuth', 'OAuth2', 'OpenID Connect', '소셜 로그인', 'Access Token', 'Refresh Token', 'SSO', '인증']
+group: 'Auth'
+order: 4
+series: auth
+tags: [OAuth, OAuth2, OpenID Connect, 소셜 로그인, Access Token, Refresh Token, SSO, 인증]
 ---
-
-# 소셜 로그인 이해하기: OAuth 2.0 흐름과 Access Token 발급 과정 정리
 
 우리가 자주 사용하는 로그인 방식 중 하나가 소셜 로그인입니다. `구글로 로그인`, `카카오로 로그인`. `네이버로 로그인`과 같은 버튼 하나를 클릭하면 별도의 회원가입 없이 빠르게 로그인이 가능합니다. 이 소셜 로그인은 대부분 OAuth 2.0 이라는 표준 프로토콜 위에서 동작합니다. 이번 글에서는 OAuth 2.0이 어떤 흐름으로 동작하는지, 그리고 Access Token이 어떻게 발급되는지 쉽게 이해할 수 있도록 정리합니다.
 

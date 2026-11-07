@@ -1,0 +1,148 @@
+.recent {
+  display: flex;
+  flex: 999 1 600px;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 16px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tab {
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--fg);
+}
+
+.tab[aria-selected='true'] {
+  border-color: var(--fg);
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.chip {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--fg);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.chip[data-tone='backend'] { background: var(--t-backend); }
+.chip[data-tone='infra'] { background: var(--t-infra); }
+.chip[data-tone='design'] { background: var(--t-design); }
+.chip[data-tone='language'] { background: var(--t-language); }
+.chip[data-tone='frontend'] { background: var(--t-frontend); }
+.chip[data-tone='ai'] { background: var(--t-ai); }
+
+.date {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.title a {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.title a:hover {
+  color: var(--accent);
+}
+
+.summary {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.tags {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.more {
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.moreLink {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--fg);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.moreLink:hover {
+  border-color: var(--muted);
+}
+
+@media (min-width: 900px) {
+  .heading {
+    font-size: 26px;
+  }
+
+  .title {
+    font-size: 21px;
+  }
+}

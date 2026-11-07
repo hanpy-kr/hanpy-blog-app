@@ -1,15 +1,11 @@
 ---
-deployment: true
-category: Backend
 title: '메시지 큐(Message Queue)'
 summary: '메시지 큐(Message Queue, MQ)는 현대적인 시스템에서 서비스 간의 데이터를 효율적으로 전달하고 관리하기 위한 필수적인 도구입니다. 이 글에서는 메시지 큐를 도입해야 하는 이유와 동작 원리를 친절하고 쉽게 소개합니다.'
-pageKey: message_queue_introduction
-lng: KOR
 publishedAt: 2025-03-24
+group: 'Beginner'
+order: 6
 tags: [Message Queue, MQ, RabbitMQ, Kafka, Redis, Backend]
 ---
-
-# 메시지 큐(Message Queue)
 
 백엔드 개발자로서 서비스 규모가 작을 때는 **API 호출 한 번으로 데이터가 즉시 전달되는 것이 당연한 것**처럼 느껴집니다. 하지만 서비스가 성장하고 사용자가 늘어나면서 문제가 발생합니다. 실시간 채팅 메시지, 이메일 발송, 결제 알림과 같이 순간적으로 처리할 데이터가 몰리면, 서버가 마치 명절 때 고속도로처럼 갑작스러운 교통체증을 겪게 됩니다.
 
