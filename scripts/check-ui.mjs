@@ -181,10 +181,10 @@ for (const [label, viewport, first] of [
         if (!el) return null
         const ins = el.querySelector('ins.adsbygoogle')
         const box = ins?.parentElement ?? el.lastElementChild
-        return { slot: ins?.getAttribute('data-ad-slot'), client: ins?.getAttribute('data-ad-client'), h: Math.round(box.getBoundingClientRect().height), status: ins?.getAttribute('data-ad-status') ?? '' }
+        return { slot: ins?.getAttribute('data-ad-slot'), client: ins?.getAttribute('data-ad-client'), h: Math.round(box.getBoundingClientRect().height), status: ins?.getAttribute('data-ad-status') ?? '', boxStyle: box.getAttribute('style') ?? '', insStyle: ins?.getAttribute('style') ?? '' }
       }, placement)
       check(`ads ${label}`, `${placement}: <ins data-ad-slot=${slot}> 생성`, !!r && r.slot === slot && r.client === 'ca-pub-8185415229814052', JSON.stringify(r))
-      check(`ads ${label}`, `${placement}: 높이 ${h}px 고정`, !!r && r.h === h, `${r?.h}px ${r?.status}`)
+      check(`ads ${label}`, `${placement}: 높이 ${h}px 고정`, !!r && r.h === h, `${r?.h}px ${r?.status} 자리 style="${r?.boxStyle}" ins style="${r?.insStyle}"`)
     }
     check(`ads ${label}`, '처음엔 광고 요청 없음(지연 로드)', before === 0, `처음 ins ${before}개`)
     const cls = await page.evaluate(() => window.__cls)
