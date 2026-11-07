@@ -1,5 +1,5 @@
 import Script from 'next/script'
-import { ADSENSE_CLIENT } from '@/lib/site'
+import { ADSENSE_CLIENT } from '@/config/site'
 
 /** AdSense 계정 연결용 스크립트. 광고 자리(AdSlot)는 세션 7 */
 export default function AdSenseScript() {

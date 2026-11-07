@@ -9,8 +9,20 @@ import AuthorCard from '@/components/common/AuthorCard'
 import BlogSidebar from '@/components/blog/BlogSidebar'
 import prose from '@/components/blog/Prose.module.css'
 import { TocDisclosure, TocRail } from '@/components/blog/Toc'
-import { categoryLabel, formatDate, getAlternates, getPost, getSidebar, releasedPosts, subLabel } from '@/lib/content'
-import { AUTHOR } from '@/lib/site'
+import JsonLd from '@/components/seo/JsonLd'
+import { AUTHOR, OG_LOCALE, RSS_ALTERNATE, SITE_NAME } from '@/config/site'
+import {
+  OG_IMAGE_SIZE,
+  categoryLabel,
+  formatDate,
+  getAlternates,
+  getPost,
+  getSidebar,
+  ogImagePath,
+  releasedPosts,
+  subLabel,
+} from '@/lib/content'
+import { postLd } from '@/lib/structured-data'
 import styles from './page.module.css'
 
 type Params = { category: string; lng: string; segments: string[] }
@@ -35,13 +47,33 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const post = getPost(category, lng, segments)
   if (!post) return {}
   const languages = getAlternates(post)
+  // 글마다 빌드 때 만든 OG 이미지 (src/app/og/…/route.tsx)
+  const image = { url: ogImagePath(post), ...OG_IMAGE_SIZE, alt: post.title }
   return {
-    title: post.title,
+    title: post.title, // 레이아웃 템플릿으로 '제목 | Hanpy Blog'
     description: post.summary,
     keywords: post.tags,
-    alternates: { canonical: post.url, ...(Object.keys(languages).length ? { languages } : {}) },
-    openGraph: { title: post.title, description: post.summary, url: post.url, type: 'article' },
-    twitter: { card: 'summary_large_image', title: post.title, description: post.summary },
+    authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
+    alternates: {
+      canonical: post.url,
+      ...(Object.keys(languages).length ? { languages } : {}),
+      types: RSS_ALTERNATE,
+    },
+    openGraph: {
+      type: 'article',
+      title: post.title,
+      description: post.summary,
+      url: post.url,
+      siteName: SITE_NAME,
+      locale: OG_LOCALE[post.lng === 'en' ? 'en' : 'ko'],
+      images: [image],
+      publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt ?? post.publishedAt,
+      authors: [AUTHOR.url],
+      section: categoryLabel(post.category),
+      tags: post.tags,
+    },
+    twitter: { card: 'summary_large_image', title: post.title, description: post.summary, images: [image.url] },
   }
 }
 
@@ -73,6 +105,7 @@ export default async function PostPage({ params }: { params: Promise<Params> }) 
       )}
 
       <main className={styles.main}>
+        <JsonLd data={postLd(post)} />
         <nav aria-label={en ? 'Breadcrumb' : '현재 위치'} className={styles.breadcrumb}>
           <Link href={`/posts?category=${post.category}`}>{catName}</Link>
           <span aria-hidden="true">/</span>

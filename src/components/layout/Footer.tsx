@@ -1,4 +1,3 @@
-import { AUTHOR } from '@/lib/site'
 import styles from './Footer.module.css'
 
 export default function Footer() {
@@ -12,9 +11,6 @@ export default function Footer() {
         <nav aria-label="바닥글" className={styles.nav}>
           <a href="/rss.xml" className={styles.link}>
             RSS
-          </a>
-          <a href={AUTHOR.github} className={styles.link}>
-            GitHub
           </a>
           <a href="/sitemap.xml" className={styles.link}>
             Sitemap

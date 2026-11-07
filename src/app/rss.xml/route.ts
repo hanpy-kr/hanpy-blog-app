@@ -1,5 +1,5 @@
 import { releasedPosts } from '@/lib/content'
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/site'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/config/site'
 
 export const dynamic = 'force-static'
 
