@@ -147,3 +147,19 @@
   font-weight: 500;
   text-decoration: none;
 }
+
+/* 폰: 처음(data-mode=auto)에는 접힌 모양 — 목록을 숨기고 진행 막대를 보여 준다 (세션 8, CLS 방지) */
+@media (max-width: 1023px) {
+  .box[data-mode='auto'] .list,
+  .box[data-mode='auto'] .all {
+    display: none;
+  }
+
+  .box[data-mode='auto'][open] .progress {
+    display: block;
+  }
+
+  .box[data-mode='auto'][open] .chevron {
+    transform: rotate(45deg) translateY(-3px);
+  }
+}

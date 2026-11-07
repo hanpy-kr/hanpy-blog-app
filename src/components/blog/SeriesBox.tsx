@@ -1,9 +1,13 @@
 'use client'
 // 글 머리 아래 시리즈 상자 (디자인 시안 'Post' 시리즈 상자, 'PostMobile' 접힌 상자)
-// <details>라서 JS 없이도 펼치고 접힌다. 넓은 화면은 펼친 채, 폰(1023px 이하)은 처음에 접어서 보여 준다
+// 넓은 화면은 펼친 채, 폰(1023px 이하)은 처음에 접어서 보여 준다
+// 처음 모양은 CSS(data-mode="auto" + 미디어 쿼리)가 정한다. JS로 접으면 하이드레이션 뒤 아래 본문이 당겨져
+// 화면 밀림(CLS 0.12)이 생겨서, 세션 8에서 바꿈. 처음 누를 때부터는 상태(open/closed)로 직접 제어
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
+import { useState } from 'react'
 import styles from './SeriesBox.module.css'
+
+type Mode = 'auto' | 'open' | 'closed'
 
 export default function SeriesBox({
   name,
@@ -18,15 +22,17 @@ export default function SeriesBox({
   /** 지금 글의 위치 (0부터) */
   index: number
 }) {
-  const ref = useRef<HTMLDetailsElement>(null)
-  useEffect(() => {
-    if (ref.current && window.matchMedia('(max-width: 1023px)').matches) ref.current.open = false
-  }, [])
+  const [mode, setMode] = useState<Mode>('auto')
+  const toggle = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const collapsedNow = mode === 'closed' || (mode === 'auto' && window.matchMedia('(max-width: 1023px)').matches)
+    setMode(collapsedNow ? 'open' : 'closed')
+  }
 
   const n = index + 1
   return (
-    <details ref={ref} open className={styles.box}>
-      <summary className={styles.summary}>
+    <details open={mode !== 'closed'} data-mode={mode} className={styles.box}>
+      <summary className={styles.summary} onClick={toggle}>
         <span className={styles.head}>
           <span className={styles.eyebrow}>시리즈</span>
           <span className={styles.name}>{name}</span>
