@@ -21,7 +21,9 @@ export function pageMetadata({
 }): Metadata {
   const full = `${title} | ${SITE_NAME}`
   return {
-    title,
+    // 레이아웃의 title 템플릿은 하위 세그먼트에만 적용된다. /backend/ko·/series/ko·/tags/ko처럼
+    // 루트 레이아웃과 같은 세그먼트의 페이지는 템플릿이 빠지므로 완성된 제목을 직접 넣는다 (세션 8)
+    title: { absolute: full },
     description,
     alternates: { canonical: path, types: rssAlternate(lng) },
     openGraph: {
